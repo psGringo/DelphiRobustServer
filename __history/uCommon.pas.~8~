@@ -1,0 +1,35 @@
+unit uCommon;
+
+interface
+
+uses
+  System.Classes,LDSLogger,uConst;
+
+type
+  ILDSLogger = interface(IUnknown)
+    ['{CE79C197-CB93-4576-9590-6FA2ED197652}']
+    procedure LogError(aMsg: string);
+  end;
+
+  TLogger = class(TInterfacedObject, ILDSLogger)
+    procedure LogError(aMsg: string);
+  end;
+
+implementation
+
+{ TLDSLoggerImpl }
+
+procedure TLDSLoggerImpl.LogError(aMsg: string);
+var
+  l: TLDSLogger;
+begin
+  l := TLDSLogger.Create(logFileName);
+  try
+    l.LogStr(aMsg, tlpError);
+  finally
+    l.Free;
+  end;
+end;
+
+end.
+

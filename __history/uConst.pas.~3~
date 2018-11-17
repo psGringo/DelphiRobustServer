@@ -1,0 +1,14 @@
+unit uConst;
+
+interface
+
+type
+  TConst = class
+    const
+      logFileName = 'log.txt';
+  end;
+
+implementation
+
+end.
+

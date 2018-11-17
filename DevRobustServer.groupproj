@@ -9,6 +9,9 @@
         <Projects Include="..\..\10_Sarafan\0_httpServer\sarafanHttpServer.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\..\10_Sarafan\1_httpServerMonitor\HTTPFileServerMonitor.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="sarafanHttpServer:Make">
         <MSBuild Projects="..\..\10_Sarafan\0_httpServer\sarafanHttpServer.dproj" Targets="Make"/>
     </Target>
+    <Target Name="HTTPFileServerMonitor">
+        <MSBuild Projects="..\..\10_Sarafan\1_httpServerMonitor\HTTPFileServerMonitor.dproj"/>
+    </Target>
+    <Target Name="HTTPFileServerMonitor:Clean">
+        <MSBuild Projects="..\..\10_Sarafan\1_httpServerMonitor\HTTPFileServerMonitor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="HTTPFileServerMonitor:Make">
+        <MSBuild Projects="..\..\10_Sarafan\1_httpServerMonitor\HTTPFileServerMonitor.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="DelphiRobustServer;sarafanHttpServer"/>
+        <CallTarget Targets="DelphiRobustServer;sarafanHttpServer;HTTPFileServerMonitor"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DelphiRobustServer:Clean;sarafanHttpServer:Clean"/>
+        <CallTarget Targets="DelphiRobustServer:Clean;sarafanHttpServer:Clean;HTTPFileServerMonitor:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DelphiRobustServer:Make;sarafanHttpServer:Make"/>
+        <CallTarget Targets="DelphiRobustServer:Make;sarafanHttpServer:Make;HTTPFileServerMonitor:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

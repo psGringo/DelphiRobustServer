@@ -1,0 +1,15 @@
+unit uCommon;
+
+interface
+
+uses
+  System.Classes;
+
+type
+  ILDSLogger = interface(IUnknown)
+  end;
+
+implementation
+
+end.
+

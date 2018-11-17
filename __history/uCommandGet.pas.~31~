@@ -1,0 +1,59 @@
+unit uCommandGet;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections,
+  superobject;
+
+type
+  TCommandGet = class(TComponent)
+  public
+    procedure Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+  end;
+
+implementation
+
+uses
+  uResponses;
+
+  { TCommandGet }
+procedure TCommandGet.Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+var
+  json: ISuperObject;
+  r: IResponses;
+  d, a, b: Double;
+begin
+  r := TResponses.Create;
+  try
+    if ARequestInfo.URI = '/testConnection' then
+    begin
+      json := SO;
+      json.S['answer'] := 'ok';
+      json.AsJSon(false, false);
+      AResponseInfo.CacheControl := 'no-cache';
+      AResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
+      AResponseInfo.ContentText := json.AsJSon(false, false);
+      AResponseInfo.ResponseNo := 200;
+      AResponseInfo.WriteContent;
+    end
+    else if ARequestInfo.URI = '/testException' then
+    begin
+    //raise Exception.Create('Error Message');
+      a := 1;
+      b := 0;
+      d := a / b;
+
+    end
+    else
+      AResponseInfo.ResponseNo := 404;
+  except
+    on E: Exception do
+    begin
+      r.CodedError(ARequestInfo, AResponseInfo, e.Message);
+    end;
+  end;
+end;
+
+end.
+

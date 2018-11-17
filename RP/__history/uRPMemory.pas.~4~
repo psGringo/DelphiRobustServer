@@ -1,0 +1,21 @@
+unit uRPMemory;
+{< Request processing memory}
+
+interface
+
+uses
+  System.SysUtils, System.Classes, IdContext, IdCustomHTTPServer, Winapi.PsAPI,
+  Winapi.Windows, Math;
+
+type
+  RPMemory = class
+    function CurrentProcessMemoryKB: Extended;
+    function CurrentProcessMemoryPeakKB: Extended;
+  public
+    class procedure GetMemory(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+  end;
+
+implementation
+
+end.
+

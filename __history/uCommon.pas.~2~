@@ -1,0 +1,9 @@
+unit uCommon;
+
+interface
+
+ ILDSLogger = interface(IUn)
+
+implementation
+
+end.

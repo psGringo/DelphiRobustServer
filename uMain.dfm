@@ -28,7 +28,7 @@ object Main: TMain
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    Text = 'testConnection'
+    Text = 'testException'
   end
   object mAnswer: TMemo
     AlignWithMargins = True
@@ -44,9 +44,6 @@ object Main: TMain
     Font.Style = []
     ParentFont = False
     TabOrder = 1
-    ExplicitTop = 219
-    ExplicitWidth = 527
-    ExplicitHeight = 67
   end
   object mPostParams: TMemo
     AlignWithMargins = True
@@ -65,7 +62,6 @@ object Main: TMain
       'PostParam2...')
     ParentFont = False
     TabOrder = 2
-    ExplicitTop = 122
   end
   object pAnswer: TPanel
     Left = 0
@@ -82,8 +78,6 @@ object Main: TMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
-    ExplicitTop = 195
-    ExplicitWidth = 533
     object bClearAnswers: TBitBtn
       Left = 0
       Top = 0
@@ -114,8 +108,6 @@ object Main: TMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 4
-    ExplicitTop = 60
-    ExplicitWidth = 533
     object bUrlEncode: TBitBtn
       AlignWithMargins = True
       Left = 4
@@ -147,8 +139,6 @@ object Main: TMain
       ParentFont = False
       TabOrder = 1
       Text = 'Some text to encode...'
-      ExplicitWidth = 426
-      ExplicitHeight = 21
     end
   end
   object pPostParams: TPanel
@@ -168,9 +158,6 @@ object Main: TMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 5
-    ExplicitLeft = 8
-    ExplicitTop = 71
-    ExplicitWidth = 533
   end
   object pTop: TPanel
     Left = 0
@@ -181,7 +168,6 @@ object Main: TMain
     Caption = 'pTop'
     ShowCaption = False
     TabOrder = 6
-    ExplicitWidth = 533
     object bStartStop: TBitBtn
       AlignWithMargins = True
       Left = 4
@@ -224,7 +210,6 @@ object Main: TMain
       Caption = 'pPort'
       ShowCaption = False
       TabOrder = 3
-      ExplicitLeft = 310
       object lPort: TLabel
         Left = 8
         Top = 5
@@ -281,14 +266,16 @@ object Main: TMain
         Width = 80
       end
       item
-        Width = 80
+        Width = 120
+      end
+      item
+        Width = 150
       end>
-    ExplicitTop = 289
-    ExplicitWidth = 533
   end
   object Server: TIdHTTPServer
     Bindings = <>
     DefaultPort = 7777
+    OnException = ServerException
     OnCommandGet = ServerCommandGet
     Left = 160
     Top = 160
@@ -298,7 +285,7 @@ object Main: TMain
     Left = 264
     Top = 160
     Bitmap = {
-      494C010102000800100010001000FFFFFFFF2100FFFFFFFFFFFFFFFF424D3600
+      494C010102000800140010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000C0704104C291766160B
       0625000000000000000000000000000000000000000000000000000000000000
@@ -434,6 +421,7 @@ object Main: TMain
       80FF800100000000807F800100000000801F8001000000008007800100000000
       8003800100000000800180010000000080018001000000008001800100000000
       8007800100000000801F800100000000803F80010000000080FF800100000000
-      83FF80010000000087FFFFFF00000000}
+      83FF80010000000087FFFFFF0000000000000000000000000000000000000000
+      000000000000}
   end
 end
