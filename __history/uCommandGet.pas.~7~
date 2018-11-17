@@ -1,0 +1,31 @@
+unit uCommandGet;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections;
+
+type
+  TCommandGet = class
+  public
+  procedure Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+  end;
+
+implementation
+
+{ TCommandGet }
+
+procedure TCommandGet.Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+begin
+  if ARequestInfo.URI = '/testConnection' then
+  begin
+    AResponseInfo.CacheControl := 'no-cache';
+    AResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
+    AResponseInfo.ContentText := 'ok';
+    AResponseInfo.ResponseNo := 200;
+    AResponseInfo.WriteContent;
+  end
+end;
+
+end.
+

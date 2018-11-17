@@ -1,0 +1,16 @@
+unit uCommandGet;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections;
+
+type
+  TCommandGet = class
+
+  end;
+
+implementation
+
+end.
+

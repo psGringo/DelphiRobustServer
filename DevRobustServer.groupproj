@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{BD4FFD45-2C47-430D-89AC-3725DB8DF2B8}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="DelphiRobustServer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\10_Sarafan\0_httpServer\sarafanHttpServer.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="DelphiRobustServer">
+        <MSBuild Projects="DelphiRobustServer.dproj"/>
+    </Target>
+    <Target Name="DelphiRobustServer:Clean">
+        <MSBuild Projects="DelphiRobustServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DelphiRobustServer:Make">
+        <MSBuild Projects="DelphiRobustServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="sarafanHttpServer">
+        <MSBuild Projects="..\..\10_Sarafan\0_httpServer\sarafanHttpServer.dproj"/>
+    </Target>
+    <Target Name="sarafanHttpServer:Clean">
+        <MSBuild Projects="..\..\10_Sarafan\0_httpServer\sarafanHttpServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="sarafanHttpServer:Make">
+        <MSBuild Projects="..\..\10_Sarafan\0_httpServer\sarafanHttpServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="DelphiRobustServer;sarafanHttpServer"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="DelphiRobustServer:Clean;sarafanHttpServer:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="DelphiRobustServer:Make;sarafanHttpServer:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

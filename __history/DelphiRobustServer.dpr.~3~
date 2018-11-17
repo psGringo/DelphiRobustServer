@@ -1,0 +1,15 @@
+program DelphiRobustServer;
+
+uses
+  Vcl.Forms,
+  uMain in 'uMain.pas' {Main},
+  uCommandGet in 'uCommandGet.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TMain, Main);
+  Application.Run;
+end.

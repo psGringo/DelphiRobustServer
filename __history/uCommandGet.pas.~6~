@@ -1,0 +1,24 @@
+unit uCommandGet;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections;
+
+type
+  TCommandGet = class
+  public
+  procedure Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+  end;
+
+implementation
+
+{ TCommandGet }
+
+procedure TCommandGet.Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+begin
+//
+end;
+
+end.
+

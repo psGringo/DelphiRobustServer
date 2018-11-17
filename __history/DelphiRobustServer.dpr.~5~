@@ -1,0 +1,20 @@
+program DelphiRobustServer;
+
+uses
+  Vcl.Forms,
+  uMain in 'uMain.pas' {Main},
+  uCommandGet in 'uCommandGet.pas',
+  Vcl.Themes,
+  Vcl.Styles,
+  uTimers in 'uTimers.pas' {DataModule2: TDataModule};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Onyx Blue');
+  Application.CreateForm(TMain, Main);
+  Application.CreateForm(TDataModule2, DataModule2);
+  Application.Run;
+end.

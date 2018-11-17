@@ -1,0 +1,12 @@
+unit uCommandGet;
+
+interface
+
+type
+  TCommandGet = class
+
+  end;
+
+implementation
+
+end.
