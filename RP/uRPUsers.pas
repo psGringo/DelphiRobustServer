@@ -4,7 +4,8 @@ unit uRPUsers;
 interface
 
 uses
-  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uResponses, uCommon;
+  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uResponses,
+  uCommon, uDB;
 
 type
   IRPUsers = interface
@@ -19,8 +20,9 @@ type
     FAResponseInfo: TIdHTTPResponseInfo;
     FARequestInfo: TIdHTTPRequestInfo;
     FResponses: IResponses;
+    FDB: TDB;
   public
-    constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
+    constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo; aDB: TDB);
   published
     procedure Add();
     procedure Delete();
@@ -28,6 +30,7 @@ type
     procedure GetInfo();
     property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
     property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write FAResponseInfo;
+    property DB:TDB read FDB write FDB;
   end;
 
 implementation
@@ -40,11 +43,12 @@ begin
   FResponses.OK();
 end;
 
-constructor TRPUsers.Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
+constructor TRPUsers.Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo; aDB: TDB);
 begin
   FResponses := TResponses.Create(aRequestInfo, aResponseInfo);
   FAResponseInfo := aResponseInfo;
   FARequestInfo := aRequestInfo;
+  FDB := aDB;
 end;
 
 procedure TRPUsers.Delete;

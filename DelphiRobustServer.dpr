@@ -15,7 +15,8 @@ uses
   uResponses in 'uResponses.pas',
   uRPUsers in 'RP\uRPUsers.pas',
   uDecodePostRequest in 'uDecodePostRequest.pas',
-  uUniqueName in 'uUniqueName.pas';
+  uUniqueName in 'uUniqueName.pas',
+  uDB in 'uDB.pas' {DB: TDataModule};
 
 {$R *.res}
 

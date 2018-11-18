@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections,
-  superobject, System.NetEncoding, System.IOUtils, Vcl.Forms, uUniqueName;
+  superobject, System.NetEncoding, System.IOUtils, Vcl.Forms, uUniqueName,uDB;
 
 type
   TCommandGet = class(TComponent)
@@ -24,7 +24,7 @@ uses
   DateUtils;
 
 
-  { TCommandGet }
+{ TCommandGet }
 procedure TCommandGet.Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 var
   r: IResponses;
@@ -45,11 +45,13 @@ procedure TCommandGet.ProcessUsers(ARequestInfo: TIdHTTPRequestInfo; AResponseIn
 var
   u: IRPUsers;
   uri: string;
+  db : ISmartPointer<TDb>;
 begin
+  db := TSmartPointer<TDb>.Create();
   uri := ARequestInfo.URI;
   if GetFirstURISection(uri) = 'Users' then
   begin
-    u := TRPUsers.Create(ARequestInfo, AResponseInfo);
+    u := TRPUsers.Create(ARequestInfo, AResponseInfo, db);
     if uri = '/Users/Add' then
       u.Add
     else if uri = '/Users/Delete' then

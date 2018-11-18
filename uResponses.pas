@@ -81,6 +81,8 @@ begin
   json :=SO(aJsonData);
   jsonResult := SO();
   jsonResult.S['answer'] := 'ok';
+  json.S['uri'] := aRequestInfo.URI;
+  json.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
   jsonResult.O['data'] := json;
 
   FAResponseInfo.ResponseNo := 200;
