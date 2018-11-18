@@ -41,6 +41,7 @@ type
     procedure bStartStopClick(Sender: TObject);
     procedure bAPIClick(Sender: TObject);
     procedure ServerException(AContext: TIdContext; AException: Exception);
+    procedure UpdateStartStopGlyph(aBitmapIndex: integer);
   private
     { Private declarations }
     FCommandGet: TCommandGet;
@@ -112,22 +113,26 @@ begin
     Server.Active := false;
     FTimers.tWorkTimer.Enabled := false;
     StatusBar.Panels[0].Text := 'Stopped';
-    bStartStop.Glyph := nil;
-    ilPics.GetBitmap(0, bStartStop.Glyph);
+    UpdateStartStopGlyph(0);
   end
   else
   begin
     Server.Active := true;
     FTimers.tWorkTimer.Enabled := true;
     StatusBar.Panels[0].Text := 'Started';
-    bStartStop.Glyph := nil;
-    ilPics.GetBitmap(1, bStartStop.Glyph);
+    UpdateStartStopGlyph(1);
   end;
 end;
 
 procedure TMain.UpdateAppMemory(var aMsg: TMessage);
 begin
   StatusBar.Panels[2].Text := PChar(aMsg.LParam);
+end;
+
+procedure TMain.UpdateStartStopGlyph(aBitmapIndex: integer);
+begin
+    bStartStop.Glyph := nil;
+    ilPics.GetBitmap(aBitmapIndex, bStartStop.Glyph);
 end;
 
 procedure TMain.UpdateWorkTime(var aMsg: TMessage);

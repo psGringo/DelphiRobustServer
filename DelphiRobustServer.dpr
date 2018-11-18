@@ -12,7 +12,8 @@ uses
   LDSLogger in 'LDSLogger.pas',
   uCommon in 'uCommon.pas',
   uConst in 'uConst.pas',
-  uResponses in 'uResponses.pas';
+  uResponses in 'uResponses.pas',
+  uRPUsers in 'RP\uRPUsers.pas';
 
 {$R *.res}
 

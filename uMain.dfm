@@ -28,7 +28,7 @@ object Main: TMain
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    Text = 'testException'
+    Text = 'Users/GetInfo'
   end
   object mAnswer: TMemo
     AlignWithMargins = True

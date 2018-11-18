@@ -3,9 +3,12 @@ unit uCommon;
 interface
 
 uses
-  System.Classes,LDSLogger,uConst;
+  LDSLogger, uConst, System.SysUtils, System.Classes, IdCustomHTTPServer,
+  superobject, uResponses;
 
 type
+  int = integer;
+
   ILogger = interface(IUnknown)
     ['{CE79C197-CB93-4576-9590-6FA2ED197652}']
     procedure LogError(aMsg: string);

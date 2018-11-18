@@ -50,12 +50,12 @@ begin
   json.S['errorMessage'] := EMessage;
   json.S['uri'] := aRequestInfo.URI;
   json.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
-  aResponseInfo.ResponseNo := 200;
-  aResponseInfo.ContentType := 'application/json';
-  aResponseInfo.CacheControl := 'no-cache';
-  aResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
-  aResponseInfo.ContentText := json.AsJSon(false, false);
-  aResponseInfo.WriteContent;
+  FaResponseInfo.ResponseNo := 200;
+  FaResponseInfo.ContentType := 'application/json';
+  FaResponseInfo.CacheControl := 'no-cache';
+  FaResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
+  FaResponseInfo.ContentText := json.AsJSon(false, false);
+  FaResponseInfo.WriteContent;
 end;
 
 procedure TResponses.OK();
@@ -66,17 +66,29 @@ begin
   json.S['answer'] := 'ok';
   json.S['uri'] := aRequestInfo.URI;
   json.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
-  aResponseInfo.ResponseNo := 200;
-  aResponseInfo.ContentType := 'application/json';
-  aResponseInfo.CacheControl := 'no-cache';
-  aResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
-  aResponseInfo.ContentText := json.AsJSon(false, false);
-  aResponseInfo.WriteContent;
+  FaResponseInfo.ResponseNo := 200;
+  FaResponseInfo.ContentType := 'application/json';
+  FaResponseInfo.CacheControl := 'no-cache';
+  FaResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
+  FaResponseInfo.ContentText := json.AsJSon(false, false);
+  FaResponseInfo.WriteContent;
 end;
 
 procedure TResponses.ResponseOkWithJson(aJsonData: string);
+var
+  json,jsonResult: ISuperobject;
 begin
+  json :=SO(aJsonData);
+  jsonResult := SO();
+  jsonResult.S['answer'] := 'ok';
+  jsonResult.O['data'] := json;
 
+  FAResponseInfo.ResponseNo := 200;
+  FAResponseInfo.ContentType := 'application/json';
+  FAResponseInfo.CacheControl := 'no-cache';
+  FAResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
+  FAResponseInfo.ContentText := jsonResult.AsJSon(false, false); // toString;
+  FAResponseInfo.WriteContent;
 end;
 
 procedure TResponses.ResponseSuccessfullInsert(aId: integer);
