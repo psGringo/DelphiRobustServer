@@ -3,13 +3,14 @@ unit uCommandGet;
 interface
 
 uses
-  System.SysUtils, System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections,
-  superobject;
+  System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections,
+  superobject, System.NetEncoding, System.IOUtils, Vcl.Forms, uUniqueName;
 
 type
   TCommandGet = class(TComponent)
   private
     function GetFirstURISection(aURI: string): string;
+    procedure ProcessFiles(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure ProcessTests(ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure ProcessUsers(ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
   public
@@ -19,20 +20,20 @@ type
 implementation
 
 uses
-  uResponses, uSmartPointer, uRPUsers;
+  uResponses, uSmartPointer, uRPUsers, uDecodePostRequest, System.SysUtils,
+  DateUtils;
+
 
   { TCommandGet }
 procedure TCommandGet.Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 var
-  json: ISuperObject;
-  uri: string;
   r: IResponses;
 begin
   r := TResponses.Create(ARequestInfo, AResponseInfo);
   try
-    uri := ARequestInfo.URI;
     ProcessTests(ARequestInfo, AResponseInfo);
     ProcessUsers(ARequestInfo, AResponseInfo);
+    ProcessFiles(AContext, ARequestInfo, AResponseInfo);
     AResponseInfo.ResponseNo := 404;
   except
     on E: Exception do
@@ -68,6 +69,58 @@ begin
   a := aURI.Split(['/']);
   if Length(a) > 0 then
     Result := a[1]; // Parses Users from /Users/Add for example....
+end;
+
+procedure TCommandGet.ProcessFiles(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+
+  function processRelUploadDir(): string;
+  var
+    absPath: string;
+  begin
+    Result := 'files\' + YearOf(Now).ToString() + '\' + MonthOf(Now()).ToString() + '\' + DayOf(Now).ToString(); //
+    absPath := ExtractFilePath(Application.ExeName) + Result;
+    if not TDirectory.Exists(absPath) then
+      TDirectory.CreateDirectory(absPath);
+  end;
+
+var
+  d: ISmartPointer<TDecodePostRequest>;
+  postParamsSmart: ISmartPointer<TStringList>;
+  postParams: TStringList;
+  uN : ISmartPointer<TUniqueName>;
+  fileName: string;
+  relUploadDir: string;
+  relWebFilePath: string;
+  r: IResponses;
+  json: ISuperobject;
+  uri: string;
+  isUniqueName: string;
+begin
+  uri := ARequestInfo.URI;
+  if GetFirstURISection(uri) = 'Files' then
+    if (uri = '/Files/Send') then
+    begin
+  // init
+      d := TSmartPointer<TDecodePostRequest>.Create();
+      postParamsSmart := TSmartPointer<TStringList>.Create();
+      postParams := postParamsSmart; // hack for next string
+      r := TResponses.Create(ARequestInfo, AResponseInfo);
+  // work
+      relUploadDir := processRelUploadDir();
+      d.DecodePostParamsAnsi(AContext, ARequestInfo, AResponseInfo, postParams);
+      fileName := TNetEncoding.URL.Decode(postParams.Values['filename']);
+      isUniqueName := TNetEncoding.URL.Decode(postParams.Values['isUniqueName']);
+      if (isUniqueName = 'true') then
+      begin
+      uN := TSmartPointer<TUniqueName>.Create();
+      fileName := uN.CreateUniqueNameAddingNumber(relUploadDir, fileName);
+      end;
+      d.ReceiveFile(AContext, ARequestInfo, AResponseInfo, relUploadDir, fileName);
+      relWebFilePath := StringReplace(relUploadDir, '\', '/', [rfReplaceAll]) + '/' + fileName;
+      json := SO;
+      json.S['relWebFilePath'] := relWebFilePath;
+      r.ResponseOkWithJson(json.AsJSon(false, false)); // return relative webpath
+    end;
 end;
 
 procedure TCommandGet.ProcessTests(ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);

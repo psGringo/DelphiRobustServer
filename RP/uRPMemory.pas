@@ -21,6 +21,7 @@ function TRPMemory.CurrentProcessMemoryKB: Extended;
 var
   MemCounters: TProcessMemoryCounters;
 begin
+  Result := 0;
   MemCounters.cb := SizeOf(MemCounters);
   if GetProcessMemoryInfo(GetCurrentProcess, @MemCounters, SizeOf(MemCounters)) then
     Result := trunc(MemCounters.WorkingSetSize / 1024)
@@ -32,6 +33,7 @@ function TRPMemory.CurrentProcessMemoryPeakKB: Extended;
 var
   MemCounters: TProcessMemoryCounters;
 begin
+  Result := 0;
   MemCounters.cb := SizeOf(MemCounters);
   if GetProcessMemoryInfo(GetCurrentProcess, @MemCounters, SizeOf(MemCounters)) then
     Result := trunc(MemCounters.PeakWorkingSetSize / 1024)

@@ -140,6 +140,8 @@
         <DCCReference Include="uConst.pas"/>
         <DCCReference Include="uResponses.pas"/>
         <DCCReference Include="RP\uRPUsers.pas"/>
+        <DCCReference Include="uDecodePostRequest.pas"/>
+        <DCCReference Include="uUniqueName.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

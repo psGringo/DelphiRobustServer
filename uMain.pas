@@ -3,12 +3,12 @@ unit uMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent,
   IdComponent, IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP,
   IdCustomHTTPServer, IdContext, Vcl.Samples.Spin, System.ImageList, Vcl.ImgList,
-  uCommon;
+  uCommon, System.Classes;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -36,12 +36,14 @@ type
     lPort: TLabel;
     sePort: TSpinEdit;
     bAPI: TBitBtn;
+    OpenDialog: TOpenDialog;
     procedure bGetRequestClick(Sender: TObject);
     procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
     procedure bAPIClick(Sender: TObject);
     procedure ServerException(AContext: TIdContext; AException: Exception);
     procedure UpdateStartStopGlyph(aBitmapIndex: integer);
+    procedure bPostRequestClick(Sender: TObject);
   private
     { Private declarations }
     FCommandGet: TCommandGet;
@@ -61,7 +63,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uSmartPointer;
+  uSmartPointer, System.NetEncoding, IdMultipartFormData;
 
 
 { TMain }
@@ -76,6 +78,31 @@ var
 begin
   client := TSmartPointer<TIdHTTP>.Create();
   mAnswer.Lines.Add(client.Get('http://localhost:' + Server.DefaultPort.ToString + '/' + eRequest.Text));
+end;
+
+procedure TMain.bPostRequestClick(Sender: TObject);
+var
+  client: ISmartPointer<TIdHTTP>;
+  s : ISmartPointer<TStringStream>;
+  postData : ISmartPointer<TIdMultiPartFormDataStream>;
+  fileName: string;
+begin
+  if OpenDialog.Execute then
+  begin
+    client := TSmartPointer<TIdHTTP>.Create();
+    s := TSmartPointer<TStringStream>.Create();
+    postData := TSmartPointer<TIdMultiPartFormDataStream>.Create();
+    client.Request.Referer := 'http://localhost: 50000/sendFileOnServer';
+    client.Request.ContentType := 'multipart/form-data';
+    client.Request.RawHeaders.AddValue('AuthToken', 'evjTI82N');
+    fileName := TNetEncoding.URL.Encode(ExtractFileName(OpenDialog.FileName));
+    postData.AddFormField('phone', '79221361449');
+    postData.AddFormField('filename', fileName);
+    postData.AddFormField('isUniqueName', 'true');
+    postData.AddFile('attach', OpenDialog.FileName, 'application/x-rar-compressed');
+    client.POST('http://localhost:'+Server.DefaultPort.ToString+'/Files/Send', postData, s); //
+    mAnswer.Lines.Add(s.DataString);
+  end;
 end;
 
 procedure TMain.bStartStopClick(Sender: TObject);

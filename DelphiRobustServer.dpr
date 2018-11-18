@@ -13,7 +13,9 @@ uses
   uCommon in 'uCommon.pas',
   uConst in 'uConst.pas',
   uResponses in 'uResponses.pas',
-  uRPUsers in 'RP\uRPUsers.pas';
+  uRPUsers in 'RP\uRPUsers.pas',
+  uDecodePostRequest in 'uDecodePostRequest.pas',
+  uUniqueName in 'uUniqueName.pas';
 
 {$R *.res}
 

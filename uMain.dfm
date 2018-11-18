@@ -198,6 +198,7 @@ object Main: TMain
       Align = alLeft
       Caption = 'Post'
       TabOrder = 2
+      OnClick = bPostRequestClick
     end
     object pPort: TPanel
       AlignWithMargins = True
@@ -423,5 +424,9 @@ object Main: TMain
       8007800100000000801F800100000000803F80010000000080FF800100000000
       83FF80010000000087FFFFFF0000000000000000000000000000000000000000
       000000000000}
+  end
+  object OpenDialog: TOpenDialog
+    Left = 336
+    Top = 160
   end
 end
