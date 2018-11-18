@@ -37,6 +37,8 @@ type
     sePort: TSpinEdit;
     bAPI: TBitBtn;
     OpenDialog: TOpenDialog;
+    pLog: TPanel;
+    mLog: TMemo;
     procedure bGetRequestClick(Sender: TObject);
     procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
@@ -44,6 +46,7 @@ type
     procedure ServerException(AContext: TIdContext; AException: Exception);
     procedure UpdateStartStopGlyph(aBitmapIndex: integer);
     procedure bPostRequestClick(Sender: TObject);
+    procedure bClearAnswersClick(Sender: TObject);
   private
     { Private declarations }
     FCommandGet: TCommandGet;
@@ -70,6 +73,11 @@ uses
 procedure TMain.bAPIClick(Sender: TObject);
 begin
   ShowMessage('Link to API');
+end;
+
+procedure TMain.bClearAnswersClick(Sender: TObject);
+begin
+  mAnswer.Lines.Clear();
 end;
 
 procedure TMain.bGetRequestClick(Sender: TObject);
@@ -134,20 +142,25 @@ begin
 end;
 
 procedure TMain.SwitchStartStopButtons;
+ var l:ILogger;
 begin
+  l := TLogger.Create();
   if Server.Active then
   begin
     Server.Active := false;
     FTimers.tWorkTimer.Enabled := false;
     StatusBar.Panels[0].Text := 'Stopped';
     UpdateStartStopGlyph(0);
+    l.LogInfo('Server successfully stopped');
   end
   else
   begin
     Server.Active := true;
     FTimers.tWorkTimer.Enabled := true;
+    FTimers.StartTime := Now;
     StatusBar.Panels[0].Text := 'Started';
     UpdateStartStopGlyph(1);
+    l.LogInfo('Server successfully started');
   end;
 end;
 

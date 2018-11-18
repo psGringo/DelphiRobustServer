@@ -16,14 +16,15 @@ uses
   uRPUsers in 'RP\uRPUsers.pas',
   uDecodePostRequest in 'uDecodePostRequest.pas',
   uUniqueName in 'uUniqueName.pas',
-  uDB in 'uDB.pas' {DB: TDataModule};
+  uDB in 'uDB.pas' {DB: TDataModule},
+  uTImerThread in 'uTImerThread.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Tablet Light');
+  TStyleManager.TrySetStyle('Onyx Blue');
   Application.CreateForm(TMain, Main);
   Application.Run;
 end.

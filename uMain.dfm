@@ -2,7 +2,7 @@ object Main: TMain
   Left = 0
   Top = 0
   Caption = 'Delphi Robust Server'
-  ClientHeight = 415
+  ClientHeight = 522
   ClientWidth = 532
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -33,16 +33,17 @@ object Main: TMain
   object mAnswer: TMemo
     AlignWithMargins = True
     Left = 3
-    Top = 279
+    Top = 228
     Width = 526
-    Height = 114
-    Align = alClient
+    Height = 98
+    Align = alTop
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clGrayText
     Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
+    ScrollBars = ssVertical
     TabOrder = 1
   end
   object mPostParams: TMemo
@@ -50,7 +51,7 @@ object Main: TMain
     Left = 3
     Top = 125
     Width = 526
-    Height = 127
+    Height = 76
     Align = alTop
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clGrayText
@@ -61,11 +62,12 @@ object Main: TMain
       'PostParam1...'
       'PostParam2...')
     ParentFont = False
+    ScrollBars = ssVertical
     TabOrder = 2
   end
   object pAnswer: TPanel
     Left = 0
-    Top = 255
+    Top = 204
     Width = 532
     Height = 21
     Align = alTop
@@ -78,6 +80,7 @@ object Main: TMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
+    ExplicitTop = 255
     object bClearAnswers: TBitBtn
       Left = 0
       Top = 0
@@ -92,6 +95,7 @@ object Main: TMain
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnClick = bClearAnswersClick
     end
   end
   object pUrlEncode: TPanel
@@ -258,7 +262,7 @@ object Main: TMain
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 396
+    Top = 503
     Width = 532
     Height = 19
     Panels = <
@@ -272,6 +276,42 @@ object Main: TMain
       item
         Width = 150
       end>
+    ExplicitTop = 396
+  end
+  object pLog: TPanel
+    Left = 0
+    Top = 329
+    Width = 532
+    Height = 21
+    Align = alTop
+    BevelOuter = bvNone
+    Caption = 'Log'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 8
+    ExplicitLeft = -8
+    ExplicitTop = 356
+  end
+  object mLog: TMemo
+    AlignWithMargins = True
+    Left = 3
+    Top = 353
+    Width = 526
+    Height = 147
+    Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clGrayText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 9
+    ExplicitHeight = 98
   end
   object Server: TIdHTTPServer
     Bindings = <>

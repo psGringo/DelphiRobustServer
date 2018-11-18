@@ -18,16 +18,14 @@ type
   private
     FAResponseInfo: TIdHTTPResponseInfo;
     FARequestInfo: TIdHTTPRequestInfo;
-    procedure SetARequestInfo(const Value: TIdHTTPRequestInfo);
-    procedure SetAResponseInfo(const Value: TIdHTTPResponseInfo);
   published
     constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
     procedure OK();
     procedure Error(EMessage: string = ''; ACodeNumber: integer = -1);
     procedure ResponseOkWithJson(aJsonData: string);
     procedure ResponseSuccessfullInsert(aId: integer);
-    property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write SetARequestInfo;
-    property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write SetAResponseInfo;
+    property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
+    property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write FAResponseInfo;
   end;
 
 implementation
@@ -81,8 +79,8 @@ begin
   json :=SO(aJsonData);
   jsonResult := SO();
   jsonResult.S['answer'] := 'ok';
-  json.S['uri'] := aRequestInfo.URI;
-  json.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
+  jsonResult.S['uri'] := aRequestInfo.URI;
+  jsonResult.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
   jsonResult.O['data'] := json;
 
   FAResponseInfo.ResponseNo := 200;
@@ -96,16 +94,6 @@ end;
 procedure TResponses.ResponseSuccessfullInsert(aId: integer);
 begin
 
-end;
-
-procedure TResponses.SetARequestInfo(const Value: TIdHTTPRequestInfo);
-begin
-  FARequestInfo := Value;
-end;
-
-procedure TResponses.SetAResponseInfo(const Value: TIdHTTPResponseInfo);
-begin
-  FAResponseInfo := Value;
 end;
 
 end.
