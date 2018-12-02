@@ -3,12 +3,12 @@ unit uMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent,
-  IdComponent, IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP,
-  IdCustomHTTPServer, IdContext, Vcl.Samples.Spin, System.ImageList, Vcl.ImgList,
-  uCommon, System.Classes;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent,
+  IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer,
+  IdContext, Vcl.Samples.Spin, System.ImageList, Vcl.ImgList, uCommon, System.Classes,
+  superobject, IdHeaderList;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -39,6 +39,8 @@ type
     OpenDialog: TOpenDialog;
     pLog: TPanel;
     mLog: TMemo;
+    bTest: TButton;
+    cbPostType: TComboBox;
     procedure bGetRequestClick(Sender: TObject);
     procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
@@ -47,6 +49,7 @@ type
     procedure UpdateStartStopGlyph(aBitmapIndex: integer);
     procedure bPostRequestClick(Sender: TObject);
     procedure bClearAnswersClick(Sender: TObject);
+    procedure bTestClick(Sender: TObject);
   private
     { Private declarations }
     FCommandGet: TCommandGet;
@@ -66,8 +69,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uSmartPointer, System.NetEncoding, IdMultipartFormData;
-
+  System.NetEncoding, IdMultipartFormData, uClientExamples;
 
 { TMain }
 procedure TMain.bAPIClick(Sender: TObject);
@@ -82,40 +84,29 @@ end;
 
 procedure TMain.bGetRequestClick(Sender: TObject);
 var
-  client: ISmartPointer<TIdHTTP>;
+  client: ISP<TIdHTTP>;
 begin
-  client := TSmartPointer<TIdHTTP>.Create();
+  client := TSP<TIdHTTP>.Create();
   mAnswer.Lines.Add(client.Get('http://localhost:' + Server.DefaultPort.ToString + '/' + eRequest.Text));
 end;
 
 procedure TMain.bPostRequestClick(Sender: TObject);
-var
-  client: ISmartPointer<TIdHTTP>;
-  s : ISmartPointer<TStringStream>;
-  postData : ISmartPointer<TIdMultiPartFormDataStream>;
-  fileName: string;
 begin
-  if OpenDialog.Execute then
-  begin
-    client := TSmartPointer<TIdHTTP>.Create();
-    s := TSmartPointer<TStringStream>.Create();
-    postData := TSmartPointer<TIdMultiPartFormDataStream>.Create();
-    client.Request.Referer := 'http://localhost: 50000/sendFileOnServer';
-    client.Request.ContentType := 'multipart/form-data';
-    client.Request.RawHeaders.AddValue('AuthToken', 'evjTI82N');
-    fileName := TNetEncoding.URL.Encode(ExtractFileName(OpenDialog.FileName));
-    postData.AddFormField('phone', '79221361449');
-    postData.AddFormField('filename', fileName);
-    postData.AddFormField('isUniqueName', 'true');
-    postData.AddFile('attach', OpenDialog.FileName, 'application/x-rar-compressed');
-    client.POST('http://localhost:'+Server.DefaultPort.ToString+'/Files/Send', postData, s); //
-    mAnswer.Lines.Add(s.DataString);
-  end;
+//
 end;
 
 procedure TMain.bStartStopClick(Sender: TObject);
 begin
   SwitchStartStopButtons();
+end;
+
+procedure TMain.bTestClick(Sender: TObject);
+var
+  ce: ISP<TClientExamples>;
+begin
+  ce := TSP<TClientExamples>.Create(TClientExamples.Create(eRequest.Text, sePort.Value.ToString()));
+  if OpenDialog.Execute then
+  ce.PostSendFile(OpenDialog.FileName);
 end;
 
 constructor TMain.Create(AOwner: TComponent);
@@ -135,16 +126,17 @@ end;
 
 procedure TMain.ServerException(AContext: TIdContext; AException: Exception);
 var
-  l: ILogger;
+  l: ISP<TLogger>;
 begin
-  l := TLogger.Create;
+  l := TSP<TLogger>.Create();
   l.LogError('Exception class ' + AException.ClassName + ' exception message ' + AException.Message);
 end;
 
 procedure TMain.SwitchStartStopButtons;
- var l:ILogger;
+var
+  l: ISP<TLogger>;
 begin
-  l := TLogger.Create();
+  l := TSP<TLogger>.Create();
   if Server.Active then
   begin
     Server.Active := false;
@@ -171,8 +163,8 @@ end;
 
 procedure TMain.UpdateStartStopGlyph(aBitmapIndex: integer);
 begin
-    bStartStop.Glyph := nil;
-    ilPics.GetBitmap(aBitmapIndex, bStartStop.Glyph);
+  bStartStop.Glyph := nil;
+  ilPics.GetBitmap(aBitmapIndex, bStartStop.Glyph);
 end;
 
 procedure TMain.UpdateWorkTime(var aMsg: TMessage);

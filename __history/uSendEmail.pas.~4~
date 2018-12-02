@@ -1,0 +1,32 @@
+unit uSendEmail;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdMessage, IdBaseComponent,
+  IdComponent, IdTCPConnection, IdTCPClient, IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP;
+
+type
+
+  IEmail = interface(IUnknown)
+    ['{CE79C197-CB93-4576-9590-6FA2ED197652}']
+    procedure Send(aMsg: string);
+  end;
+
+  TSendEmail = class(TDataModule)
+    IdSMTP: TIdSMTP;
+    msg: TIdMessage;
+    SSLOpen: TIdSSLIOHandlerSocketOpenSSL;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+end.

@@ -31,7 +31,6 @@ implementation
 function TDB.Connect: boolean;
 var
   oParams: TStrings;
-  ErrorInfo: string;
 begin
   oParams := TStringList.Create;
   try

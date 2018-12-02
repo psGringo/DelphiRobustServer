@@ -5,20 +5,22 @@ interface
 
 uses
   System.SysUtils, System.Classes, vcl.dialogs, System.RegularExpressions,
-  StrUtils,uSmartPointer, System.IOUtils,Vcl.Forms;
+  StrUtils, uCommon, System.IOUtils,Vcl.Forms;
 
 type
   TUniqueName = class(TDataModule)
   private
-
-    { Private declarations }
+    function GetNumberInBracketsFromTheEnd(AFileName: string): string;
+    function GetSubStringWithoutLastBracketsInTheEnd(ASomeString, AValueInBrackets: string): string;
+    function IsValueInBracketsAtEndOfString(ASomeString, AValueInBrackets: string): Boolean;
+    function GetStringWithoutExtension(AFileName: string; var ext: string): string;
   public
     { Public declarations }
-    function CreateUniqueNameAddingGUID(FileName: string; MaxOriginNameLength: Integer): string;
+    function CreateUniqueNameAddingGUID(aFileName: string; aMaxOriginNameLength: Integer): string;
     {< CreateUniqueNameAddingGUID - all clear from the name. This is class function}
     function AddNumberOnTheEnd(ANameWithNumberOnTheEnd: string): string;
     function CreateUniqueNameAddingNumber(ANamesToCompare: TStringList; ANameThatShouldBeUnique: string): string; overload;
-    function CreateUniqueNameAddingNumber(ADirectory: string; ANameThatShouldBeUnique: string): string; overload;
+    function CreateUniqueNameAddingNumber(aAbsWinDir: string; ANameThatShouldBeUnique: string): string; overload;
     {< this method will Create Unique Name like SomeName(1),SomeName(2), Etc.}
     function IsFileNameUnique(ANameThatShouldBeUnique: string; AAllNamesToCompareSL: TStringList): boolean;
     {< this method will Create Unique Name like SomeName(1),SomeName(2), Etc.}
@@ -26,15 +28,8 @@ type
     {<this will add Param=Value to someName }
     function GetParamValueFromFileName(FileName: string; const ParamName: string): string;
     {<this will get ParamValue from Name like Param=Value   }
-    function GetNumberInBracketsFromTheEnd(AFileName: string): string;
-    function FindAllOffsetsOfSubstrings(ASomeString: string; ASomeSubString: string): TStringList;
-    function GetSubStringWithoutLastBracketsInTheEnd(ASomeString, AValueInBrackets: string): string;
-    function IsValueInBracketsAtEndOfString(ASomeString, AValueInBrackets: string): Boolean;
-    function GetStringWithoutExtension(AFileName: string; var ext: string): string;
   end;
 
-//var
-//  CreateUniqueName: TCreateUniqueName;
 
 implementation
 
@@ -46,7 +41,7 @@ uses
 { TCreateUniqueName }
 
 {Creating New Unique Name with a rest of old name, using GUID}
-function TUniqueName.CreateUniqueNameAddingGUID(FileName: string; MaxOriginNameLength: Integer): string;
+function TUniqueName.CreateUniqueNameAddingGUID(aFileName: string; aMaxOriginNameLength: Integer): string;
 var
   ext: string;
   splittedString: TArray<string>;
@@ -56,11 +51,11 @@ var
   fileNameTemp: string;
 begin
 //Checks
-  if FileName = '' then
+  if aFileName = '' then
     Exit;
 //if MaxOriginNameLength=0 then exit;  // if MaxOriginNameLength=0 will be only GUID as a result
 //1--------- First of all we need to extract extension if it is
-  splittedString := FileName.Split(['.']);
+  splittedString := aFileName.Split(['.']);
     //we suppose that extensions are symbols after last '.', so...
     // if FileName has extension like 'SomeFileName.exe'
   if Length(splittedString) > 0 //1 and more, for example somename.ext [somename,ext]
@@ -76,8 +71,8 @@ begin
         someStringToChange := someStringToChange + '.' + splittedString[i];
     end;
          //Cutting name up to the MaxOriginNameLength
-    if Length(someStringToChange) > MaxOriginNameLength then
-      someStringToChange := someStringToChange.Substring(0, MaxOriginNameLength);
+    if Length(someStringToChange) > aMaxOriginNameLength then
+      someStringToChange := someStringToChange.Substring(0, aMaxOriginNameLength);
       //Adding GUID
     Createguid(newguid);
     someStringToChange := someStringToChange + newguid.ToString;
@@ -89,10 +84,10 @@ begin
      // if FileName without Extension like 'SomeFileName'
 if Length(splittedString) = 0 then
   begin
-    fileNameTemp := FileName;
+    fileNameTemp := aFileName;
       //Cutting name up to the MaxOriginNameLength
-    if Length(fileNameTemp) > MaxOriginNameLength then
-      fileNameTemp := fileNameTemp.Substring(0, MaxOriginNameLength);
+    if Length(fileNameTemp) > aMaxOriginNameLength then
+      fileNameTemp := fileNameTemp.Substring(0, aMaxOriginNameLength);
       //Adding GUID
     Createguid(newguid);
     fileNameTemp := fileNameTemp + newguid.ToString;
@@ -101,14 +96,14 @@ if Length(splittedString) = 0 then
 //ShowMessage(Result);
 end;
 
-function TUniqueName.CreateUniqueNameAddingNumber(ADirectory: string; ANameThatShouldBeUnique: string): string;
-var files : ISmartPointer<TStringList>;
+function TUniqueName.CreateUniqueNameAddingNumber(aAbsWinDir: string; ANameThatShouldBeUnique: string): string;
+var files : ISP<TStringList>;
     a: TStringDynArray;
   i: Integer;
 begin
   // getting files
-  files := TSmartPointer<TStringList>.Create();
-  a := TDirectory.GetFiles(ExtractFilePath(Application.ExeName) + ADirectory);
+  files := TSP<TStringList>.Create();
+  a := TDirectory.GetFiles(aAbsWinDir);
   for i := Low(a) to High(a) do
     files.add(ExtractFileName(a[i]));
   // Creating Unique Name
@@ -140,11 +135,7 @@ end;
 
 function TUniqueName.AddNumberOnTheEnd(ANameWithNumberOnTheEnd: string): string;
 var
-  SplittedString: TArray<string>;
-  i: integer;
-  NameWithoutExtension: string;
   NumberInTheEnd: Integer;
-  SubStringWithoutLastBrackets: string;
   StringWithoutExtension: string;
   Extension: string;
   StringWithoutBracketsInTheEnd: string;
@@ -202,41 +193,24 @@ end;
 
 function TUniqueName.GetNumberInBracketsFromTheEnd(AFileName: string): string;
 var
-  RegEx: TRegEx;
-  M: TMatchCollection;
-  s: string;
-  NumberInBrackets: string;
-  RegEx2: TRegEx;
-  M2: TMatchCollection;
+  regEx: TRegEx;
+  m: TMatchCollection;
+  numberInBrackets: string;
+  regEx2: TRegEx;
+  m2: TMatchCollection;
 begin
   Result := '';
-  RegEx := TRegEx.Create('\([\d]+\)'); // Extracting (1) from SomeFile(1) - will receive (1)
-  M := RegEx.Matches(AFileName);
-  if M.Count > 0 then
+  regEx := TRegEx.Create('\([\d]+\)'); // Extracting (1) from SomeFile(1) - will receive (1)
+  m := regEx.Matches(AFileName);
+  if m.Count > 0 then
   begin
-    NumberInBrackets := M.Item[M.Count - 1].Value; // Extracting Last One
+    numberInBrackets := m.Item[m.Count - 1].Value; // Extracting Last One
   end;
-  RegEx2 := TRegEx.Create('[\d]+'); // Extracting 1 from  (1)
-  M2 := RegEx2.Matches(NumberInBrackets);
-  if M2.Count > 0 then
+  regEx2 := TRegEx.Create('[\d]+'); // Extracting 1 from  (1)
+  m2 := regEx2.Matches(numberInBrackets);
+  if m2.Count > 0 then
   begin
-    Result := M2.Item[M.Count - 1].Value; // Extracting Last One
-  end;
-end;
-
-function TUniqueName.FindAllOffsetsOfSubstrings(ASomeString: string; ASomeSubString: string): TStringList;
-var
-  Len: Integer;
-  P: Integer;
-begin
-  Result := TStringList.Create;
-//
-  Len := Length(ASomeSubString);
-  P := PosEx(ASomeSubString, ASomeString, 1);
-  while P > 0 do
-  begin
-    Result.Add(P.ToString());
-    P := PosEx(ASomeSubString, ASomeString, P + Len); // Recursievely call this for next possible substring
+    Result := m2.Item[m.Count - 1].Value; // Extracting Last One
   end;
 end;
 
@@ -304,32 +278,26 @@ if Length(splittedString) = 1 then
     FileNameTemp := FileNameTemp + '{' + aParam + '=' + aValue + '}';
     Result := FileNameTemp;
   end;
-//ShowMessage(Result); //for test
 end;
-
 
 {Get Param Value from FileName}
 function TUniqueName.GetParamValueFromFileName(FileName: string; const ParamName: string): string;
 var
-  RegEx: TRegEx;
-  M: TMatchCollection;
-  M2: TMatchCollection;
-  M3: TMatchCollection;
+  m: TMatchCollection;
+  m2: TMatchCollection;
+  m3: TMatchCollection;
 begin
   Result := '';
-  M := RegEx.Matches(FileName, '{' + ParamName + '=[\w\d]*}'); //chunkNumber=[\w\d]*[\d]\b //chunkNumber=[\w]*[\d]\b
-  if M.Count > 0 then
-    M2 := RegEx.Matches(M.Item[M.Count - 1].Value, '=[\w\d]*');
-  if M2.Count > 0 then
-    M3 := RegEx.Matches(M2.Item[M2.Count - 1].Value, '[\w\d]*');
-  if M3.Count > 0 then
-    Result := M3.Item[M3.Count - 1].Value;
+  m := TRegEx.Matches(FileName, '{' + ParamName + '=[\w\d]*}'); //chunkNumber=[\w\d]*[\d]\b //chunkNumber=[\w]*[\d]\b
+  if m.Count > 0 then
+    m2 := TRegEx.Matches(m.Item[m.Count - 1].Value, '=[\w\d]*');
+  if m2.Count > 0 then
+    m3 := TRegEx.Matches(m2.Item[m2.Count - 1].Value, '[\w\d]*');
+  if m3.Count > 0 then
+    Result := m3.Item[m3.Count - 1].Value;
 end;
 
 function TUniqueName.IsFileNameUnique(ANameThatShouldBeUnique: string; AAllNamesToCompareSL: TStringList): boolean;
-var
-  splittedString: TArray<string>;
-  i: Integer;
 begin
   Result := false;
   if AAllNamesToCompareSL.IndexOf(ANameThatShouldBeUnique) = -1 then

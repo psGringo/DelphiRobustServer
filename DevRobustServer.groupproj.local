@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.171,C:\Users\YellowFriend\Documents\Embarcadero\Studio\Projects\ProjectGroup1.groupproj=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\DevRobustServer.groupproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.171,C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\DevRobustServer.groupproj=C:\Users\YellowFriend\Documents\Embarcadero\Studio\Projects\ProjectGroup1.groupproj</Transaction>
   </Transactions>
 	<Default.Personality>
 		<Projects ActiveProject="C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\DelphiRobustServer.dproj"/>

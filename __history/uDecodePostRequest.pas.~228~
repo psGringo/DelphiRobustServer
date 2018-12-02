@@ -1,0 +1,302 @@
+unit uDecodePostRequest;
+
+interface
+
+uses
+  System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls,
+  Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent, IdCustomTCPServer,
+  IdCustomHTTPServer, IdHTTPServer, Vcl.StdCtrls, HTTPApp, IdMultipartFormData,
+  IdContext, System.IOUtils, System.NetEncoding, superobject, Contnrs,
+  uSmartPointer,System.Generics.Collections;
+
+type
+  TPostParam = record
+    Name: string;
+    Value: string;
+  end;
+
+type
+  TDecodePostRequest = class
+  private
+    FRelWebFileDir: string;
+    FPostParams: TList<TPostParam>;
+    FJsonRequest: string;
+    function ReadMultipartRequest(const Boundary: Ansistring; ARequest: Ansistring; var AHeader: TStringList; var Data: Ansistring): Ansistring;
+    procedure ParseJson(const aAsObject: TSuperTableString);
+    procedure SetRelWebFileDir(const Value: string);
+    procedure SetJsonRequest(const Value: string);
+  public
+    constructor Create();
+
+    procedure Multipart(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+    procedure FormURLEncoded(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+    procedure Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+
+    property RelWebFileDir: string read FRelWebFileDir write SetRelWebFileDir;
+    property PostParams: TList<TPostParam> read FPostParams;
+    property Json: string read FJsonRequest;
+  end;
+
+const
+  MaxReadBlockSize = 8192;
+
+implementation
+
+uses
+  System.StrUtils;
+
+procedure TDecodePostRequest.Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+var
+  ss: ISP<TStringStream>;
+begin
+  AResponseInfo.Server := 'ver1';
+  AResponseInfo.CacheControl := 'no-cache';
+
+  if (Pos('multipart/form-data', LowerCase(ARequestInfo.ContentType)) > 0) and     // далее идёт обработка multipart
+    (Pos('boundary', LowerCase(ARequestInfo.ContentType)) > 0) then
+    Multipart(AContext, ARequestInfo, AResponseInfo)
+
+  else if (Pos('application/x-www-form-urlencoded', LowerCase(ARequestInfo.ContentType)) > 0) then
+    FormURLEncoded(AContext, ARequestInfo, AResponseInfo)
+
+  else if (Pos('application/json', LowerCase(ARequestInfo.ContentType)) > 0) then
+  begin
+    ss := TSP<TStringStream>.Create();
+    ss.LoadFromStream(ARequestInfo.PostStream);
+    Json := ss.DataString;
+    // parse json... if needed or parse in other place
+    //obj := SO(TNetEncoding.URL.Decode(allContent));
+    //ParseJson(obj.AsObject, aPostParams);
+  end;
+end;
+
+procedure TDecodePostRequest.FormURLEncoded(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+var
+  ms: ISP<TMemoryStream>;
+  boundary, bufferStr, allContent: Ansistring;
+  header: ISP<TStringList>;
+  hList: ISP<TStringList>;
+  byteToRead, readedBytes, rSize: Integer;
+  buffer: PAnsiChar;
+  data: Ansistring;
+  ss: ISP<TStringStream>;
+begin
+  ms := TSP<TMemoryStream>.Create();
+  ms.LoadFromStream(ARequestInfo.PostStream);
+  allContent := '';
+  byteToRead := ARequestInfo.ContentLength;
+  try
+    while byteToRead > 0 do
+    begin
+      rSize := MaxReadBlockSize;
+      if rSize > byteToRead then
+        rSize := byteToRead;
+      GetMem(buffer, rSize);
+      try
+        readedBytes := ms.Read(buffer^, rSize);
+        SetString(bufferStr, buffer, readedBytes);
+        allContent := allContent + bufferStr;
+      finally
+        FreeMem(buffer, rSize);
+      end;
+      byteToRead := ARequestInfo.ContentLength - Length(allContent);
+    end;
+  except
+    on E: Exception do
+    begin
+      raise Exception.Create(' Exception Raised = ' + 'Class=' + E.ClassName + #13#1 + #13#10 + '  Message=' + E.Message);
+      AResponseInfo.ContentText := E.Message;
+      AResponseInfo.WriteContent;
+    end;
+  end;
+end;
+
+procedure TDecodePostRequest.ParseJson(const aAsObject: TSuperTableString);
+//https://stackoverflow.com/questions/14082886/superobject-extract-all
+var
+  Names: ISuperObject;
+  Name: string;
+  Items: ISuperObject;
+  Item: ISuperObject;
+  idx: Integer;
+  Value: string;
+begin
+  if Assigned(aAsObject) then
+  begin
+    Names := aAsObject.GetNames;
+    Items := aAsObject.GetValues;
+
+    for idx := 0 to Items.AsArray.Length - 1 do
+    begin
+      Name := Names.AsArray[idx].AsString;
+      Item := Items.AsArray[idx];
+      if Item.DataType = stObject then
+        Value := '<Object>'
+      else if Item.DataType = stArray then
+        Value := '<Array>'
+      else
+        Value := Item.AsString;
+
+       // do smth with json
+
+      //postParams.Add(Name + '=' + Value);
+     // postParams.json := Value; // returning only json object
+
+      //if SameText(Name, 'id') then
+       // WriteLn(Format('%s: %s', [aPrefix + Name, Value]));
+
+       {
+      if Item.DataType = stArray then
+        for ArrayItem in Item do
+          ProcessObject(ArrayItem.AsObject, aPrefix + Name + '.');
+
+      if Item.DataType = stObject then
+        ProcessObject(Item.AsObject, aPrefix + Name + '.');
+        }
+    end;
+  end;
+end;
+
+//-------------------------------------------------
+function TDecodePostRequest.ReadMultipartRequest(const Boundary: Ansistring; ARequest: Ansistring; var AHeader: TStringList; var Data: Ansistring): Ansistring;
+var
+  Req, RHead: string;
+  i: Integer;
+begin
+  Result := '';
+  AHeader.Clear;
+  Data := '';
+
+  if (Pos(Boundary, ARequest) < Pos(Boundary + '--', ARequest)) and (Pos(Boundary, ARequest) = 1) then
+  begin
+    Delete(ARequest, 1, Length(Boundary) + 2);
+    Req := Copy(ARequest, 1, Pos(Boundary, ARequest) - 3);
+    Delete(ARequest, 1, Length(Req) + 2);
+    RHead := Copy(Req, 1, Pos(#13#10#13#10, Req) - 1);
+
+    Delete(Req, 1, Length(RHead) + 4);
+    AHeader.Text := RHead;
+    for i := 0 to AHeader.Count - 1 do
+      if Pos(':', AHeader.Strings[i]) > 0 then
+        AHeader.Strings[i] := Trim(Copy(AHeader.Strings[i], 1, Pos(':', AHeader.Strings[i]) - 1)) + '=' + Trim(Copy(AHeader.Strings[i], Pos(':', AHeader.Strings[i]) + 1, Length(AHeader.Strings[i]) - Pos(':', AHeader.Strings[i])));
+    Data := Req;
+    Result := ARequest;
+  end
+end;
+
+procedure TDecodePostRequest.SetRelWebFileDir(const Value: string);
+begin
+  FRelWebFileDir := Value;
+end;
+
+procedure TDecodePostRequest.Multipart(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+
+  function GetPostParam(aParamName: string): string;
+  var index: integer;
+  begin
+    index := FPostParams.Names.IndexOf(aParamName);
+    Result := IfThen( index <> -1,FPostParams.Values[index],'');
+  end;
+
+const
+  MaxReadBlockSize = 8192;
+var
+  ms: TMemoryStream;
+  boundary, bufferStr, allContent: Ansistring;
+  header: TStringList;
+  byteToRead, readedBytes, rSize: Integer;
+  buffer: PAnsiChar;
+  data: Ansistring;
+  hList: TStrings;
+  fs: TFileStream;
+  filename: string;
+  dir: string;
+  isUniqueName: string;
+
+begin
+  AResponseInfo.Server := 'ver1';
+  AResponseInfo.CacheControl := 'no-cache';
+
+  if (Pos('multipart/form-data', LowerCase(ARequestInfo.ContentType)) > 0) and
+    (Pos('boundary', LowerCase(ARequestInfo.ContentType)) > 0) then
+  begin
+    header := TStringList.Create;
+    try
+      ExtractHeaderFields([';'], [' '], PChar(ARequestInfo.ContentType), header, False, False);
+      boundary := header.Values['boundary'];
+    finally
+      header.Free;
+    end;
+    ms := TMemoryStream.Create;
+    try
+      ms.LoadFromStream(ARequestInfo.PostStream);
+      allContent := '';
+      byteToRead := ARequestInfo.ContentLength;
+      while byteToRead > 0 do
+      begin
+        rSize := MaxReadBlockSize;
+        if rSize > byteToRead then
+          rSize := byteToRead;
+        GetMem(buffer, rSize);
+        try
+          readedBytes := ms.Read(buffer^, rSize);
+          SetString(bufferStr, buffer, readedBytes);
+          allContent := allContent + bufferStr;
+        finally
+          FreeMem(buffer, rSize);
+        end;
+        byteToRead := ARequestInfo.ContentLength - Length(allContent);
+      end;
+    finally
+      ms.Free;
+    end;
+
+    if ARequestInfo.ContentLength = Length(allContent) then
+      while Length(allContent) > Length('--' + boundary + '--' + #13#10) do
+      begin
+        header := TStringList.Create;
+        hList := TStringList.Create;
+        try
+          allContent := ReadMultipartRequest('--' + boundary, allContent, header, data);
+          ExtractHeaderFields([';'], [' '], PChar(header.Values['Content-Disposition']), hList, False, True);
+          FPostParams.names.Add(hList.Values['name']);
+          FPostParams.Values.Add(data);
+        finally
+          header.Free;
+          hList.Free;
+        end;
+      end;
+     // writing file
+
+    filename := GetPostParam('filename');
+    dir := GetPostParam('dir');
+    isUniqueName := GetPostParam('isUniqueName');
+    data := GetPostParam('data');
+
+    if (filename <> '') then
+    begin
+      fs := TFileStream.Create(ExtractFilePath(Application.ExeName) + filename, fmCreate);
+      try
+        try
+          fs.WriteBuffer(Pointer(data)^, Length(data));
+        except
+          on E: EStreamError do
+            raise Exception.Create('EStreamError EClassName' + E.ClassName + ' ' + 'EMessage ' + E.Message);
+          on E: Exception do
+            raise Exception.Create('EClassName' + E.ClassName + ' ' + 'EMessage ' + E.Message);
+        end;
+      finally
+        fs.Free;
+      end
+    end;
+  end;
+end;
+
+constructor TDecodePostRequest.Create();
+begin
+  FPostParams := TSP<TPostParams>.Create();
+end;
+
+{ TPostParams }
+end.
+

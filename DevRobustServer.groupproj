@@ -12,6 +12,9 @@
         <Projects Include="..\..\10_Sarafan\1_httpServerMonitor\HTTPFileServerMonitor.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\..\02_UniShopMilk\Program5\UniShop5.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="HTTPFileServerMonitor:Make">
         <MSBuild Projects="..\..\10_Sarafan\1_httpServerMonitor\HTTPFileServerMonitor.dproj" Targets="Make"/>
     </Target>
+    <Target Name="UniShop5">
+        <MSBuild Projects="..\..\02_UniShopMilk\Program5\UniShop5.dproj"/>
+    </Target>
+    <Target Name="UniShop5:Clean">
+        <MSBuild Projects="..\..\02_UniShopMilk\Program5\UniShop5.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="UniShop5:Make">
+        <MSBuild Projects="..\..\02_UniShopMilk\Program5\UniShop5.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="DelphiRobustServer;sarafanHttpServer;HTTPFileServerMonitor"/>
+        <CallTarget Targets="DelphiRobustServer;sarafanHttpServer;HTTPFileServerMonitor;UniShop5"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DelphiRobustServer:Clean;sarafanHttpServer:Clean;HTTPFileServerMonitor:Clean"/>
+        <CallTarget Targets="DelphiRobustServer:Clean;sarafanHttpServer:Clean;HTTPFileServerMonitor:Clean;UniShop5:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DelphiRobustServer:Make;sarafanHttpServer:Make;HTTPFileServerMonitor:Make"/>
+        <CallTarget Targets="DelphiRobustServer:Make;sarafanHttpServer:Make;HTTPFileServerMonitor:Make;UniShop5:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

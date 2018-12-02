@@ -3,7 +3,7 @@ unit uTimers;
 interface
 
 uses
-  System.SysUtils, Vcl.ExtCtrls, DateUtils, System.Classes;
+  System.SysUtils, Vcl.ExtCtrls, DateUtils, System.Classes, uCommon;
 
 type
   TTimers = class(TDataModule)
@@ -23,7 +23,7 @@ type
 implementation
 
 uses
-  uMain, Winapi.Windows, Winapi.Messages,uRPMemory,uSmartPointer,uTimerThread;
+  uMain, Winapi.Windows, Winapi.Messages,uRPMemory, uTimerThread;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -37,10 +37,10 @@ end;
 procedure TTimers.tMemoryTimer(Sender: TObject);
 var
   t: TTimerThread;
-  memory: ISmartPointer<TRPMemory>;
+  memory: ISP<TRPMemory>;
     //t: TThread;
 begin
-  memory := TSmartPointer<TRPMemory>.Create();
+  memory := TSP<TRPMemory>.Create();
   t := TTimerThread.Create(true);
   t.Msg := memory.CurrentProcessMemoryKB.ToString()+' KB / '+memory.CurrentProcessMemoryPeakKB.ToString()+' KB';
   t.PanelNumber := 2;
