@@ -1,7 +1,7 @@
 object DB: TDB
   OldCreateOrder = False
-  Height = 243
-  Width = 379
+  Height = 39
+  Width = 136
   object FDConnection: TFDConnection
     Left = 48
     Top = 40

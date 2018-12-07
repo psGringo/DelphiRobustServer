@@ -46,17 +46,17 @@ type
     constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
     procedure OK();
     procedure Error(EMessage: string = ''; ACodeNumber: integer = -1);
-    procedure ResponseOkWithJson(aJsonData: string);
+    procedure OkWithJson(aJsonData: string);
     procedure ResponseSuccessfullInsert(aId: integer);
     property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
     property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write FAResponseInfo;
   end;
 
-
   TCommon = class
   public
-    class procedure DecodeFormDataRemy(ARequestInfo: TIdHTTPRequestInfo);
+    procedure DecodeFormDataRemy(ARequestInfo: TIdHTTPRequestInfo);
     {< method from Remy, doesn't work...}
+    procedure IsNotNull(aObject: TObject);
   end;
 
 const
@@ -165,7 +165,7 @@ begin
   end;
 end;
 
-class procedure TCommon.DecodeFormDataRemy(ARequestInfo: TIdHTTPRequestInfo);
+procedure TCommon.DecodeFormDataRemy(ARequestInfo: TIdHTTPRequestInfo);
 var
   msgEnd: Boolean;
   decoder: TIdMessageDecoder;
@@ -337,7 +337,7 @@ begin
   FaResponseInfo.WriteContent;
 end;
 
-procedure TResponses.ResponseOkWithJson(aJsonData: string);
+procedure TResponses.OkWithJson(aJsonData: string);
 var
   json,jsonResult: ISuperobject;
 begin
@@ -362,6 +362,11 @@ begin
 
 end;
 
+
+procedure TCommon.IsNotNull(aObject: TObject);
+begin
+ if (aObject = nil) then raise Exception.Create('Object is nil');
+end;
 
 end.
 

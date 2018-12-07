@@ -5,48 +5,39 @@ interface
 
 uses
   System.SysUtils, System.Classes, IdCustomHTTPServer, superobject,
-  uCommon, uDB;
+  uCommon, uDB, uRP;
 
 type
-  TRPUsers = class(TInterfacedObject)
-  private
-    FAResponseInfo: TIdHTTPResponseInfo;
-    FARequestInfo: TIdHTTPRequestInfo;
-    FResponses: ISP<TResponses>;
-    FDB: TDB;
+  TRPUsers = class(TRP)
   public
-    constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo; aDB: TDB);
-    procedure Add();
-    procedure Delete();
-    procedure Update();
-    procedure GetInfo();
-    property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
-    property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write FAResponseInfo;
-    property DB: TDB read FDB write FDB;
+    constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo); overload; override;
+    procedure Create(); overload; override;
+    procedure Delete(); override;
+    procedure Update(); override;
+    procedure GetInfo(); override;
   end;
 
 implementation
 
 { TRPUsers }
 
-procedure TRPUsers.Add;
+procedure TRPUsers.Create();
 begin
-    // insert your code here...
-  FResponses.OK();
+       // insert your code here...
+  Responses.OK();
 end;
 
-constructor TRPUsers.Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo; aDB: TDB);
+constructor TRPUsers.Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
 begin
-  FResponses := TSP<TResponses>.Create(TResponses.Create(ARequestInfo, AResponseInfo));
-  FAResponseInfo := aResponseInfo;
-  FARequestInfo := aRequestInfo;
-  FDB := aDB;
+  inherited;
+  FClassAlias := 'Users';
+  Execute(ARequestInfo.URI);
 end;
 
 procedure TRPUsers.Delete;
 begin
   // insert your code here...
-  FResponses.OK();
+Responses.OK();
 end;
 
 procedure TRPUsers.GetInfo;
@@ -58,13 +49,13 @@ begin
   // getInfo by id... ... for ex in db
   jsonUser := SO();
   jsonUser.S['name'] := 'Bill Gates';
-  FResponses.ResponseOkWithJson(jsonUser.AsJSon(false, false));
+  Responses.OkWithJson(jsonUser.AsJSon(false, false));
 end;
 
 procedure TRPUsers.Update;
 begin
   // insert your code here...
-  FResponses.OK();
+  Responses.OK();
 end;
 
 end.

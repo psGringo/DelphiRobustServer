@@ -28,7 +28,7 @@ object Main: TMain
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    Text = 'Test/Request'
+    Text = 'Test/Sessions'
   end
   object mAnswer: TMemo
     AlignWithMargins = True
@@ -332,6 +332,9 @@ object Main: TMain
     Bindings = <>
     DefaultPort = 7777
     OnException = ServerException
+    AutoStartSession = True
+    SessionState = True
+    SessionTimeOut = 1000
     OnCommandGet = ServerCommandGet
     Left = 160
     Top = 160
@@ -341,7 +344,7 @@ object Main: TMain
     Left = 264
     Top = 160
     Bitmap = {
-      494C0101020008002C0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010102000800380010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000000C0704104C291766160B
       0625000000000000000000000000000000000000000000000000000000000000

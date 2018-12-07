@@ -89,67 +89,64 @@ uses
 type
   TCommandGet = class(TComponent)
   private
-    function GetFirstURISection(aURI: string): string;
+    FContext: TIdContext;
+    FRequestInfo: TIdHTTPRequestInfo;
+    FResponseInfo: TIdHTTPResponseInfo;
+    function ParseFirstSection(aValue: string): Boolean;
     procedure ProcessFiles(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure ProcessTests(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
-    procedure ProcessUsers(ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
   public
-    procedure Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+    constructor Create(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+    procedure Execute();
+    property Context: TIdContext read FContext write FContext;
+    property RequestInfo: TIdHTTPRequestInfo read FRequestInfo write FRequestInfo;
+    property ResponseInfo: TIdHTTPResponseInfo read FResponseInfo write FResponseInfo;
   end;
 
 implementation
 
 uses
   uRPUsers, uDecodePostRequest, System.SysUtils,
-  DateUtils;
+  DateUtils, uConst;
 
 { TCommandGet }
-procedure TCommandGet.Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+constructor TCommandGet.Create(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+begin
+  FContext := AContext;
+  FRequestInfo := ARequestInfo;
+  FResponseInfo := AResponseInfo;
+  Execute();
+end;
+
+procedure TCommandGet.Execute();
 var
   r: ISP<TResponses>;
+  u: ISP<TRPUsers>;
 begin
-  r := TSP<TResponses>.Create(TResponses.Create(ARequestInfo, AResponseInfo));
+  r := TSP<TResponses>.Create(TResponses.Create(FRequestInfo, FResponseInfo));
   try
-    ProcessTests(AContext, ARequestInfo, AResponseInfo);
-    ProcessUsers(ARequestInfo, AResponseInfo);
-    ProcessFiles(AContext, ARequestInfo, AResponseInfo);
-    AResponseInfo.ResponseNo := 404;
+    if (ParseFirstSection('Users')) then
+      u := TSP<TRPUsers>.Create(TRPUsers.Create(FRequestInfo, FResponseInfo))
+    {
+    if (ParseFirstSection('SmthOther')) then
+      u := TSP<TRPSmthOther>.Create(TRPSmthOther.Create(FRequestInfo, FResponseInfo))
+    }
+    else
+      FResponseInfo.ResponseNo := 404;
   except
     on E: Exception do
       r.Error(e.Message);
   end;
 end;
 
-procedure TCommandGet.ProcessUsers(ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
-var
-  u: TRPUsers;
-  uri: string;
-  db: ISP<TDb>;
-begin
-  db := TSP<TDb>.Create();
-  uri := ARequestInfo.URI;
-  if GetFirstURISection(uri) = 'Users' then
-  begin
-    u := TRPUsers.Create(ARequestInfo, AResponseInfo, db);
-    if uri = '/Users/Add' then
-      u.Add
-    else if uri = '/Users/Delete' then
-      u.Delete
-    else if uri = '/Users/Update' then
-      u.Update
-    else if uri = '/Users/GetInfo' then
-      u.GetInfo;
-  end;
-end;
 
-function TCommandGet.GetFirstURISection(aURI: string): string;
+function TCommandGet.ParseFirstSection(aValue: string): Boolean;
 var
   a: TArray<string>;
 begin
-  Result := '';
-  a := aURI.Split(['/']);
+  a := FRequestInfo.URI.Split(['/']);
   if Length(a) > 0 then
-    Result := a[1]; // Parses Users from /Users/Add for example....
+    Result := a[1].Equals(aValue); // Parses Users from /Users/Add for example....
 end;
 
 procedure TCommandGet.ProcessFiles(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -173,19 +170,20 @@ var
   json: ISuperobject;
   uri: string;
 begin
+  {
   uri := ARequestInfo.URI;
-  if GetFirstURISection(uri) = 'Files' then
+  if ParseFirstSection(uri) = 'Files' then
     if (uri = '/Files/Send') then
     begin
       d := TSP<TDecodePostRequest>.Create();
       d.Execute(AContext, ARequestInfo, AResponseInfo);
-      //TCommon.DecodeFormData(ARequestInfo);
       relWebFilePath := StringReplace(relUploadDir, '\', '/', [rfReplaceAll]) + '/' + fileName;
       json := SO;
       json.S['relWebFilePath'] := relWebFilePath;
       r := TSP<TResponses>.Create(TResponses.Create(ARequestInfo, AResponseInfo));
-      r.ResponseOkWithJson(json.AsJSon(false, false)); // return relative webpath
+      r.OkWithJson(json.AsJSon(false, false)); // return relative webpath
     end;
+   }
 end;
 
 procedure TCommandGet.ProcessTests(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -213,7 +211,7 @@ begin
       d := TSP<TDecodePostRequest>.Create();
       d.Execute(AContext, ARequestInfo, AResponseInfo);
       jo := SO[d.Json];
-      r.ResponseOkWithJson(jo.AsJSon(false, false));
+      r.OkWithJson(jo.AsJSon(false, false));
     end;
   end
   else if uri = '/Test/URLEncoded' then
@@ -222,7 +220,13 @@ begin
     d.Execute(AContext, ARequestInfo, AResponseInfo);
     r := TSP<TResponses>.Create(TResponses.Create(ARequestInfo, AResponseInfo));
     r.OK();
-  end;
+  end
+   else if uri = '/Test/Sessions' then
+   begin
+    jo := SO();
+    jo.S['sessionID'] := ARequestInfo.Session.SessionID;
+    r.OkWithJson(jo.AsJSon(false, false));
+   end;
 end;
 
 end.

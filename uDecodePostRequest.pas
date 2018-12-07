@@ -27,34 +27,6 @@ type
   public
     constructor Create();
     procedure Multipart(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
-    { < multipart processing on server, here below is example of sending multipart request
-
-     procedure TClientExamples.PostSendFile(aAbsWinFilePath: string);
-       var
-      client: ISP<TIdHTTP>;
-      jo:ISuperobject;
-      ss: ISP<TStringStream>;
-      postData : ISP<TIdMultiPartFormDataStream>;
-      r: string;
-      fileName: string;
-    begin
-      fileName := ExtractFileName(aAbsWinFilePath);
-      Assert(fileName <> '', 'filename is empty');
-      client := TSP<TIdHTTP>.Create();
-      ss := TSP<TStringStream>.Create();
-      postData := TSP<TIdMultiPartFormDataStream>.Create();
-      client.Request.Referer := 'http://localhost:' + FPort + '/Files/Send';
-      client.Request.ContentType := 'multipart/form-data';
-      client.Request.RawHeaders.AddValue('AuthToken', 'evjTI82N');
-      postData.AddFormField('filename', filename);
-      postData.AddFormField('dir', 'files');
-      postData.AddFormField('isUniqueName', 'true');
-      postData.AddFile('attach', aAbsWinFilePath, 'application/x-rar-compressed');
-      client.POST('http://localhost:' + FPort + '/Files/Send', postData, ss); //
-      Main.mAnswer.Lines.Add(ss.DataString);
-    end;
-    }
-
     procedure FormURLEncoded(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     property RelWebFileDir: string read FRelWebFileDir write SetRelWebFileDir;

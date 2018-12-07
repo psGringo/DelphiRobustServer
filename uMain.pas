@@ -52,7 +52,6 @@ type
     procedure bTestClick(Sender: TObject);
   private
     { Private declarations }
-    FCommandGet: TCommandGet;
     FTimers: TTimers;
     procedure SwitchStartStopButtons();
     procedure UpdateWorkTime(var aMsg: TMessage); message WM_WORK_TIME;
@@ -113,15 +112,16 @@ constructor TMain.Create(AOwner: TComponent);
 begin
   inherited;
   ReportMemoryLeaksOnShutdown := True;
-  FCommandGet := TCommandGet.Create(Self);
   FTimers := TTimers.Create(Self);
   Server.DefaultPort := sePort.Value;
   SwitchStartStopButtons(); // will start server
 end;
 
 procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+var
+  cg: ISP<TCommandGet>;
 begin
-  FCommandGet.Execute(AContext, ARequestInfo, AResponseInfo);
+  cg := TSP<TCommandGet>.Create(TCommandGet.Create(AContext, ARequestInfo, AResponseInfo));
 end;
 
 procedure TMain.ServerException(AContext: TIdContext; AException: Exception);

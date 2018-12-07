@@ -16,7 +16,8 @@ uses
   uDB in 'uDB.pas' {DB: TDataModule},
   uTImerThread in 'uTImerThread.pas',
   uClientExamples in 'uClientExamples.pas',
-  uConst in 'uConst.pas';
+  uConst in 'uConst.pas',
+  uRP in 'RP\uRP.pas';
 
 {$R *.res}
 

@@ -8,6 +8,7 @@ type
 
 const
   logFileName = 'log.txt';
+  CommandGet_Users = '/Users/';
 
 implementation
 
