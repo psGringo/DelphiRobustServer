@@ -1,0 +1,21 @@
+unit uHTTPAttributes;
+
+interface
+
+uses
+  System;
+type
+  THTTPAttributes = class(TCustomAttribute)
+    FCommandType: string;
+    constructor Create(aCommandType: string);
+    property CommandType: string read FCommandType;
+  end;
+implementation
+
+{ THTTPAttributes }
+constructor THTTPAttributes.Create(aCommandType: string);
+begin
+  FCommandType := FCommandType;
+end;
+
+end.

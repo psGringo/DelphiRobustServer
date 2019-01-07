@@ -7,7 +7,7 @@ uses
   superobject, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
   IdSSL, IdSSLOpenSSL, IdMessage, IdBaseComponent, IdComponent, IdTCPConnection,
   IdTCPClient, IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase,
-  IdSMTP, IdMessageCoderMIME, IdMessageCoder, IdGlobal, HTTPApp, vcl.Forms;
+  IdSMTP, IdMessageCoderMIME, IdMessageCoder, IdGlobal, HTTPApp, vcl.Forms, System.NetEncoding;
 
 type
   int = integer;
@@ -34,7 +34,6 @@ type
   TLogger = class
     procedure LogError(aMsg: string);
     procedure LogInfo(aMsg: string);
-    procedure UpdateMainLogMemo();
   end;
 
   TResponses = class(TInterfacedObject)
@@ -70,52 +69,20 @@ uses
 
 procedure TLogger.LogError(aMsg: string);
 var
-  l: TLDSLogger;
+ l: ISP<TLDSLogger>;
 begin
-  l := TLDSLogger.Create(logFileName);
-  try
-    l.LogStr(aMsg, tlpError);
-    UpdateMainLogMemo;
-  finally
-    l.Free;
-  end;
+  l := TSP<TLDSLogger>.Create(TLDSLogger.Create(logFileName));
+  l.LogStr(aMsg, tlpError);
 end;
 
 procedure TLogger.LogInfo(aMsg: string);
 var
-  l: TLDSLogger;
+  l: ISP<TLDSLogger>;
 begin
-  l := TLDSLogger.Create(logFileName);
-  try
-    l.LogStr(aMsg, tlpInformation);
-    UpdateMainLogMemo;
-  finally
-    l.free;
-  end;
+  l := TSP<TLDSLogger>.Create(TLDSLogger.Create(logFileName));
+  l.LogStr(aMsg, tlpInformation);
 end;
 
-procedure TLogger.UpdateMainLogMemo;
-var
-  fs: TFileStream;
-  ss: ISP<TstringStream>;
-  sl: ISP<TStringList>;
-  i: Integer;
-begin
-  fs := nil;
-  fs := WaitAndCreateLogFileStream(logFileName, fmOpenRead, -1);
-  ss := TSP<TstringStream>.Create();
-  sl := TSP<TStringList>.Create();
-  try
-    ss.LoadFromStream(fs);
-    Main.mLog.Lines.Text := ss.DataString;
-    sl.Assign(Main.mLog.Lines);
-    Main.mLog.Lines.Clear;
-    for i := sl.Count - 1 downto 0 do
-      Main.mLog.Lines.Add(sl[i]);
-  finally
-    fs.Free;
-  end;
-end;
 
 { TEmail }
 procedure TEmail.Send(aHost: string; aPort: int; aSubject, aEmailContent, aRecipientEmail, aMyEmail, aMyPassword, aFromName: string);
@@ -303,6 +270,7 @@ begin
   json.S['errorMessage'] := EMessage;
   json.S['uri'] := aRequestInfo.URI;
   json.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
+  json.S['commandType'] := GetCommandType();
   FaResponseInfo.ResponseNo := 200;
   FaResponseInfo.ContentType := 'application/json';
   FaResponseInfo.CacheControl := 'no-cache';
@@ -329,6 +297,7 @@ begin
   json.S['answer'] := 'ok';
   json.S['uri'] := aRequestInfo.URI;
   json.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
+  json.S['commandType'] := GetCommandType();
   FaResponseInfo.ResponseNo := 200;
   FaResponseInfo.ContentType := 'application/json';
   FaResponseInfo.CacheControl := 'no-cache';
@@ -353,7 +322,7 @@ begin
   FAResponseInfo.ContentType := 'application/json';
   FAResponseInfo.CacheControl := 'no-cache';
   FAResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
-  FAResponseInfo.ContentText := jsonResult.AsJSon(false, false); // toString;
+  FAResponseInfo.ContentText := jsonResult.AsJSon(false, false);
   FAResponseInfo.WriteContent;
 end;
 

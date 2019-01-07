@@ -21,6 +21,7 @@ type
     FRelWebFileDir: string;
     FPostParams: ISP<TList<TPostParam>>;
     FJson: string;
+    FParams: ISP<TStringList>; // will collect params in spite of MIME type
     //procedure ParseJson(const aAsObject: TSuperTableString); // uncomment if needed
     function ReadMultipartRequest(const aBoundary: string; aRequest: string; aHeader: ISP<TStringList>; var aData: string): string;
     procedure SetRelWebFileDir(const Value: string);
@@ -30,8 +31,7 @@ type
     procedure FormURLEncoded(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure Execute(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     property RelWebFileDir: string read FRelWebFileDir write SetRelWebFileDir;
-    property PostParams: ISP<TList<TPostParam>> read FPostParams;
-    property Json: string read FJson;
+    property Params: ISP<TStringList> read FParams;
   end;
 
 const
@@ -61,6 +61,7 @@ begin
     ss := TSP<TStringStream>.Create();
     ss.LoadFromStream(ARequestInfo.PostStream);
     FJson := ss.DataString;
+    FParams.Text := FJson;
     // parse json... if needed or parse in other place
     //obj := SO(TNetEncoding.URL.Decode(allContent));
     //ParseJson(obj.AsObject, aPostParams);
@@ -77,6 +78,7 @@ begin
     postParam.Name := System.NetEncoding.TNetEncoding.URL.Decode(ARequestInfo.Params.Names[i]);
     postParam.Value := System.NetEncoding.TNetEncoding.URL.Decode(ARequestInfo.Params.Values[ARequestInfo.Params.Names[i]]);
     FPostParams.Add(postParam);
+    FParams.Add(postParam.Name+'='+postParam.Value);
   end;
 end;
 {
@@ -194,21 +196,23 @@ var
   data: string;
   hList: ISP<TStringList>;
   filename: string;
-  dir: string;
   isOverwrite: string;
   postParam: TPostParam;
-  uploadDir: string;
+  absUploadDir: string;
+  relUploadDir: string;
   un: ISP<TUniqueName>;
 
   procedure ProcessUploadDir();
   begin
-    uploadDir := ExtractFilePath(Application.ExeName) + 'files\' + //
+    relUploadDir := 'files\' + //
       YearOf(Now).ToString() + '\' + //
       MonthOf(Now).ToString() + '\' +  //
       DayOf(Now).ToString(); //
 
-    if (not TDirectory.Exists(uploadDir)) then
-      TDirectory.CreateDirectory(uploadDir);
+    absUploadDir := ExtractFilePath(Application.ExeName) + relUploadDir;
+
+    if (not TDirectory.Exists(absUploadDir)) then
+      TDirectory.CreateDirectory(absUploadDir);
   end;
 
 begin
@@ -257,11 +261,11 @@ begin
         postParam.Name := System.NetEncoding.TNetEncoding.URL.Decode(hList.Values['name']);
         postParam.Value := System.NetEncoding.TNetEncoding.URL.Decode(data);
         FPostParams.Add(postParam);
+        FParams.Add(postParam.Name+'='+postParam.Value);
       end;
 
      // reading params
     filename := GetPostParam('filename');
-    dir := GetPostParam('dir');
     isOverwrite := GetPostParam('isOverwrite');
     data := GetPostParam('attach');
 
@@ -273,13 +277,16 @@ begin
       if isOverwrite <> 'true' then
       begin
         un := TSP<TUniqueName>.Create();
-        filename := un.CreateUniqueNameAddingNumber(uploadDir, filename);
+        filename := un.CreateUniqueNameAddingNumber(absUploadDir, filename);
       end;
 
 
-      fs := TSP<TFileStream>.Create(TFileStream.Create(uploadDir + '\' + filename, fmCreate));
+      fs := TSP<TFileStream>.Create(TFileStream.Create(absUploadDir + '\' + filename, fmCreate));
+      {fmCreate Create a file with the given name. If a file with the given name exists,
+      override the existing file and open it in write mode.}
       try
         fs.WriteBuffer(Pointer(data)^, Length(data));
+        FRelWebFileDir := StringReplace(relUploadDir + '\' + filename,'\','/',[rfReplaceAll]);
       except
         on E: EStreamError do
           raise Exception.Create('EStreamError EClassName' + E.ClassName + ' ' + 'EMessage ' + E.Message);
@@ -293,7 +300,7 @@ end;
 constructor TDecodePostRequest.Create();
 begin
   FPostParams := TSP<TList<TPostParam>>.Create();
-  ;
+  FParams := TSP<TStringList>.Create();
 end;
 
 { TPostParams }

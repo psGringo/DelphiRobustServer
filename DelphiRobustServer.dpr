@@ -17,14 +17,17 @@ uses
   uTImerThread in 'uTImerThread.pas',
   uClientExamples in 'uClientExamples.pas',
   uConst in 'uConst.pas',
-  uRP in 'RP\uRP.pas';
+  uRP in 'RP\uRP.pas',
+  uRPTests in 'RP\uRPTests.pas',
+  uAttributes in 'uAttributes.pas',
+  uRPFiles in 'RP\uRPFiles.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Onyx Blue');
+  TStyleManager.TrySetStyle('Carbon');
   Application.CreateForm(TMain, Main);
   Application.Run;
 end.

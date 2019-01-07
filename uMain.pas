@@ -3,12 +3,10 @@ unit uMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent,
-  IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer,
-  IdContext, Vcl.Samples.Spin, System.ImageList, Vcl.ImgList, uCommon, System.Classes,
-  superobject, IdHeaderList;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
+  Vcl.Dialogs, IdBaseComponent, IdComponent, IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin,
+  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -18,44 +16,50 @@ type
   TMain = class(TForm)
     Server: TIdHTTPServer;
     eRequest: TEdit;
-    mAnswer: TMemo;
-    mPostParams: TMemo;
-    pAnswer: TPanel;
     pUrlEncode: TPanel;
-    bUrlEncode: TBitBtn;
+    bDoUrlEncode: TBitBtn;
     eUrlEncodeValue: TEdit;
-    pPostParams: TPanel;
     pTop: TPanel;
     bStartStop: TBitBtn;
-    bGetRequest: TBitBtn;
-    bPostRequest: TBitBtn;
     StatusBar: TStatusBar;
-    bClearAnswers: TBitBtn;
     ilPics: TImageList;
     pPort: TPanel;
     lPort: TLabel;
     sePort: TSpinEdit;
     bAPI: TBitBtn;
     OpenDialog: TOpenDialog;
-    pLog: TPanel;
-    mLog: TMemo;
-    bTest: TButton;
+    bLog: TBitBtn;
+    cbRequestType: TComboBox;
+    bGo: TBitBtn;
+    pPost: TPanel;
+    pPostParamsTop: TPanel;
     cbPostType: TComboBox;
-    procedure bGetRequestClick(Sender: TObject);
-    procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+    mPostParams: TMemo;
+    bUrlEncode: TBitBtn;
+    pAnswers: TPanel;
+    pAnswerTop: TPanel;
+    mAnswer: TMemo;
+    bClearAnswers: TBitBtn;
+    procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo:
+      TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
     procedure bAPIClick(Sender: TObject);
     procedure ServerException(AContext: TIdContext; AException: Exception);
     procedure UpdateStartStopGlyph(aBitmapIndex: integer);
-    procedure bPostRequestClick(Sender: TObject);
     procedure bClearAnswersClick(Sender: TObject);
-    procedure bTestClick(Sender: TObject);
+    procedure bLogClick(Sender: TObject);
+    procedure bGoClick(Sender: TObject);
+    procedure cbRequestTypeSelect(Sender: TObject);
+    procedure bUrlEncodeClick(Sender: TObject);
+    procedure cbPostTypeSelect(Sender: TObject);
   private
     { Private declarations }
     FTimers: TTimers;
     procedure SwitchStartStopButtons();
     procedure UpdateWorkTime(var aMsg: TMessage); message WM_WORK_TIME;
     procedure UpdateAppMemory(var aMsg: TMessage); message WM_APP_MEMORY;
+    procedure PostRequestProcessing();
+    procedure GetRequestProcessing();
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -68,12 +72,16 @@ implementation
 {$R *.dfm}
 
 uses
-  System.NetEncoding, IdMultipartFormData, uClientExamples;
+  System.NetEncoding, IdMultipartFormData, uClientExamples, uRP;
 
 { TMain }
 procedure TMain.bAPIClick(Sender: TObject);
+var
+ rp: ISP<TRP>;
 begin
-  ShowMessage('Link to API');
+ rp := TSP<TRP>.Create();
+ rp.CreateAPI();
+ ShellExecute(Handle, 'open', 'c:\windows\notepad.exe', 'api.txt', nil, SW_SHOWNORMAL);
 end;
 
 procedure TMain.bClearAnswersClick(Sender: TObject);
@@ -81,17 +89,76 @@ begin
   mAnswer.Lines.Clear();
 end;
 
-procedure TMain.bGetRequestClick(Sender: TObject);
-var
-  client: ISP<TIdHTTP>;
+procedure TMain.bGoClick(Sender: TObject);
 begin
-  client := TSP<TIdHTTP>.Create();
-  mAnswer.Lines.Add(client.Get('http://localhost:' + Server.DefaultPort.ToString + '/' + eRequest.Text));
+  case cbRequestType.ItemIndex of
+    0:
+      GetRequestProcessing();
+    1:
+      PostRequestProcessing();
+  end;
 end;
 
-procedure TMain.bPostRequestClick(Sender: TObject);
+procedure TMain.bLogClick(Sender: TObject);
 begin
-//
+  ShellExecute(Handle, 'open', 'c:\windows\notepad.exe', 'log.txt', nil, SW_SHOWNORMAL);
+end;
+
+procedure TMain.PostRequestProcessing();
+var
+  client: ISP<TIdHTTP>;
+  jo: ISuperobject;
+  ss: ISP<TStringStream>;
+  postData: ISP<TIdMultiPartFormDataStream>;
+  paramsSL: ISP<TStringList>;
+  r: string;
+  port: string;
+  fileName: string;
+begin
+  client := TSP<TIdHTTP>.Create();
+  ss := TSP<TStringStream>.Create();
+  port := Server.DefaultPort.ToString();
+
+  case cbPostType.ItemIndex of
+    0:
+      begin
+        jo := SO(Trim(mPostParams.Lines.Text));
+        ss.WriteString(jo.AsJSon(false, false));
+        client.Request.ContentType := 'application/json';
+        client.Request.ContentEncoding := 'utf-8';
+        r := client.Post('http://localhost:' + port + '/' + eRequest.Text, ss);
+        mAnswer.Lines.Add(r);
+      end;
+    1:
+      begin
+       //for test Send with 2 params on  Test/URLEncoded
+        paramsSL := TSP<TStringList>.Create();
+        paramsSL.Assign(mPostParams.Lines);
+        { or in code you can add params...
+         paramsSL.Add('a=UrlEncoded(aValue)')
+         paramsSL.Add('b=UrlEncoded(bValue)')
+        }
+        client.Request.ContentType := 'application/x-www-form-urlencoded';
+        client.Request.ContentEncoding := 'utf-8';
+
+        r := client.Post('http://localhost:' + port + '/' + eRequest.Text, paramsSL);
+        mAnswer.Lines.Add(r);
+      end;
+    2:
+      begin
+      // multipart...
+        fileName := ExtractFileName(mPostParams.Lines[0]);
+        postData := TSP<TIdMultiPartFormDataStream>.Create();
+        client.Request.Referer := 'http://localhost:' + port + '/' + eRequest.Text;
+        client.Request.ContentType := 'multipart/form-data';
+        client.Request.RawHeaders.AddValue('AuthToken', System.NetEncoding.TNetEncoding.URL.Encode('evjTI82N'));
+        postData.AddFormField('filename', System.NetEncoding.TNetEncoding.URL.Encode( fileName ));
+        postData.AddFormField('isOverwrite', System.NetEncoding.TNetEncoding.URL.Encode(mPostParams.Lines[1]));
+        postData.AddFile('attach', mPostParams.Lines[0], 'application/x-rar-compressed');
+        client.POST('http://localhost:' + port + '/' + eRequest.Text, postData, ss); //
+        mAnswer.Lines.Add(ss.DataString);
+      end;
+  end;
 end;
 
 procedure TMain.bStartStopClick(Sender: TObject);
@@ -99,13 +166,53 @@ begin
   SwitchStartStopButtons();
 end;
 
-procedure TMain.bTestClick(Sender: TObject);
-var
-  ce: ISP<TClientExamples>;
+procedure TMain.bUrlEncodeClick(Sender: TObject);
 begin
-  ce := TSP<TClientExamples>.Create(TClientExamples.Create(eRequest.Text, sePort.Value.ToString()));
-  if OpenDialog.Execute then
-  ce.PostSendFile(OpenDialog.FileName);
+  pUrlEncode.Visible := not pUrlEncode.Visible;
+end;
+
+procedure TMain.cbPostTypeSelect(Sender: TObject);
+begin
+  mPostParams.Clear();
+  mPostParams.Lines.BeginUpdate;
+  case cbPostType.ItemIndex of
+    0:
+      begin
+        eRequest.Text := 'Test/PostJson';
+        mPostParams.Text := '{ "name":"Stas", "age":35 }';
+      end;
+    1:
+      begin
+        eRequest.Text := 'Test/URLEncoded';
+        mPostParams.Lines.Add('PostParam1 = URLEncoded(PostParam1Value)');
+        mPostParams.Lines.Add('PostParam2 = URLEncoded(PostParam2Value)');
+      end;
+    2:
+      begin
+        eRequest.Text := 'Files/Upload';
+        mPostParams.Lines.Add(ExtractFilePath(Application.ExeName) + 'testFile.php');
+        mPostParams.Lines.Add('false');
+      end;
+  end;
+  mPostParams.Lines.EndUpdate;
+end;
+
+procedure TMain.cbRequestTypeSelect(Sender: TObject);
+begin
+  case cbRequestType.ItemIndex of
+    0:
+      begin
+       eRequest.Text := 'Test/Connection';
+       pPost.Visible := false;
+      end;
+
+    1:
+      begin
+        cbPostTypeSelect(nil);
+        pPost.Visible := true;
+      end;
+
+  end;
 end;
 
 constructor TMain.Create(AOwner: TComponent);
@@ -114,10 +221,20 @@ begin
   ReportMemoryLeaksOnShutdown := True;
   FTimers := TTimers.Create(Self);
   Server.DefaultPort := sePort.Value;
+  ilPics.GetBitmap(3, bClearAnswers.Glyph);
   SwitchStartStopButtons(); // will start server
 end;
 
-procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+procedure TMain.GetRequestProcessing;
+var
+  client: ISP<TIdHTTP>;
+begin
+  client := TSP<TIdHTTP>.Create();
+  mAnswer.Lines.Add(client.Get('http://localhost:' + Server.DefaultPort.ToString + '/' + eRequest.Text));
+end;
+
+procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo:
+  TIdHTTPResponseInfo);
 var
   cg: ISP<TCommandGet>;
 begin

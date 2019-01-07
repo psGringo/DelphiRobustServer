@@ -846,8 +846,8 @@ begin
     // Удаляем лишние строки с начала файла
     if fs.Size > MaxFileSize + BufSize then
     begin
-
-      fs.Seek(-MaxFileSize, soFromEnd);
+      //fs.Seek(-MaxFileSize, soFromEnd);
+      fs.Position := fs.Size - -MaxFileSize;
       SetLength(ar, BufSize);
       Counter := 0;
       WasFind := False;
@@ -873,7 +873,8 @@ begin
       if not WasFind then
         Counter := 0; // Жесткая обрезка
 
-      fs.Seek(-MaxFileSize - Counter, soFromEnd);
+      //fs.Seek(-MaxFileSize - Counter, soFromEnd);
+      fs.Position := fs.Size -MaxFileSize - Counter;
 
       tempfname := Format('%s_%d_%d', [FileName, GetCurrentProcessId, GetCurrentThreadId]);
 
@@ -1193,7 +1194,9 @@ end;
 
 procedure InitFormatSettings;
 begin
-  GetLocaleFormatSettings(0, LDSLoggerFormatSettings);
+  {$WARN SYMBOL_PLATFORM OFF}
+  LDSLoggerFormatSettings := TFormatSettings.Create(LOCALE_USER_DEFAULT);
+  {$WARN SYMBOL_PLATFORM ON}
   LDSLoggerFormatSettings.LongDateFormat := 'dd/mm/yyyy';
   LDSLoggerFormatSettings.ShortDateFormat := 'dd/mm/yyyy';
   LDSLoggerFormatSettings.LongTimeFormat := 'hh:nn:ss.zzz';

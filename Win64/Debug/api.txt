@@ -1,0 +1,30 @@
+Below API methods and params of TRPTests class
+---
+
+Exceptions | GET
+
+PostJson | POST
+
+URLEncoded | GET
+a: string
+b: string
+
+Sessions | GET
+
+MethodWithParams | GET
+aParam1: string
+aParam2: string
+
+HTTPAttribute | GET
+
+HTTPAttribute | POST
+aParam: string
+
+Create | GET
+
+Delete | GET
+
+Update | GET
+
+GetInfo | GET
+

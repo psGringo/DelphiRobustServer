@@ -15,8 +15,8 @@ File_12=TSourceModule,'c:\program files (x86)\embarcadero\studio\17.0\source\rtl
 File_13=TSourceModule,'C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uSmartPointer.pas',0,1,1,3,25,0,0,,
 
 [Modules]
-Module0=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas
-Module1=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uMain.pas
+Module0=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uMain.pas
+Module1=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas
 Module2=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRP.pas
 Module3=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRPUsers.pas
 Module4=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Rtti.pas
@@ -27,14 +27,14 @@ Module8=default.htm
 Count=9
 EditWindowCount=1
 
-[C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
 [C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uMain.pas]
 ModuleType=TSourceModule
 FormState=1
+FormOnTop=0
+
+[C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas]
+ModuleType=TSourceModule
+FormState=0
 FormOnTop=0
 
 [C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRP.pas]
@@ -72,7 +72,7 @@ ModuleType=TURLModule
 
 [EditWindow0]
 ViewCount=9
-CurrentEditView=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas
+CurrentEditView=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uMain.pas
 View0=0
 View1=1
 View2=2
@@ -105,7 +105,7 @@ BottomPanelClients=DockSite1,MessageView
 BottomPanelData=0000080001020100000009000000446F636B5369746531724500000000000002C0050000000000000100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
-BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E6756696577F342000000000000023D060000000000000100000000F342000009000000446F636B5369746530FFFFFFFF
+BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779F1D00000000000002F206000000000000FFFFFFFF
 TabDockLeftClients=DockSite3=0,PropertyInspector=1
 TabDockRightClients=DockSite2=0,DockSite4=1
 
@@ -116,12 +116,12 @@ WelcomePageURL=bds:/default.htm
 [View1]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uMain.pas
-CursorX=45
-CursorY=126
-TopLine=107
+CursorX=68
+CursorY=124
+TopLine=111
 LeftCol=1
 Elisions=
-Bookmarks={1,109,40}
+Bookmarks={1,123,1}
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uMain.pas
 
 [View2]
@@ -149,31 +149,31 @@ EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommon.pas
 [View4]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas
-CursorX=1
-CursorY=98
-TopLine=84
+CursorX=17
+CursorY=94
+TopLine=89
 LeftCol=1
 Elisions=
-Bookmarks={1,167,1}{2,149,1}
+Bookmarks={1,169,1}{2,152,1}
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas
 
 [View5]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRP.pas
-CursorX=1
-CursorY=82
-TopLine=66
+CursorX=50
+CursorY=88
+TopLine=76
 LeftCol=1
 Elisions=
-Bookmarks={1,96,1}
+Bookmarks={1,90,9}
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRP.pas
 
 [View6]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Rtti.pas
 CursorX=1
-CursorY=4896
-TopLine=4882
+CursorY=5559
+TopLine=5546
 LeftCol=1
 Elisions=
 Bookmarks={1,5274,1}
@@ -182,9 +182,9 @@ EditViewName=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\Sy
 [View7]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRPUsers.pas
-CursorX=1
-CursorY=33
-TopLine=17
+CursorX=29
+CursorY=11
+TopLine=2
 LeftCol=1
 Elisions=
 Bookmarks={1,47,1}
@@ -230,25 +230,29 @@ Dockable=1
 StayOnTop=0
 
 [Breakpoints]
-Count=18
+Count=22
 Breakpoint0='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uDecodePostRequest.pas',280,'',0,1,'',1,0,0,'',1,'','','',0,''
 Breakpoint1='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uDecodePostRequest.pas',279,'',0,1,'',1,0,0,'',1,'','','',0,''
 Breakpoint2='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uDecodePostRequest.pas',279,'',0,1,'',1,0,0,'',1,'','','',0,''
 Breakpoint3='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uDecodePostRequest.pas',279,'',0,1,'',1,0,0,'',1,'','','',0,''
 Breakpoint4='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uDecodePostRequest.pas',273,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint5='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',222,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint6='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRP.pas',82,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint7='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRP.pas',47,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint8='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRPUsers.pas',33,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint9='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uDB.pas',79,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint10='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRP.pas',79,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint11='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',222,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint12='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',219,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint13='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',219,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint14='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',216,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint15='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',221,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint16='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',218,'',0,1,'',1,0,0,'',1,'','','',0,''
-Breakpoint17='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',215,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint5='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',225,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint6='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uDB.pas',79,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint7='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',225,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint8='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',222,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint9='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',222,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint10='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',219,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint11='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',224,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint12='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',221,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint13='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',218,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint14='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRPUsers.pas',33,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint15='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\RP\uRPUsers.pas',14,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint16='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',224,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint17='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',221,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint18='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',218,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint19='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',223,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint20='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',220,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint21='C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\uCommandGet.pas',217,'',0,1,'',1,0,0,'',1,'','','',0,''
 
 [EmbarcaderoWin32Debugger_AddressBreakpoints]
 Count=0
@@ -296,12 +300,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=2000
-Height=7000
+Width=1875
+Height=6750
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=7000
+ClientWidth=1875
+ClientHeight=6750
 TBDockHeight=5903
 LRDockWidth=2352
 Dockable=1
@@ -402,11 +406,6 @@ LRDockWidth=1898
 Dockable=1
 StayOnTop=0
 SplitPos=111
-
-[PropInspDesignerSelection]
-ArrangeBy=Name
-SelectedItem=Action,
-ExpandedItems=
 
 [ClassBrowserTool]
 PercentageSizes=1
@@ -632,12 +631,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=9641
-Height=903
+Width=2336
+Height=1097
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=9641
-ClientHeight=903
+ClientWidth=2336
+ClientHeight=1097
 TBDockHeight=3208
 LRDockWidth=2820
 Dockable=1
@@ -803,14 +802,14 @@ Visible=0
 Docked=1
 State=0
 Left=0
-Top=23
-Width=9641
-Height=1278
+Top=0
+Width=2336
+Height=1472
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=9641
-ClientHeight=1278
-TBDockHeight=1278
+ClientWidth=2336
+ClientHeight=1472
+TBDockHeight=1472
 LRDockWidth=2336
 Dockable=1
 StayOnTop=0
@@ -850,14 +849,14 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=4
-Top=24
+Left=1280
+Top=52
 Width=2000
-Height=7375
+Height=7667
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=7375
+ClientWidth=1875
+ClientHeight=7125
 TBDockHeight=7667
 LRDockWidth=2000
 Dockable=1

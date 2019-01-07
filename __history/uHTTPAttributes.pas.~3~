@@ -1,0 +1,13 @@
+unit uHTTPAttributes;
+
+interface
+
+uses
+  System;
+  type
+  THTTPAttributes = class (TCustomAttribute)
+
+  end;
+implementation
+
+end.

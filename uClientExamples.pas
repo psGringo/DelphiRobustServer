@@ -50,7 +50,7 @@ begin
   ss.WriteString(jo.AsJSon(false, false));
   client.Request.ContentType := 'application/json';
   client.Request.ContentEncoding := 'utf-8';
-  r := client.Post('http://localhost:' + FPort + '/' + FRequest, ss); //
+  r := client.Post('http://localhost:' + FPort + '/' + 'Tests/PostJson', ss); //
   Main.mAnswer.Lines.Add(r);
 end;
 
@@ -60,7 +60,6 @@ var
   ss: ISP<TStringStream>;
   postData: ISP<TIdMultiPartFormDataStream>;
   fileName: string;
-  OpenDialog: TOpenDialog;
 begin
   fileName := ExtractFileName(aAbsWinFilePath);
   Assert(fileName <> '', 'filename is empty');
@@ -71,7 +70,6 @@ begin
   client.Request.ContentType := 'multipart/form-data';
   client.Request.RawHeaders.AddValue('AuthToken', System.NetEncoding.TNetEncoding.URL.Encode('evjTI82N'));
   postData.AddFormField('filename', System.NetEncoding.TNetEncoding.URL.Encode(fileName));
-  postData.AddFormField('dir', System.NetEncoding.TNetEncoding.URL.Encode('files'));
   postData.AddFormField('isOverwrite', System.NetEncoding.TNetEncoding.URL.Encode('false'));
   postData.AddFile('attach', aAbsWinFilePath, 'application/x-rar-compressed');
   client.POST('http://localhost:' + FPort + '/Files/Send', postData, ss); //
@@ -90,10 +88,10 @@ begin
   sl.Add('param1='+System.NetEncoding.TNetEncoding.URL.Encode('–усскийѕараметр1'));
   sl.Add('param2='+System.NetEncoding.TNetEncoding.URL.Encode('–усскийѕараметр2'));
 
-  client.Request.Referer := 'http://localhost:' + FPort + '/Test/URLEncoded';
+  client.Request.Referer := 'http://localhost:' + FPort + '/Tests/URLEncoded';
   client.Request.ContentType := 'application/x-www-form-urlencoded';
   client.Request.RawHeaders.AddValue('AuthToken', 'evjTI82N');
-  r := client.POST('http://localhost:' + FPort + '/Test/URLEncoded', sl);
+  r := client.POST('http://localhost:' + FPort + '/Tests/URLEncoded', sl);
   Main.mAnswer.Lines.Add(r);
 end;
 
