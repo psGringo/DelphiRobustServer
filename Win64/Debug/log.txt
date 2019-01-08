@@ -442,3 +442,82 @@
 07.01.2019 08:02:33.121 [инфо] Server successfully started
 07.01.2019 08:14:59.381 [инфо] Server successfully started
 07.01.2019 08:18:42.383 [инфо] Server successfully started
+08.01.2019 00:50:26.522 [инфо] Server successfully started
+08.01.2019 00:51:48.549 [инфо] Server successfully started
+08.01.2019 10:16:00.442 [инфо] Server successfully started
+08.01.2019 10:32:28.902 [инфо] Server successfully started
+08.01.2019 10:37:54.927 [инфо] Server successfully started
+08.01.2019 10:43:30.016 [инфо] Server successfully started
+08.01.2019 10:45:11.800 [инфо] Server successfully started
+08.01.2019 10:46:00.917 [инфо] Server successfully started
+08.01.2019 10:47:11.047 [инфо] Server successfully started
+08.01.2019 10:50:21.933 [инфо] Server successfully started
+08.01.2019 10:51:34.557 [инфо] Server successfully started
+08.01.2019 10:56:18.915 [инфо] Server successfully started
+08.01.2019 10:58:07.472 [инфо] Server successfully started
+08.01.2019 11:11:42.343 [инфо] Server successfully started
+08.01.2019 11:15:36.856 [инфо] Server successfully started
+08.01.2019 11:16:09.392 [инфо] Server successfully started
+08.01.2019 11:31:28.224 [инфо] Server successfully started
+08.01.2019 11:34:38.069 [инфо] Server successfully started
+08.01.2019 11:42:59.869 [инфо] Server successfully started
+08.01.2019 11:46:07.010 [инфо] Server successfully started
+08.01.2019 11:49:46.671 [инфо] Server successfully started
+08.01.2019 11:51:58.100 [инфо] Server successfully started
+08.01.2019 11:53:02.062 [инфо] Server successfully started
+08.01.2019 11:54:33.924 [инфо] Server successfully started
+08.01.2019 11:59:57.144 [инфо] Server successfully started
+08.01.2019 12:08:08.359 [инфо] Server successfully started
+08.01.2019 12:10:39.218 [инфо] Server successfully started
+08.01.2019 12:10:54.543 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 12:11:08.688 [инфо] Server successfully started
+08.01.2019 12:13:22.651 [инфо] Server successfully started
+08.01.2019 12:14:00.949 [инфо] Server successfully started
+08.01.2019 12:14:26.743 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 12:15:27.394 [инфо] Server successfully started
+08.01.2019 12:15:45.068 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 12:16:17.715 [инфо] Server successfully started
+08.01.2019 12:16:53.805 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 12:17:10.798 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 12:18:28.041 [инфо] Server successfully started
+08.01.2019 12:18:57.259 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 12:19:51.799 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 13:07:30.127 [инфо] Server successfully started
+08.01.2019 13:45:35.885 [инфо] Server successfully started
+08.01.2019 13:48:02.993 [инфо] Server successfully started
+08.01.2019 13:54:11.675 [инфо] Server successfully started
+08.01.2019 13:55:26.724 [инфо] Server successfully started
+08.01.2019 13:59:16.259 [инфо] Server successfully started
+08.01.2019 15:17:42.452 [инфо] Server successfully started
+08.01.2019 15:49:43.395 [инфо] Server successfully started
+08.01.2019 23:32:53.434 [инфо] Server successfully started
+08.01.2019 23:33:00.561 [инфо] Server successfully started
+08.01.2019 23:35:29.348 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 23:35:29.349 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+08.01.2019 23:47:02.773 [инфо] Server successfully started
+09.01.2019 00:02:12.173 [инфо] Server successfully stopped
+09.01.2019 00:03:19.370 [инфо] Server successfully stopped
+09.01.2019 00:03:25.953 [инфо] Server successfully stopped
+09.01.2019 00:03:25.971 [инфо] Server successfully started
+09.01.2019 00:04:27.477 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:04:27.479 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:04:55.180 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:04:55.181 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:05:10.909 [инфо] Server successfully stopped
+09.01.2019 00:05:36.322 [инфо] Server successfully stopped
+09.01.2019 00:05:36.339 [инфо] Server successfully started
+09.01.2019 00:06:04.822 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:23:44.506 [инфо] Server successfully stopped
+09.01.2019 00:23:52.922 [инфо] Server successfully stopped
+09.01.2019 00:27:09.816 [инфо] Server successfully stopped
+09.01.2019 00:27:47.072 [инфо] Server successfully stopped
+09.01.2019 00:27:52.088 [инфо] Server successfully stopped
+09.01.2019 00:27:54.825 [инфо] Server successfully stopped
+09.01.2019 00:28:08.968 [инфо] Server successfully stopped
+09.01.2019 00:28:08.986 [инфо] Server successfully started
+09.01.2019 00:29:22.473 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:30:29.392 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:30:29.392 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:31:23.098 [инфо] Server successfully stopped
+09.01.2019 00:31:42.629 [инфо] Server successfully stopped
+09.01.2019 00:34:47.628 [инфо] Server successfully stopped

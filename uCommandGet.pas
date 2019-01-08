@@ -27,6 +27,7 @@ uses
   uRPUsers,
   uRPTests,
   uRPFiles,
+  uRPApi,
   uDecodePostRequest, System.SysUtils,
   DateUtils, uConst;
 
@@ -55,17 +56,21 @@ var
   u: ISP<TRPUsers>;
   t: ISP<TRPTests>;
   f: ISP<TRPFiles>;
+  a: ISP<TRPApi>;
 
 begin
   r := TSP<TResponses>.Create(TResponses.Create(FRequestInfo, FResponseInfo));
   try
     firstSection := ParseFirstSection;
-    if ( SameStr(firstSection,'Users')) then
+
+    if (SameStr(firstSection, 'Users')) then
       u := TSP<TRPUsers>.Create(TRPUsers.Create(FContext, FRequestInfo, FResponseInfo))
-    else if ( SameStr(firstSection,'Test')) then
+    else if (SameStr(firstSection, 'Test')) then
       t := TSP<TRPTests>.Create(TRPTests.Create(FContext, FRequestInfo, FResponseInfo))
-    else if SameStr(firstSection,'Files') then
-      f := TSP<TRPFiles>.Create(TRPFiles.Create(FContext, FRequestInfo, FResponseInfo));
+    else if SameStr(firstSection, 'Files') then
+      f := TSP<TRPFiles>.Create(TRPFiles.Create(FContext, FRequestInfo, FResponseInfo))
+    else if SameStr(firstSection, 'Api') then
+      a := TSP<TRPApi>.Create(TRPApi.Create(FContext, FRequestInfo, FResponseInfo));
 
     DownloadFile();
     FResponseInfo.ResponseNo := 404;
@@ -80,6 +85,7 @@ function TCommandGet.ParseFirstSection(): string;
 var
   a: TArray<string>;
 begin
+  Result := '';
   a := FRequestInfo.URI.Split(['/']);
   if Length(a) > 0 then
     Result := a[1]; // Parses Users from /Users/Add for example....

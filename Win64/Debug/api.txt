@@ -1,6 +1,9 @@
-Below API methods and params of TRPTests class
+
 ---
 
+TRPTests
+
+---
 Exceptions | GET
 
 PostJson | POST

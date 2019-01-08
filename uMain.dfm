@@ -29,7 +29,6 @@ object Main: TMain
     ParentFont = False
     TabOrder = 0
     Text = 'Test/Connection'
-    ExplicitWidth = 526
   end
   object pUrlEncode: TPanel
     AlignWithMargins = True
@@ -47,9 +46,6 @@ object Main: TMain
     ParentFont = False
     TabOrder = 1
     Visible = False
-    ExplicitLeft = 0
-    ExplicitTop = 63
-    ExplicitWidth = 532
     object bDoUrlEncode: TBitBtn
       AlignWithMargins = True
       Left = 584
@@ -65,8 +61,6 @@ object Main: TMain
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 285
-      ExplicitTop = 20
     end
     object eUrlEncodeValue: TEdit
       AlignWithMargins = True
@@ -83,8 +77,6 @@ object Main: TMain
       ParentFont = False
       TabOrder = 1
       Text = 'Some text to encode...'
-      ExplicitLeft = 103
-      ExplicitWidth = 425
     end
   end
   object pTop: TPanel
@@ -102,7 +94,6 @@ object Main: TMain
     ParentFont = False
     ShowCaption = False
     TabOrder = 2
-    ExplicitWidth = 532
     object bStartStop: TBitBtn
       AlignWithMargins = True
       Left = 4
@@ -124,7 +115,6 @@ object Main: TMain
       Caption = 'pPort'
       ShowCaption = False
       TabOrder = 1
-      ExplicitLeft = 121
       object lPort: TLabel
         Left = 8
         Top = 5
@@ -168,7 +158,6 @@ object Main: TMain
       Caption = 'API'
       TabOrder = 2
       OnClick = bAPIClick
-      ExplicitLeft = 250
     end
     object bLog: TBitBtn
       AlignWithMargins = True
@@ -180,7 +169,6 @@ object Main: TMain
       Caption = 'LOG'
       TabOrder = 3
       OnClick = bLogClick
-      ExplicitLeft = 442
     end
     object cbRequestType: TComboBox
       AlignWithMargins = True
@@ -225,8 +213,6 @@ object Main: TMain
       Caption = 'URLEncode'
       TabOrder = 6
       OnClick = bUrlEncodeClick
-      ExplicitLeft = 554
-      ExplicitTop = 2
     end
   end
   object StatusBar: TStatusBar
@@ -245,8 +231,6 @@ object Main: TMain
       item
         Width = 150
       end>
-    ExplicitTop = 503
-    ExplicitWidth = 532
   end
   object pPost: TPanel
     AlignWithMargins = True
@@ -260,9 +244,6 @@ object Main: TMain
     ShowCaption = False
     TabOrder = 4
     Visible = False
-    ExplicitLeft = 0
-    ExplicitTop = 95
-    ExplicitWidth = 614
     object pPostParamsTop: TPanel
       AlignWithMargins = True
       Left = 3
@@ -280,9 +261,6 @@ object Main: TMain
       ParentFont = False
       ShowCaption = False
       TabOrder = 0
-      ExplicitLeft = 8
-      ExplicitTop = 12
-      ExplicitWidth = 606
       object cbPostType: TComboBox
         AlignWithMargins = True
         Left = 3
@@ -299,7 +277,6 @@ object Main: TMain
           'application/json'
           'application/x-www-form-urlencoded'
           'multipart/form-data')
-        ExplicitWidth = 254
       end
     end
     object mPostParams: TMemo
@@ -320,10 +297,6 @@ object Main: TMain
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 1
-      ExplicitLeft = 4
-      ExplicitTop = 35
-      ExplicitWidth = 606
-      ExplicitHeight = 70
     end
   end
   object pAnswers: TPanel
@@ -336,10 +309,6 @@ object Main: TMain
     BevelOuter = bvNone
     Caption = 'pAnswers'
     TabOrder = 5
-    ExplicitLeft = 0
-    ExplicitTop = 185
-    ExplicitWidth = 614
-    ExplicitHeight = 136
     object pAnswerTop: TPanel
       Left = 0
       Top = 0
@@ -355,9 +324,6 @@ object Main: TMain
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitTop = 1
-      ExplicitWidth = 612
       object bClearAnswers: TBitBtn
         AlignWithMargins = True
         Left = 3
@@ -379,7 +345,6 @@ object Main: TMain
         ShowHint = True
         TabOrder = 0
         OnClick = bClearAnswersClick
-        ExplicitHeight = 20
       end
     end
     object mAnswer: TMemo
@@ -397,10 +362,6 @@ object Main: TMain
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 1
-      ExplicitLeft = 4
-      ExplicitTop = 25
-      ExplicitWidth = 606
-      ExplicitHeight = 64
     end
   end
   object Server: TIdHTTPServer
@@ -419,7 +380,7 @@ object Main: TMain
     Left = 360
     Top = 232
     Bitmap = {
-      494C010104000800640010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010104000800700010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

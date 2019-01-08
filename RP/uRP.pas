@@ -29,7 +29,6 @@ type
     procedure Delete(); virtual;
     procedure Update(); virtual;
     procedure GetInfo(); virtual;
-    procedure CreateAPI();
     procedure Execute(aClassAlias: string);
     property Context: TIdContext read FContext;
     property RequestInfo: TIdHTTPRequestInfo read FRequestInfo write FRequestInfo;
@@ -52,102 +51,6 @@ begin
   FResponses.OK();
 end;
 
-procedure TRP.CreateAPI;
-
-var
-  ctx: TRttiContext;
-  t: TRttiType;
-  m: TRttiMethod;
-  classes, api: ISP<TStringList>;
-  i,j: integer;
-  methodParams: TArray<System.Rtti.TRttiParameter>;
-  fileName: string;
-  rpTests: TRPTests;
-  attribs: TArray<TCustomAttribute>;
-  a: TCustomAttribute;
-  methodName: string;
-begin
- // to do...
-  fileName := 'api.txt';
-
-  if TFile.Exists(fileName) then
-    TFile.Delete(fileName);
-
- api := TSP<TStringList>.Create();
- api.Add('Below API methods and params of TRPTests class');
- api.Add('---');
- api.Add('');
-
-  ctx := TRttiContext.Create();
-  try
-    t := ctx.GetType(TRPTests);
-//      if t.InheritsFrom(TRP) then
-      begin
-        for m in t.GetMethods do
-        begin
-          if (m.Visibility = mvPublic)
-          and (m.MethodKind <> mkConstructor) and (m.MethodKind <> mkDestructor)
-          and ( (m.MethodKind = mkFunction) or  (m.MethodKind = mkProcedure) )
-          and   (m.Name <> 'CPP_ABI_3')
-                and (m.Name <> 'CPP_ABI_2')
-                and (m.Name <> 'CPP_ABI_1')
-                and (m.Name <> 'FreeInstance')
-                and (m.Name <> 'DefaultHandler')
-                and (m.Name <> 'Dispatch')
-                and (m.Name <> 'BeforeDestruction')
-                and (m.Name <> 'AfterConstruction')
-                and (m.Name <> 'SafeCallException')
-                and (m.Name <> 'ToString')
-                and (m.Name <> 'GetHashCode')
-                and (m.Name <> 'GetInterface')
-                and (m.Name <> 'FieldAddress')
-                and (m.Name <> 'ClassType')
-                and (m.Name <> 'CleanupInstance')
-                and (m.Name <> 'DisposeOf')
-                and (m.Name <> 'Connection')
-                and (m.Name <> 'CreateAPI')
-                and (m.Name <> 'Execute')
-                and (m.Name <> 'Equals')
-                and (m.Name <> 'Free')
-          then
-        begin
-          methodName := m.Name;
-
-          attribs := m.GetAttributes;
-          if Length(attribs) > 0 then
-          begin
-            for a in m.GetAttributes() do
-            begin
-              // if attribs HttpGet or HttpPost
-              if (THTTPAttributes(a).CommandType = 'HttpGet') or (THTTPAttributes(a).CommandType = 'HttpPost') then
-              begin
-                if (THTTPAttributes(a).CommandType = 'HttpGet') then
-                  methodName := methodName + ' | GET'
-                else if (THTTPAttributes(a).CommandType = 'HttpPost') then
-                  methodName := methodName + ' | POST'
-              end;
-            end;
-          end
-          else
-            methodName := methodName + ' | GET';
-
-          api.Add(methodName);
-
-            methodParams := m.GetParameters();
-            if (Length(methodParams) > 0 ) then
-            begin
-            for j := 0 to high(methodParams) do
-              api.Add(methodParams[j].ToString);
-            end;
-            api.Add('');
-          end;
-        end;
-      end;
-    api.SaveToFile(fileName);
-  finally
-    ctx.Free;
-  end;
-end;
 
 constructor TRP.Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
 var

@@ -46,7 +46,7 @@ type
     procedure OK();
     procedure Error(EMessage: string = ''; ACodeNumber: integer = -1);
     procedure OkWithJson(aJsonData: string);
-    procedure ResponseSuccessfullInsert(aId: integer);
+    procedure SuccessfullInsert(aId: integer);
     property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
     property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write FAResponseInfo;
   end;
@@ -326,9 +326,9 @@ begin
   FAResponseInfo.WriteContent;
 end;
 
-procedure TResponses.ResponseSuccessfullInsert(aId: integer);
+procedure TResponses.SuccessfullInsert(aId: integer);
 begin
-
+//
 end;
 
 
