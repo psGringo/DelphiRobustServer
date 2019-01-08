@@ -521,3 +521,42 @@
 09.01.2019 00:31:23.098 [инфо] Server successfully stopped
 09.01.2019 00:31:42.629 [инфо] Server successfully stopped
 09.01.2019 00:34:47.628 [инфо] Server successfully stopped
+09.01.2019 00:38:03.116 [инфо] Server successfully stopped
+09.01.2019 00:38:21.475 [инфо] Server successfully stopped
+09.01.2019 00:38:25.894 [инфо] Server successfully stopped
+09.01.2019 00:38:27.070 [инфо] Server successfully stopped
+09.01.2019 00:38:27.803 [инфо] Server successfully stopped
+09.01.2019 00:38:28.305 [инфо] Server successfully stopped
+09.01.2019 00:39:42.153 [инфо] Server successfully stopped
+09.01.2019 00:40:22.358 [инфо] Server successfully started
+09.01.2019 00:40:59.940 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:40:59.972 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:42:20.390 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:42:20.510 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:44:03.981 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:44:04.131 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:45:28.059 [инфо] Server successfully started
+09.01.2019 00:45:48.527 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:45:48.700 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:46:57.075 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:47:21.009 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:47:21.111 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:48:29.410 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:48:29.501 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:48:48.013 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:48:48.071 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:50:02.964 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:50:03.078 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:50:14.197 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:50:14.303 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:50:30.283 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:50:30.381 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:52:10.317 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:52:23.011 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:52:23.299 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:53:35.939 [инфо] Server successfully started
+09.01.2019 00:53:55.105 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:53:55.156 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:54:43.760 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 00:54:43.831 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+09.01.2019 01:00:25.502 [инфо] Server successfully started

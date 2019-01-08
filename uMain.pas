@@ -227,7 +227,7 @@ begin
   ReportMemoryLeaksOnShutdown := True;
   FTimers := TTimers.Create(Self);
   Server.DefaultPort := sePort.Value;
- // ilPics.GetBitmap(3, bClearAnswers.Glyph);
+  ilPics.GetBitmap(3, bClearAnswers.Glyph);
   SwitchStartStopButtons(); // will start server
 end;
 
@@ -282,9 +282,9 @@ end;
 procedure TMain.SwitchStartStopButtons;
 begin
   if (Server.Active) then
-    Start
+    Stop
   else
-    Stop;
+    Start;
 end;
 
 procedure TMain.UpdateAppMemory(var aMsg: TMessage);

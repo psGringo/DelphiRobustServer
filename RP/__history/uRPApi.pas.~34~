@@ -12,13 +12,13 @@ type
   private
    procedure CreateAPIFromClass(aClass: TClass; aApi: TStringList);
   public
-   procedure Get();
+   procedure Get;
   end;
 
 implementation
 
 uses
-  uRPTests, Vcl.Forms;
+  uRPTests, Vcl.Forms, uRPFiles, uRPMemory, uRPUsers;
 
 { TApi }
 
@@ -54,13 +54,13 @@ var
   methodName: string;
 
 begin
-  api.Add('');
-  api.Add('---');
-  api.Add('');
+  aApi.Add('');
+  aApi.Add('---');
+  aApi.Add('');
 
-  api.Add(aClass.ClassName);
-  api.Add('');
-  api.Add('---');
+  aApi.Add(aClass.ClassName);
+  aApi.Add('');
+  aApi.Add('---');
   ctx := TRttiContext.Create;
   try
     t := ctx.GetType(aClass);
@@ -111,15 +111,15 @@ begin
           else
             methodName := methodName + ' | GET';
 
-          api.Add(methodName);
+          aApi.Add(methodName);
 
           methodParams := m.GetParameters();
           if (Length(methodParams) > 0) then
           begin
             for j := 0 to high(methodParams) do
-              api.Add(methodParams[j].ToString);
+              aApi.Add(methodParams[j].ToString);
           end;
-          api.Add('');
+          aApi.Add('');
         end;
       end;
     end;
@@ -131,7 +131,7 @@ end;
 procedure TRPApi.Get;
 var
   fileName: string;
-  api: TStringList;
+  api: ISP<TStringList>;
   filepath: string;
 begin
   fileName := 'api.txt';
@@ -139,13 +139,16 @@ begin
   if TFile.Exists(fileName) then
     TFile.Delete(fileName);
 
-  api := TStringList.Create();
-  try
-    CreateAPIFromClass(TRPTests, api);
-    api.SaveToFile(fileName);
-  finally
-    api.Free;
-  end;
+  api := TSP<TStringList>.Create();
+
+  CreateAPIFromClass(TRPTests, api);
+  CreateAPIFromClass(TRPFiles, api);
+  CreateAPIFromClass(TRPMemory, api);
+  CreateAPIFromClass(TRPUsers, api);
+  // add other classes that descendants from TRP or just API classes
+  // CreateAPIFromClass(TRPOtherClass, api);
+
+  api.SaveToFile(fileName);
 
   filepath := ExtractFileDir(Application.ExeName) + '\'+fileName;
   if TFile.Exists(filepath) then

@@ -8,12 +8,13 @@ uses
 
 type
   TRPFiles = class(TRP)
+    public
     constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo;
       aResponseInfo: TIdHTTPResponseInfo); overload; override;
     constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo;
       aResponseInfo: TIdHTTPResponseInfo; NoExecute: Boolean); overload; override;
-    procedure Upload();
-    procedure Download();
+    procedure Upload;
+    procedure Download;
   end;
 
 implementation

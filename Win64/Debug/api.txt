@@ -31,3 +31,58 @@ Update | GET
 
 GetInfo | GET
 
+
+---
+
+TRPFiles
+
+---
+Upload | GET
+
+Download | GET
+
+Create | GET
+
+Delete | GET
+
+Update | GET
+
+GetInfo | GET
+
+
+---
+
+TRPMemory
+
+---
+CurrentProcessMemoryKB | GET
+
+CurrentProcessMemoryPeakKB | GET
+
+GetMemory | GET
+AContext: TIdContext
+ARequestInfo: TIdHTTPRequestInfo
+AResponseInfo: TIdHTTPResponseInfo
+
+
+---
+
+TRPUsers
+
+---
+Create | GET
+
+Delete | GET
+
+Update | GET
+
+GetInfo | GET
+
+Create | GET
+
+Delete | GET
+
+Update | GET
+
+GetInfo | GET
+

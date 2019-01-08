@@ -23,19 +23,11 @@ uses
 
 { TRPFiles }
 
-constructor TRPFiles.Create(aContext: TIdContext; aRequestInfo:
-  TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
-
-  function IsMultipartRequest(): Boolean;
-  begin
-    Result := (Pos('multipart/form-data', LowerCase(aRequestInfo.ContentType)) > 0) and (Pos('boundary',
-      LowerCase(aRequestInfo.ContentType)) > 0) and aRequestInfo.URI := '/Files/Upload';
-  end;
-
+constructor TRPFiles.Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo:
+  TIdHTTPResponseInfo);
 begin
   inherited;
-  if not IsMultipartRequest() then // Multipart
-    Execute('Files');
+  Execute('Files');
 end;
 
 constructor TRPFiles.Create(aContext: TIdContext; aRequestInfo:
@@ -48,24 +40,20 @@ procedure TRPFiles.Download;
 var
   filepath: string;
 begin
-  filepath := ExtractFileDir(Application.ExeName) + StringReplace(RequestInfo.URI,
-    '/', '\', [rfReplaceAll]);
+  filepath := ExtractFileDir(Application.ExeName) + StringReplace(RequestInfo.URI, '/', '\', [rfReplaceAll]);
   if TFile.Exists(filepath) then
   begin
-    ResponseInfo.ServeFile(Context, filepath);
+    ResponseInfo.SmartServeFile(Context, RequestInfo, filepath);
     FResponses.OK();
   end;
 end;
 
 procedure TRPFiles.Upload;
 var
-  d: ISP<TDecodePostRequest>;
   json: ISuperobject;
 begin
-  d := TSP<TDecodePostRequest>.Create();
-  d.Execute(Context, RequestInfo, ResponseInfo);
   json := SO;
-  json.S['relWebFilePath'] := d.RelWebFileDir;
+  json.S['relWebFilePath'] := RelWebFileDir;
   FResponses.OkWithJson(json.AsJSon(false, false));
 end;
 

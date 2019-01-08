@@ -140,7 +140,9 @@ begin
       className := Self.ClassName;
 
     for m in t.GetMethods do
-      if (m.MethodKind <> mkConstructor) and (m.MethodKind <> mkDestructor) and (FRequestInfo.URI = '/' + className + '/' + m.Name) then
+      if (m.MethodKind <> mkConstructor) and (m.MethodKind <> mkDestructor) and ( (FRequestInfo.URI = '/' + className + '/' + m.Name)
+      or (FRequestInfo.URI = '/' + className + '/' + m.Name+'()'))
+      then
       begin
         if (Pos('application/json', LowerCase(RequestInfo.ContentType)) > 0)
         or (

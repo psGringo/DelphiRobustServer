@@ -3,10 +3,12 @@ unit uMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
-  Vcl.Dialogs, IdBaseComponent, IdComponent, IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin,
-  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent,
+  IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer,
+  IdContext, Vcl.Samples.Spin, System.ImageList, Vcl.ImgList, uCommon, System.Classes,
+  superobject, IdHeaderList, ShellApi, uRPTests;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -40,8 +42,7 @@ type
     pAnswerTop: TPanel;
     mAnswer: TMemo;
     bClearAnswers: TBitBtn;
-    procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo:
-      TIdHTTPResponseInfo);
+    procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
     procedure bAPIClick(Sender: TObject);
     procedure ServerException(AContext: TIdContext; AException: Exception);
@@ -65,6 +66,7 @@ type
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     procedure Start;
+    procedure Stop;
     property IsVclDesktopMode: boolean read FIsVclDesktopMode write FIsVclDesktopMode;
   end;
 
@@ -75,7 +77,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.NetEncoding, IdMultipartFormData, uClientExamples, uRP;
+  System.NetEncoding, IdMultipartFormData, uClientExamples, uRP, System.Math;
 
 { TMain }
 procedure TMain.bAPIClick(Sender: TObject);
@@ -155,7 +157,7 @@ begin
         client.Request.Referer := 'http://localhost:' + port + '/' + eRequest.Text;
         client.Request.ContentType := 'multipart/form-data';
         client.Request.RawHeaders.AddValue('AuthToken', System.NetEncoding.TNetEncoding.URL.Encode('evjTI82N'));
-        postData.AddFormField('filename', System.NetEncoding.TNetEncoding.URL.Encode( fileName ));
+        postData.AddFormField('filename', System.NetEncoding.TNetEncoding.URL.Encode(fileName));
         postData.AddFormField('isOverwrite', System.NetEncoding.TNetEncoding.URL.Encode(mPostParams.Lines[1]));
         postData.AddFile('attach', mPostParams.Lines[0], 'application/x-rar-compressed');
         client.POST('http://localhost:' + port + '/' + eRequest.Text, postData, ss); //
@@ -205,8 +207,8 @@ begin
   case cbRequestType.ItemIndex of
     0:
       begin
-       eRequest.Text := 'Test/Connection';
-       pPost.Visible := false;
+        eRequest.Text := 'Test/Connection';
+        pPost.Visible := false;
       end;
 
     1:
@@ -237,8 +239,7 @@ begin
   mAnswer.Lines.Add(client.Get('http://localhost:' + Server.DefaultPort.ToString + '/' + eRequest.Text));
 end;
 
-procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo:
-  TIdHTTPResponseInfo);
+procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 var
   cg: ISP<TCommandGet>;
 begin
@@ -257,27 +258,33 @@ procedure TMain.Start;
 var
   l: ISP<TLogger>;
 begin
-    Server.Active := true;
-    FTimers.tWorkTimer.Enabled := true;
-    FTimers.StartTime := Now;
-    StatusBar.Panels[0].Text := 'Started';
-    UpdateStartStopGlyph(1);
-        l.LogInfo('Server successfully started');
+  l := TSP<TLogger>.Create();
+  Server.Active := true;
+  FTimers.tWorkTimer.Enabled := true;
+  FTimers.StartTime := Now;
+  StatusBar.Panels[0].Text := 'Started';
+  UpdateStartStopGlyph(1);
+  l.LogInfo('Server successfully started');
+end;
+
+procedure TMain.Stop;
+var
+  l: ISP<TLogger>;
+begin
+  l := TSP<TLogger>.Create();
+  Server.Active := false;
+  FTimers.tWorkTimer.Enabled := false;
+  StatusBar.Panels[0].Text := 'Stopped';
+  UpdateStartStopGlyph(0);
+  l.LogInfo('Server successfully stopped');
 end;
 
 procedure TMain.SwitchStartStopButtons;
-
 begin
-  l := TSP<TLogger>.Create();
-  if Server.Active then
-  begin
-
-    l.LogInfo('Server successfully stopped');
-  end
+  if (Server.Active) then
+    Start
   else
-  begin
-    Start;
-  end;
+    Stop;
 end;
 
 procedure TMain.UpdateAppMemory(var aMsg: TMessage);

@@ -12,7 +12,7 @@ type
   private
    procedure CreateAPIFromClass(aClass: TClass; aApi: TStringList);
   public
-   procedure Get();
+   procedure Get;
   end;
 
 implementation
@@ -47,7 +47,7 @@ var
   ctx: TRttiContext;
   t: TRttiType;
   m: TRttiMethod;
-  i, j: integer;
+  j: integer;
   methodParams: TArray<System.Rtti.TRttiParameter>;
   attribs: TArray<TCustomAttribute>;
   a: TCustomAttribute;
