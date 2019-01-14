@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2019.01.14 23:42:14.965,C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\DRS_Dev.groupproj=C:\Users\YellowFriend\Documents\Embarcadero\Studio\Projects\ProjectGroup1.groupproj</Transaction>
+  </Transactions>
+  <Default.Personality>
+    <Projects ActiveProject="C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Tests\DRS_Tests.dproj"/>
+  </Default.Personality>
+</BorlandProject>
