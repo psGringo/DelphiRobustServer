@@ -861,3 +861,8 @@
 02.02.2019 21:41:45.899 [инфо] Server successfully started
 02.02.2019 21:42:17.375 [инфо] Server successfully started
 02.02.2019 21:42:17.391 [инфо] Server successfully started
+02.02.2019 21:50:01.738 [инфо] Server successfully stopped
+02.02.2019 21:50:10.948 [инфо] Server successfully started
+02.02.2019 21:52:56.405 [инфо] Server successfully started
+02.02.2019 22:32:24.072 [инфо] Server successfully started
+02.02.2019 22:34:14.704 [инфо] Server successfully started
