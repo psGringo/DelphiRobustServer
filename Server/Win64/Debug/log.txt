@@ -748,3 +748,116 @@
 02.02.2019 15:51:49.708 [инфо] Server successfully started
 02.02.2019 15:52:31.319 [инфо] Server successfully started
 02.02.2019 15:53:40.029 [инфо] Server successfully started
+02.02.2019 17:12:57.925 [инфо] Server successfully started
+02.02.2019 17:13:15.826 [инфо] Server successfully started
+02.02.2019 17:13:41.649 [инфо] Server successfully started
+02.02.2019 17:14:06.805 [инфо] Server successfully started
+02.02.2019 17:14:18.471 [инфо] Server successfully started
+02.02.2019 17:57:14.612 [инфо] Server successfully started
+02.02.2019 17:59:11.449 [инфо] Server successfully started
+02.02.2019 18:01:00.591 [инфо] Server successfully started
+02.02.2019 18:02:24.618 [инфо] Server successfully started
+02.02.2019 18:03:40.230 [инфо] Server successfully started
+02.02.2019 18:07:40.799 [инфо] Server successfully started
+02.02.2019 18:08:06.230 [инфо] Server successfully started
+02.02.2019 18:09:05.842 [инфо] Server successfully started
+02.02.2019 18:20:43.867 [инфо] Server successfully started
+02.02.2019 18:20:48.518 [инфо] Server successfully started
+02.02.2019 18:21:07.215 [инфо] Server successfully started
+02.02.2019 18:21:27.934 [инфо] Server successfully started
+02.02.2019 18:25:03.820 [инфо] Server successfully started
+02.02.2019 18:32:36.023 [инфо] Server successfully started
+02.02.2019 18:33:18.733 [инфо] Server successfully started
+02.02.2019 18:33:24.699 [инфо] Server successfully started
+02.02.2019 18:33:24.710 [инфо] Server successfully started
+02.02.2019 18:34:19.111 [инфо] Server successfully started
+02.02.2019 18:40:14.255 [инфо] Server successfully started
+02.02.2019 18:40:30.351 [инфо] Server successfully started
+02.02.2019 18:40:48.047 [инфо] Server successfully started
+02.02.2019 18:41:21.585 [инфо] Server successfully started
+02.02.2019 18:41:25.697 [инфо] Server successfully started
+02.02.2019 18:41:53.509 [инфо] Server successfully started
+02.02.2019 18:41:53.546 [инфо] Server successfully started
+02.02.2019 18:42:44.500 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:42:44.500 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:42:55.591 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:42:55.592 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:44:59.194 [инфо] Server successfully started
+02.02.2019 18:44:59.204 [инфо] Server successfully started
+02.02.2019 18:46:03.754 [инфо] Server successfully stopped
+02.02.2019 18:46:18.490 [инфо] Server successfully started
+02.02.2019 18:46:18.502 [инфо] Server successfully started
+02.02.2019 18:46:52.451 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:46:52.452 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:47:05.691 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:47:05.692 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:47:51.567 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:47:51.568 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 18:48:14.797 [ошиб] Exception class EIdNotConnected exception message Not Connected
+02.02.2019 18:48:14.797 [ошиб] Exception class EIdNotConnected exception message Not Connected
+02.02.2019 18:48:15.297 [инфо] Server successfully stopped
+02.02.2019 18:48:36.265 [инфо] Server successfully started
+02.02.2019 18:48:58.712 [инфо] Server successfully started
+02.02.2019 18:48:58.728 [инфо] Server successfully started
+02.02.2019 18:53:08.991 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 19:01:29.531 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+02.02.2019 19:10:15.814 [инфо] Server successfully stopped
+02.02.2019 19:10:27.123 [инфо] Server successfully started
+02.02.2019 19:12:15.040 [инфо] Server successfully started
+02.02.2019 19:13:52.006 [инфо] Server successfully started
+02.02.2019 19:13:52.019 [инфо] Server successfully started
+02.02.2019 19:14:16.020 [инфо] Server successfully stopped
+02.02.2019 19:16:21.724 [инфо] Server successfully started
+02.02.2019 19:16:59.428 [инфо] Server successfully started
+02.02.2019 19:16:59.455 [инфо] Server successfully started
+02.02.2019 19:17:09.436 [инфо] Server successfully stopped
+02.02.2019 19:19:22.102 [инфо] Server successfully started
+02.02.2019 19:22:18.617 [инфо] Server successfully started
+02.02.2019 19:22:18.629 [инфо] Server successfully started
+02.02.2019 19:24:06.677 [инфо] Server successfully stopped
+02.02.2019 19:24:17.262 [инфо] Server successfully started
+02.02.2019 19:24:38.976 [инфо] Server successfully started
+02.02.2019 19:24:39.079 [инфо] Server successfully started
+02.02.2019 19:24:57.983 [инфо] Server successfully stopped
+02.02.2019 19:25:15.597 [инфо] Server successfully started
+02.02.2019 19:25:15.612 [инфо] Server successfully started
+02.02.2019 20:02:01.996 [инфо] Server successfully stopped
+02.02.2019 20:02:11.728 [инфо] Server successfully started
+02.02.2019 20:02:33.384 [инфо] Server successfully started
+02.02.2019 20:05:23.500 [инфо] Server successfully started
+02.02.2019 20:06:28.980 [инфо] Server successfully started
+02.02.2019 20:10:52.898 [инфо] Server successfully started
+02.02.2019 20:13:32.996 [инфо] Server successfully started
+02.02.2019 20:22:38.275 [инфо] Server successfully started
+02.02.2019 20:22:38.296 [инфо] Server successfully started
+02.02.2019 20:29:00.732 [инфо] Server successfully stopped
+02.02.2019 20:29:10.124 [инфо] Server successfully started
+02.02.2019 20:29:51.254 [инфо] Server successfully started
+02.02.2019 20:29:51.281 [инфо] Server successfully started
+02.02.2019 20:30:12.268 [инфо] Server successfully stopped
+02.02.2019 20:30:30.607 [инфо] Server successfully started
+02.02.2019 20:30:34.789 [инфо] Server successfully started
+02.02.2019 20:31:26.187 [инфо] Server successfully started
+02.02.2019 20:31:29.196 [инфо] Server successfully started
+02.02.2019 20:31:32.852 [инфо] Server successfully started
+02.02.2019 20:31:35.975 [инфо] Server successfully started
+02.02.2019 20:31:46.328 [инфо] Server successfully started
+02.02.2019 20:31:46.345 [инфо] Server successfully started
+02.02.2019 20:38:16.625 [инфо] Server successfully stopped
+02.02.2019 20:38:25.887 [инфо] Server successfully started
+02.02.2019 20:40:07.600 [инфо] Server successfully started
+02.02.2019 20:40:07.612 [инфо] Server successfully started
+02.02.2019 20:41:33.850 [инфо] Server successfully stopped
+02.02.2019 20:44:16.679 [инфо] Server successfully started
+02.02.2019 20:44:54.719 [инфо] Server successfully started
+02.02.2019 20:44:54.736 [инфо] Server successfully started
+02.02.2019 20:58:19.340 [инфо] Server successfully stopped
+02.02.2019 21:02:37.172 [инфо] Server successfully started
+02.02.2019 21:03:46.769 [инфо] Server successfully started
+02.02.2019 21:04:25.113 [инфо] Server successfully started
+02.02.2019 21:04:25.123 [инфо] Server successfully started
+02.02.2019 21:24:44.135 [инфо] Server successfully stopped
+02.02.2019 21:32:05.448 [инфо] Server successfully started
+02.02.2019 21:41:45.899 [инфо] Server successfully started
+02.02.2019 21:42:17.375 [инфо] Server successfully started
+02.02.2019 21:42:17.391 [инфо] Server successfully started

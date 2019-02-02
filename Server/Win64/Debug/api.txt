@@ -1,35 +1,67 @@
 
 ---
 
+TRPSystem
+
+---
+  Memory | GET
+
+  WorkTime | GET
+
+  Offline | GET
+
+  Online | GET
+
+  Connections | GET
+
+  Deactivate | GET
+
+  Log | GET
+
+  Api | GET
+
+  Create | GET
+
+  Delete | GET
+
+  Update | GET
+
+  GetInfo | GET
+
+
+---
+
 TRPTests
 
 ---
-Exceptions | GET
+  Exceptions | GET
 
-PostJson | POST
+  PostJson | POST
 
-URLEncoded | GET
-a: string
-b: string
+  URLEncoded | GET
+    a: string
+    b: string
 
-Sessions | GET
+  Sessions | GET
 
-MethodWithParams | GET
-aParam1: string
-aParam2: string
+  MethodWithParams | GET
+    aParam1: string
+    aParam2: string
 
-HTTPAttribute | GET
+  HTTPAttribute | GET
 
-HTTPAttribute | POST
-aParam: string
+  HTTPAttribute | POST
+    aParam: string
 
-Create | GET
+  SomeFakeJob | GET
 
-Delete | GET
+  Create | GET
 
-Update | GET
+  Delete | GET
 
-GetInfo | GET
+  Update | GET
+
+  GetInfo | GET
 
 
 ---
@@ -37,17 +69,17 @@ GetInfo | GET
 TRPFiles
 
 ---
-Upload | GET
+  Upload | GET
 
-Download | GET
+  Download | GET
 
-Create | GET
+  Create | GET
 
-Delete | GET
+  Delete | GET
 
-Update | GET
+  Update | GET
 
-GetInfo | GET
+  GetInfo | GET
 
 
 ---
@@ -55,14 +87,14 @@ GetInfo | GET
 TRPMemory
 
 ---
-CurrentProcessMemoryKB | GET
+  CurrentProcessMemoryKB | GET
 
-CurrentProcessMemoryPeakKB | GET
+  CurrentProcessMemoryPeakKB | GET
 
-GetMemory | GET
-AContext: TIdContext
-ARequestInfo: TIdHTTPRequestInfo
-AResponseInfo: TIdHTTPResponseInfo
+  GetMemory | GET
+    AContext: TIdContext
+    ARequestInfo: TIdHTTPRequestInfo
+    AResponseInfo: TIdHTTPResponseInfo
 
 
 ---
@@ -70,19 +102,19 @@ AResponseInfo: TIdHTTPResponseInfo
 TRPUsers
 
 ---
-Create | GET
+  Create | GET
 
-Delete | GET
+  Delete | GET
 
-Update | GET
+  Update | GET
 
-GetInfo | GET
+  GetInfo | GET
 
-Create | GET
+  Create | GET
 
-Delete | GET
+  Delete | GET
 
-Update | GET
+  Update | GET
 
-GetInfo | GET
+  GetInfo | GET
 
