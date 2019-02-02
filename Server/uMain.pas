@@ -3,12 +3,10 @@ unit uMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent,
-  IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer,
-  IdContext, Vcl.Samples.Spin, System.ImageList, Vcl.ImgList, uCommon, System.Classes,
-  superobject, IdHeaderList, ShellApi, uRPTests;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  IdBaseComponent, IdComponent, IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin, System.ImageList,
+  Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -53,10 +51,15 @@ type
     procedure cbRequestTypeSelect(Sender: TObject);
     procedure bUrlEncodeClick(Sender: TObject);
     procedure cbPostTypeSelect(Sender: TObject);
+    procedure bDoUrlEncodeClick(Sender: TObject);
   private
     { Private declarations }
+    FProtocol: string;
+    FHost: string;
+    FPort: string;
     FTimers: TTimers;
     FIsVclDesktopMode: boolean;
+    FAdress: string;
     procedure SwitchStartStopButtons();
     procedure UpdateWorkTime(var aMsg: TMessage); message WM_WORK_TIME;
     procedure UpdateAppMemory(var aMsg: TMessage); message WM_APP_MEMORY;
@@ -68,6 +71,11 @@ type
     procedure Start;
     procedure Stop;
     property IsVclDesktopMode: boolean read FIsVclDesktopMode write FIsVclDesktopMode;
+    property Protocol: string read FProtocol write FProtocol;
+    property Host: string read FHost write FHost;
+    property Port: string read FPort write FPort;
+    property Adress: string read FAdress write FAdress;
+    property Timers: TTimers read FTimers write FTimers;
   end;
 
 var
@@ -77,7 +85,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.NetEncoding, IdMultipartFormData, uClientExamples, uRP, System.Math;
+  System.NetEncoding, IdMultipartFormData, uClientExamples, uRP, System.Math, System.IOUtils, System.IniFiles;
 
 { TMain }
 procedure TMain.bAPIClick(Sender: TObject);
@@ -92,6 +100,11 @@ end;
 procedure TMain.bClearAnswersClick(Sender: TObject);
 begin
   mAnswer.Lines.Clear();
+end;
+
+procedure TMain.bDoUrlEncodeClick(Sender: TObject);
+begin
+  eUrlEncodeValue.Text := System.NetEncoding.TNetEncoding.URL.Encode(eUrlEncodeValue.Text);
 end;
 
 procedure TMain.bGoClick(Sender: TObject);
@@ -117,12 +130,10 @@ var
   postData: ISP<TIdMultiPartFormDataStream>;
   paramsSL: ISP<TStringList>;
   r: string;
-  port: string;
   fileName: string;
 begin
   client := TSP<TIdHTTP>.Create();
   ss := TSP<TStringStream>.Create();
-  port := Server.DefaultPort.ToString();
 
   case cbPostType.ItemIndex of
     0:
@@ -131,7 +142,7 @@ begin
         ss.WriteString(jo.AsJSon(false, false));
         client.Request.ContentType := 'application/json';
         client.Request.ContentEncoding := 'utf-8';
-        r := client.Post('http://localhost:' + port + '/' + eRequest.Text, ss);
+        r := client.Post(FAdress + '/' + eRequest.Text, ss);
         mAnswer.Lines.Add(r);
       end;
     1:
@@ -146,7 +157,7 @@ begin
         client.Request.ContentType := 'application/x-www-form-urlencoded';
         client.Request.ContentEncoding := 'utf-8';
 
-        r := client.Post('http://localhost:' + port + '/' + eRequest.Text, paramsSL);
+        r := client.Post(FAdress + '/' + eRequest.Text, paramsSL);
         mAnswer.Lines.Add(r);
       end;
     2:
@@ -154,13 +165,13 @@ begin
       // multipart...
         fileName := ExtractFileName(mPostParams.Lines[0]);
         postData := TSP<TIdMultiPartFormDataStream>.Create();
-        client.Request.Referer := 'http://localhost:' + port + '/' + eRequest.Text;
+        client.Request.Referer := FAdress + '/' + eRequest.Text;
         client.Request.ContentType := 'multipart/form-data';
         client.Request.RawHeaders.AddValue('AuthToken', System.NetEncoding.TNetEncoding.URL.Encode('evjTI82N'));
         postData.AddFormField('filename', System.NetEncoding.TNetEncoding.URL.Encode(fileName));
         postData.AddFormField('isOverwrite', System.NetEncoding.TNetEncoding.URL.Encode(mPostParams.Lines[1]));
         postData.AddFile('attach', mPostParams.Lines[0], 'application/x-rar-compressed');
-        client.POST('http://localhost:' + port + '/' + eRequest.Text, postData, ss); //
+        client.POST(FAdress + '/' + eRequest.Text, postData, ss); //
         mAnswer.Lines.Add(ss.DataString);
       end;
   end;
@@ -221,12 +232,32 @@ begin
 end;
 
 constructor TMain.Create(AOwner: TComponent);
+var
+  filepath: string;
+  ini: ISP<TIniFile>;
 begin
   inherited;
-  IsVclDesktopMode := false;
+
+  filepath := ExtractFilePath(Application.ExeName) + settingsFileName;
+  if TFile.Exists(filepath) then
+  begin
+    ini := TSP<Tinifile>.Create(Tinifile.Create(filepath));
+    FProtocol := ini.ReadString('server', 'protocol', '<None>');
+    FHost := ini.ReadString('server', 'host', '<None>');
+    FPort := ini.ReadString('server', 'port', '<None>');
+  end
+  else
+  begin
+    FProtocol := 'http';
+    FHost := 'localhost';
+    FPort := '7777';
+  end;
+  Adress := FProtocol + '://' + FHost + ':' + FPort;
+
   ReportMemoryLeaksOnShutdown := True;
   FTimers := TTimers.Create(Self);
-  Server.DefaultPort := sePort.Value;
+  sePort.Value := FPort.ToInteger();
+  Server.DefaultPort := FPort.ToInteger();
   ilPics.GetBitmap(3, bClearAnswers.Glyph);
   SwitchStartStopButtons(); // will start server
 end;
@@ -236,7 +267,7 @@ var
   client: ISP<TIdHTTP>;
 begin
   client := TSP<TIdHTTP>.Create();
-  mAnswer.Lines.Add(client.Get('http://localhost:' + Server.DefaultPort.ToString + '/' + eRequest.Text));
+  mAnswer.Lines.Add(client.Get(FAdress + '/' + eRequest.Text));
 end;
 
 procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -257,11 +288,10 @@ end;
 procedure TMain.Start;
 var
   l: ISP<TLogger>;
+  jo: ISuperObject;
 begin
   l := TSP<TLogger>.Create();
   Server.Active := true;
-  FTimers.tWorkTimer.Enabled := true;
-  FTimers.StartTime := Now;
   StatusBar.Panels[0].Text := 'Started';
   UpdateStartStopGlyph(1);
   l.LogInfo('Server successfully started');
@@ -270,10 +300,11 @@ end;
 procedure TMain.Stop;
 var
   l: ISP<TLogger>;
+  c: ISP<TIdHTTP>;
+  jo: ISuperObject;
 begin
   l := TSP<TLogger>.Create();
   Server.Active := false;
-  FTimers.tWorkTimer.Enabled := false;
   StatusBar.Panels[0].Text := 'Stopped';
   UpdateStartStopGlyph(0);
   l.LogInfo('Server successfully stopped');

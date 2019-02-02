@@ -1,15 +1,16 @@
 object Timers: TTimers
   OldCreateOrder = False
+  OnCreate = DataModuleCreate
   Height = 150
   Width = 215
-  object tWorkTimer: TTimer
-    OnTimer = tWorkTimerTimer
-    Left = 48
-    Top = 32
+  object tWork: TTimer
+    OnTimer = tWorkTimer
+    Left = 32
+    Top = 16
   end
   object tMemory: TTimer
     OnTimer = tMemoryTimer
-    Left = 120
-    Top = 64
+    Left = 40
+    Top = 80
   end
 end

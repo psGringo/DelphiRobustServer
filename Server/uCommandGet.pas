@@ -28,7 +28,9 @@ uses
   uRPTests,
   uRPFiles,
   uRPApi,
-  uDecodePostRequest, System.SysUtils,
+  uRPSystem,
+  uDecodePostRequest,
+  System.SysUtils,
   DateUtils, uConst;
 
 { TCommandGet }
@@ -57,9 +59,11 @@ var
   t: ISP<TRPTests>;
   f: ISP<TRPFiles>;
   a: ISP<TRPApi>;
+  s: ISP<TRPSystem>;
 
 begin
   r := TSP<TResponses>.Create(TResponses.Create(FRequestInfo, FResponseInfo));
+
   try
     firstSection := ParseFirstSection;
 
@@ -70,7 +74,9 @@ begin
     else if SameStr(firstSection, 'Files') then
       f := TSP<TRPFiles>.Create(TRPFiles.Create(FContext, FRequestInfo, FResponseInfo))
     else if SameStr(firstSection, 'Api') then
-      a := TSP<TRPApi>.Create(TRPApi.Create(FContext, FRequestInfo, FResponseInfo));
+      a := TSP<TRPApi>.Create(TRPApi.Create(FContext, FRequestInfo, FResponseInfo))
+    else if SameStr(firstSection, 'System') then
+      s := TSP<TRPSystem>.Create(TRPSystem.Create(FContext, FRequestInfo, FResponseInfo));
 
     DownloadFile();
     FResponseInfo.ResponseNo := 404;
@@ -79,7 +85,6 @@ begin
       r.Error(e.Message);
   end;
 end;
-
 
 function TCommandGet.ParseFirstSection(): string;
 var

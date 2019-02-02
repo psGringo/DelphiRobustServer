@@ -61,6 +61,7 @@ object Main: TMain
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnClick = bDoUrlEncodeClick
     end
     object eUrlEncodeValue: TEdit
       AlignWithMargins = True
@@ -230,6 +231,9 @@ object Main: TMain
       end
       item
         Width = 150
+      end
+      item
+        Width = 100
       end>
   end
   object pPost: TPanel
@@ -380,7 +384,7 @@ object Main: TMain
     Left = 360
     Top = 232
     Bitmap = {
-      494C010104000800780010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010104000800940010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

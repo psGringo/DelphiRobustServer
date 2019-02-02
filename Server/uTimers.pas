@@ -3,89 +3,73 @@ unit uTimers;
 interface
 
 uses
-  System.SysUtils, Vcl.ExtCtrls, DateUtils, System.Classes, uCommon;
+  System.SysUtils, Vcl.ExtCtrls, DateUtils, System.Classes, uCommon, IdBaseComponent, IdComponent, IdTCPConnection,
+  IdTCPClient, IdHTTP;
 
 type
   TTimers = class(TDataModule)
-    tWorkTimer: TTimer;
+    tWork: TTimer;
     tMemory: TTimer;
-    procedure tWorkTimerTimer(Sender: TObject);
+    procedure tWorkTimer(Sender: TObject);
     procedure tMemoryTimer(Sender: TObject);
+    procedure DataModuleCreate(Sender: TObject);
   private
     FStartTime: TDateTime;
-    procedure SetStartTime(const Value: TDateTime);
+    FWorkTime: TDateTime;
     { Private declarations }
   public
     { Public declarations }
-    property StartTime:TDateTime read FStartTime write SetStartTime;
+    property StartTime: TDateTime read FStartTime write FStartTime;
+    property WorkTime: TDateTime read FWorkTime write FWorkTime;
   end;
 
 implementation
 
 uses
-  uMain, Winapi.Windows, Winapi.Messages,uRPMemory, uTimerThread;
+  uMain, Winapi.Windows, Winapi.Messages, uRPSystem, superobject;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
 
-procedure TTimers.SetStartTime(const Value: TDateTime);
+procedure TTimers.DataModuleCreate(Sender: TObject);
 begin
-  FStartTime := Value;
+  FStartTime := Now();
 end;
 
 procedure TTimers.tMemoryTimer(Sender: TObject);
 var
-  t: TTimerThread;
-  memory: ISP<TRPMemory>;
-    //t: TThread;
+  jo: ISuperObject;
+  idHTTP: ISP<TiDHTTP>;
 begin
-  memory := TSP<TRPMemory>.Create();
-  t := TTimerThread.Create(true);
-  t.Msg := memory.CurrentProcessMemoryKB.ToString()+' KB / '+memory.CurrentProcessMemoryPeakKB.ToString()+' KB';
-  t.PanelNumber := 2;
-  t.FreeOnTerminate := true;
-  t.Start;
-{
- t := TThread.CreateAnonymousThread(
+  TThread.CreateAnonymousThread(
     procedure
-    var
-      s: string;
-      memory: ISmartPointer<TRPMemory>;
     begin
-      memory := TSmartPointer<TRPMemory>.Create();
-      s := memory. CurrentProcessMemoryKB.ToString()+' KB / '+memory.CurrentProcessMemoryPeakKB.ToString()+' KB';
-      PostMessage(Main.Handle, WM_APP_MEMORY, 0, LParam(PChar(s)));
-    end);
-   t.FreeOnTerminate := true;
-   t.Start;
-}
+      idHTTP := TSP<TiDHTTP>.Create();
+      jo := SO[idHTTP.Get(Main.Adress + '/System/Memory')];
+      TThread.Synchronize(TThread.CurrentThread,
+        procedure()
+        begin
+          Main.StatusBar.Panels[2].Text := jo.O['data'].s['memory'];
+        end);
+    end).Start;
 end;
 
-procedure TTimers.tWorkTimerTimer(Sender: TObject);
+procedure TTimers.tWorkTimer(Sender: TObject);
 var
-  //t: TThread;
-  t:TTimerThread;
+  jo: ISuperObject;
+  idHTTP: ISP<TiDHTTP>;
 begin
-  t := TTimerThread.Create(true);
-  t.Msg := TimeToStr(Now() - FStartTime);
-  t.PanelNumber := 1;
-  t.FreeOnTerminate := true;
-  t.Start;
-    {
- t := TThread.CreateAnonymousThread(
+  TThread.CreateAnonymousThread(
     procedure
-    var
-      s: string;
     begin
-      s := DateTimeToStr(Now());
-      //PostMessage(Main.Handle, WM_WORK_TIME, 0, LParam(PChar(s)));
-
-
-    end);
-   t.FreeOnTerminate := true;
-   t.Start;
-   }
+      TThread.Synchronize(TThread.CurrentThread,
+        procedure()
+        begin
+          FWorkTime := (Now() - FStartTime);
+          Main.StatusBar.Panels[1].Text := TimeToStr(FWorkTime);
+        end);
+    end).Start;
 end;
 
 end.

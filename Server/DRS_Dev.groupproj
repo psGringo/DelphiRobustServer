@@ -3,13 +3,10 @@
         <ProjectGuid>{BCF2A313-F286-47FD-93F0-9C468D8066F8}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="DelphiRobustServer.dproj">
+        <Projects Include="RobustServer.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\GUI\DRS_GUI.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\Tests\DRS_Tests.dproj">
+        <Projects Include="..\GUI\RobustServerGUI.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -20,41 +17,32 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="DelphiRobustServer">
-        <MSBuild Projects="DelphiRobustServer.dproj"/>
+    <Target Name="RobustServer">
+        <MSBuild Projects="RobustServer.dproj"/>
     </Target>
-    <Target Name="DelphiRobustServer:Clean">
-        <MSBuild Projects="DelphiRobustServer.dproj" Targets="Clean"/>
+    <Target Name="RobustServer:Clean">
+        <MSBuild Projects="RobustServer.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="DelphiRobustServer:Make">
-        <MSBuild Projects="DelphiRobustServer.dproj" Targets="Make"/>
+    <Target Name="RobustServer:Make">
+        <MSBuild Projects="RobustServer.dproj" Targets="Make"/>
     </Target>
-    <Target Name="DRS_GUI">
-        <MSBuild Projects="..\GUI\DRS_GUI.dproj"/>
+    <Target Name="RobustServerGUI">
+        <MSBuild Projects="..\GUI\RobustServerGUI.dproj"/>
     </Target>
-    <Target Name="DRS_GUI:Clean">
-        <MSBuild Projects="..\GUI\DRS_GUI.dproj" Targets="Clean"/>
+    <Target Name="RobustServerGUI:Clean">
+        <MSBuild Projects="..\GUI\RobustServerGUI.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="DRS_GUI:Make">
-        <MSBuild Projects="..\GUI\DRS_GUI.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="DRS_Tests">
-        <MSBuild Projects="..\Tests\DRS_Tests.dproj"/>
-    </Target>
-    <Target Name="DRS_Tests:Clean">
-        <MSBuild Projects="..\Tests\DRS_Tests.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="DRS_Tests:Make">
-        <MSBuild Projects="..\Tests\DRS_Tests.dproj" Targets="Make"/>
+    <Target Name="RobustServerGUI:Make">
+        <MSBuild Projects="..\GUI\RobustServerGUI.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="DelphiRobustServer;DRS_GUI;DRS_Tests"/>
+        <CallTarget Targets="RobustServer;RobustServerGUI"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="DelphiRobustServer:Clean;DRS_GUI:Clean;DRS_Tests:Clean"/>
+        <CallTarget Targets="RobustServer:Clean;RobustServerGUI:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="DelphiRobustServer:Make;DRS_GUI:Make;DRS_Tests:Make"/>
+        <CallTarget Targets="RobustServer:Make;RobustServerGUI:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

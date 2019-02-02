@@ -1,0 +1,18 @@
+unit uConst;
+
+interface
+
+type
+  TConst = class
+  end;
+
+implementation
+
+const
+  logFileName = 'log.txt';
+  settingsFileName = 'settings.ini';
+  START_AsService = 0;
+  START_AsExe = 1;
+
+end.
+

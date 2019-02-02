@@ -1,0 +1,10 @@
+object Timers: TTimers
+  OldCreateOrder = False
+  Height = 150
+  Width = 215
+  object tSystem: TTimer
+    OnTimer = tSystemTimer
+    Left = 32
+    Top = 16
+  end
+end

@@ -3,11 +3,10 @@ unit uCommon;
 interface
 
 uses
-  LDSLogger, uConst, System.SysUtils, System.Classes, IdCustomHTTPServer,
-  superobject, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
-  IdSSL, IdSSLOpenSSL, IdMessage, IdBaseComponent, IdComponent, IdTCPConnection,
-  IdTCPClient, IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase,
-  IdSMTP, IdMessageCoderMIME, IdMessageCoder, IdGlobal, HTTPApp, vcl.Forms, System.NetEncoding;
+  LDSLogger, uConst, System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, IdIOHandler, IdIOHandlerSocket,
+  IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdMessage, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
+  IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP, IdMessageCoderMIME, IdMessageCoder, IdGlobal,
+  HTTPApp, vcl.Forms, System.NetEncoding, IdException;
 
 type
   int = integer;
@@ -45,6 +44,7 @@ type
     constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
     procedure OK();
     procedure Error(EMessage: string = ''; ACodeNumber: integer = -1);
+    procedure Deactivate();
     procedure OkWithJson(aJsonData: string);
     procedure SuccessfullInsert(aId: integer);
     property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
@@ -69,7 +69,7 @@ uses
 
 procedure TLogger.LogError(aMsg: string);
 var
- l: ISP<TLDSLogger>;
+  l: ISP<TLDSLogger>;
 begin
   l := TSP<TLDSLogger>.Create(TLDSLogger.Create(logFileName));
   l.LogStr(aMsg, tlpError);
@@ -85,7 +85,8 @@ end;
 
 
 { TEmail }
-procedure TEmail.Send(aHost: string; aPort: int; aSubject, aEmailContent, aRecipientEmail, aMyEmail, aMyPassword, aFromName: string);
+procedure TEmail.Send(aHost: string; aPort: int; aSubject, aEmailContent, aRecipientEmail, aMyEmail, aMyPassword,
+  aFromName: string);
 var
   idSMTP: ISP<TIdSMTP>;
   msg: ISP<TIdMessage>;
@@ -117,7 +118,7 @@ begin
   msg.Body.Text := aEmailContent;
   msg.Subject := aSubject;
   msg.From.Address := aMyEmail; // 'shop.bel-ozero@yandex.ru';
-  msg.From.Name :=   aFromName;
+  msg.From.Name := aFromName;
   msg.Recipients.EMailAddresses := aRecipientEmail;
   //
   try
@@ -260,6 +261,18 @@ begin
   FARequestInfo := aRequestInfo;
 end;
 
+procedure TResponses.Deactivate();
+begin
+  try
+    Main.Server.Active := false;
+  except
+    on E: EIdException do
+      Error(E.Message);
+    on E: Exception do
+      Error(E.Message);
+  end;
+end;
+
 procedure TResponses.Error(EMessage: string = ''; ACodeNumber: integer = -1);
 var
   json: ISuperObject;
@@ -268,8 +281,8 @@ begin
   json.S['answer'] := 'not ok';
   json.S['errorCode'] := ACodeNumber.ToString();
   json.S['errorMessage'] := EMessage;
-  json.S['uri'] := aRequestInfo.URI;
-  json.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
+  json.S['uri'] := ARequestInfo.URI;
+  json.S['responseNo'] := aResponseInfo.ResponseNo.ToString();
   json.S['commandType'] := GetCommandType();
   FaResponseInfo.ResponseNo := 200;
   FaResponseInfo.ContentType := 'application/json';
@@ -281,9 +294,9 @@ end;
 
 function TResponses.GetCommandType: string;
 begin
-  if (aRequestInfo.CommandType = hcGet) then
+  if (ARequestInfo.CommandType = hcGet) then
     Result := 'GET'
-  else if (aRequestInfo.CommandType = hcPOST) then
+  else if (ARequestInfo.CommandType = hcPOST) then
     Result := 'POST'
   else
     Result := 'Other';
@@ -295,8 +308,8 @@ var
 begin
   json := SO;
   json.S['answer'] := 'ok';
-  json.S['uri'] := aRequestInfo.URI;
-  json.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
+  json.S['uri'] := ARequestInfo.URI;
+  json.S['responseNo'] := aResponseInfo.ResponseNo.ToString();
   json.S['commandType'] := GetCommandType();
   FaResponseInfo.ResponseNo := 200;
   FaResponseInfo.ContentType := 'application/json';
@@ -308,15 +321,15 @@ end;
 
 procedure TResponses.OkWithJson(aJsonData: string);
 var
-  json,jsonResult: ISuperobject;
+  json, jsonResult: ISuperobject;
 begin
-  json :=SO(aJsonData);
+  json := SO(aJsonData);
   jsonResult := SO();
   jsonResult.S['answer'] := 'ok';
-  jsonResult.S['uri'] := aRequestInfo.URI;
-  jsonResult.S['responseNo'] := AResponseInfo.ResponseNo.ToString();
+  jsonResult.S['uri'] := ARequestInfo.URI;
+  jsonResult.S['responseNo'] := aResponseInfo.ResponseNo.ToString();
   jsonResult.O['data'] := json;
-  jsonresult.S['commandType'] := GetCommandType();
+  jsonResult.S['commandType'] := GetCommandType();
 
   FAResponseInfo.ResponseNo := 200;
   FAResponseInfo.ContentType := 'application/json';
@@ -331,10 +344,10 @@ begin
 //
 end;
 
-
 procedure TCommon.IsNotNull(aObject: TObject);
 begin
- if (aObject = nil) then raise Exception.Create('Object is nil');
+  if (aObject = nil) then
+    raise Exception.Create('Object is nil');
 end;
 
 end.

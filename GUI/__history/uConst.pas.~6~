@@ -1,0 +1,16 @@
+unit uConst;
+
+interface
+
+const
+  SettingsFile = 'settings.ini';
+  ServerStarted = 'Started';
+  ServerStopped = 'Stopped';
+  ServerExeName = 'DelphiRobustServer.exe';
+  START_AsService = 0;
+  START_AsExe = 1;
+
+implementation
+
+end.
+

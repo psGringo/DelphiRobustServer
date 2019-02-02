@@ -1,0 +1,19 @@
+program DRS_GUI;
+
+uses
+  Vcl.Forms,
+  uMain in 'uMain.pas' {Main},
+  uMainFrame in 'uMainFrame.pas' {MainFrame: TFrame},
+  uTimers in 'uTimers.pas' {Timers: TDataModule},
+  Vcl.Themes,
+  Vcl.Styles;
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Tablet Light');
+  Application.CreateForm(TMain, Main);
+  Application.Run;
+end.

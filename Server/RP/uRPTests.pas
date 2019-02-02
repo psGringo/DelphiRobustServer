@@ -3,8 +3,8 @@ unit uRPTests;
 interface
 
 uses
-  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB,
-  uRP, IdContext, System.NetEncoding, uAttributes, System.JSON;
+  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, uRP, IdContext, System.NetEncoding,
+  uAttributes, System.JSON;
 
 type
   TRPTests = class(TRP)
@@ -12,12 +12,13 @@ type
     FRequest: string;
     FPort: string;
   public
-    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo); overload; override;
+    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
+      overload; override;
     procedure Connection;
     procedure Exceptions;
     [THTTPAttributes('HttpPost')]
     procedure PostJson;
-    procedure URLEncoded(a,b: string);
+    procedure URLEncoded(a, b: string);
     procedure Sessions;
     procedure MethodWithParams(aParam1: string; aParam2: string);
     [THTTPAttributes('HttpGet')]
@@ -26,6 +27,7 @@ type
     procedure HTTPAttribute(aParam: string); overload;
     property Port: string read FPort;
     property Request: string read FRequest;
+    procedure SomeFakeJob();
   end;
 
 implementation
@@ -95,8 +97,7 @@ procedure TRPTests.Sessions;
 var
   jo: ISuperObject;
 //  LSessionList: TIdHTTPDefaultSessionList;  //TIdHTTPSessionList;
-LSessionList: TIdHTTPSessionList;
-
+  LSessionList: TIdHTTPSessionList;
 begin
   jo := SO;
   jo.S['sessionID'] := RequestInfo.Session.SessionID;
@@ -106,9 +107,15 @@ begin
 
 //  LSessionList := TIdHTTPDefaultSessionList(Main.Server.SessionList).LockList;
   LSessionList := TIdHTTPDefaultSessionList(Main.Server.SessionList).SessionList.LockList;
-  jo.S['sessionCount'] :=   LSessionList.Count.ToString;
+  jo.S['sessionCount'] := LSessionList.Count.ToString;
   TIdHTTPDefaultSessionList(Main.Server.SessionList).SessionList.UnlockList;
   FResponses.OkWithJson(jo.AsJSon(false, false));
+end;
+
+procedure TRPTests.SomeFakeJob;
+begin
+  Sleep(3000);
+  FResponses.OK();
 end;
 
 procedure TRPTests.Connection;
@@ -116,7 +123,7 @@ begin
   FResponses.OK();
 end;
 
-procedure TRPTests.URLEncoded(a,b: string);
+procedure TRPTests.URLEncoded(a, b: string);
 var
   jo: ISuperObject;
 begin
