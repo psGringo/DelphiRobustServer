@@ -193,16 +193,16 @@ begin
         if Assigned(t) and Assigned(t.OnProgress) then
           (t.OnProgress(i));
 
-        // raise Exception.Create('Test Error Message'); // test Exception
+         raise Exception.Create('Test Error Message'); // test Exception
             end;
 
-      if Assigned(t) and Assigned(t.OnFinish) then
+      if Assigned(t) and Assigned(t.OnFinish) and not TLongTaskThread(t).IsTerminated then
         (t.OnFinish(i, ' ThreadFinished')); // thread finished
     end);
 
-  t.OnStart := OnStartLongTask;
-  t.OnProgress := OnProgressLongTask;
-  t.OnFinish := OnFinishLongTask;
+//  t.OnStart := OnStartLongTask;
+//  t.OnProgress := OnProgressLongTask;
+//  t.OnFinish := OnFinishLongTask;
   t.OnException := OnException;
 
   Main.LongTaskThreads.Add(t);

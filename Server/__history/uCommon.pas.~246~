@@ -60,7 +60,7 @@ type
 
   TNotifyLongTask = procedure(aProgress: double = 0.00; aMsg: string = '') of object;
 
-  TNotifyLongTaskException = procedure(aEClass: string; aMsg: string) of object;
+  TNotifyLongTaskException = procedure(aObject: TObject; aEClass: string; aMsg: string) of object;
 
   TLongTaskThread = class(TThread)
   private
@@ -71,20 +71,17 @@ type
     FOnProgress: TNotifyLongTask;
     FOnFinish: TNotifyLongTask;
     FOnException: TNotifyLongTaskException;
-    FIsTerminated: boolean;
-    procedure GetTerminated();
-    procedure SetIsTerminated(const Value: Boolean);
   protected
     procedure Execute(); override;
   published
     constructor Create(aProc: TProc);
+    function IsTerminated: Boolean;
     property Progress: double read FProgress write FProgress;
     property GuiId: string read FGuid;
     property OnStart: TNotifyLongTask read FOnStart write FOnStart;
     property OnProgress: TNotifyLongTask read FOnProgress write FOnProgress;
     property OnFinish: TNotifyLongTask read FOnFinish write FOnFinish;
     property OnException: TNotifyLongTaskException read FOnException write FOnException;
-    property IsTerminated: Boolean read GetTerminated write SetisTerminated;
   end;
 
 const
@@ -396,7 +393,7 @@ procedure TLongTaskThread.Execute;
 begin
   inherited;
   try
-    if not Terminated then    
+    if not Terminated then
       FProc();
   except
     on E: Exception do
@@ -405,14 +402,9 @@ begin
   end;
 end;
 
-procedure TLongTaskThread.GetTerminated;
+function TLongTaskThread.IsTerminated: Boolean;
 begin
- //
-end;
-
-procedure TLongTaskThread.SetisTerminated(const Value: Boolean);
-begin
-  FisTerminated := Value;
+  Result := Terminated;
 end;
 
 end.

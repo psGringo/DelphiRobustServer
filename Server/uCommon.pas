@@ -60,7 +60,7 @@ type
 
   TNotifyLongTask = procedure(aProgress: double = 0.00; aMsg: string = '') of object;
 
-  TNotifyLongTaskException = procedure(aEClass: string; aMsg: string) of object;
+  TNotifyLongTaskException = procedure(aObject: TObject; aEClass: string; aMsg: string) of object;
 
   TLongTaskThread = class(TThread)
   private
@@ -398,7 +398,7 @@ begin
   except
     on E: Exception do
       if Assigned(OnException) then
-        OnException(E.ClassName, E.Message);
+        OnException(Self, E.ClassName, E.Message);
   end;
 end;
 

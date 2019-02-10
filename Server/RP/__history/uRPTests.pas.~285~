@@ -11,7 +11,7 @@ type
   private
     FRequest: string;
     FPort: string;
-    procedure OnException(aClass, aMsg: string);
+    procedure OnException(aObject: TObject; aClass, aMsg: string);
     procedure OnStartLongTask(aProgress: double; aMsg: string);
     procedure OnProgressLongTask(aProgress: double; aMsg: string);
     procedure OnFinishLongTask(aProgress: double; aMsg: string);
@@ -59,10 +59,13 @@ begin
   FResponses.OkWithJson(json.AsJSon(false, false));
 end;
 
-procedure TRPTests.OnException(aClass, aMsg: string);
+procedure TRPTests.OnException(aObject: TObject; aClass, aMsg: string);
 begin
 // Notify exception here...
   // free allocated memory and send any notification
+//  (aObject as TLongTaskThread).FreeOnTerminate := false;
+//  (aObject as TLongTaskThread).Free();
+  Main.LongTaskThreads.Remove(aObject);
   Main.mAnswer.Lines.Add(aClass + ' ' + aMsg);
 end;
 
@@ -193,16 +196,16 @@ begin
         if Assigned(t) and Assigned(t.OnProgress) then
           (t.OnProgress(i));
 
-        // raise Exception.Create('Test Error Message'); // test Exception
+         raise Exception.Create('Test Error Message'); // test Exception
             end;
 
-      if Assigned(t) and Assigned(t.OnFinish) then
+      if Assigned(t) and Assigned(t.OnFinish) and not TLongTaskThread(t).IsTerminated then
         (t.OnFinish(i, ' ThreadFinished')); // thread finished
     end);
 
-  t.OnStart := OnStartLongTask;
-  t.OnProgress := OnProgressLongTask;
-  t.OnFinish := OnFinishLongTask;
+//  t.OnStart := OnStartLongTask;
+//  t.OnProgress := OnProgressLongTask;
+//  t.OnFinish := OnFinishLongTask;
   t.OnException := OnException;
 
   Main.LongTaskThreads.Add(t);

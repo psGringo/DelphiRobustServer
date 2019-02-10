@@ -11,7 +11,7 @@ type
   private
     FRequest: string;
     FPort: string;
-    procedure OnException(aClass, aMsg: string);
+    procedure OnException(aObject: TObject; aClass, aMsg: string);
     procedure OnStartLongTask(aProgress: double; aMsg: string);
     procedure OnProgressLongTask(aProgress: double; aMsg: string);
     procedure OnFinishLongTask(aProgress: double; aMsg: string);
@@ -59,10 +59,13 @@ begin
   FResponses.OkWithJson(json.AsJSon(false, false));
 end;
 
-procedure TRPTests.OnException(aClass, aMsg: string);
+procedure TRPTests.OnException(aObject: TObject; aClass, aMsg: string);
 begin
 // Notify exception here...
   // free allocated memory and send any notification
+  (aObject as TLongTaskThread).FreeOnTerminate := false;
+  (aObject as TLongTaskThread).Free();
+  Main.LongTaskThreads.Remove(aObject);
   Main.mAnswer.Lines.Add(aClass + ' ' + aMsg);
 end;
 
@@ -78,7 +81,7 @@ end;
 
 procedure TRPTests.OnStartLongTask(aProgress: double; aMsg: string);
 begin
-  Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+  //Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
 end;
 
 procedure TRPTests.Exceptions;
@@ -95,7 +98,7 @@ begin
   p := 0.00;
   with Main.LongTaskThreads.LockList() do
   try
-    for i := 0 to Count do
+    for i := 0 to Count - 1 do
       if TLongTaskThread(Items[i]).GuiId = aGuid then
       begin
         p := TLongTaskThread(Items[i]).Progress;
@@ -179,7 +182,7 @@ begin
       i: integer;
     begin
 
-      if Assigned(t.OnStart) then
+      if Assigned(t) and Assigned(t.OnStart) then
         (t.OnStart(i, 'ThreadStarted'));
 
       for i := 0 to 99 do
@@ -188,21 +191,21 @@ begin
         t.Progress := i;
 
         if TLongTaskThread(t).IsTerminated then
-        break;
+          break;
 
-        if Assigned(t.OnProgress) then
+        if Assigned(t) and Assigned(t.OnProgress) then
           (t.OnProgress(i));
 
-        // raise Exception.Create('Test Error Message'); // test Exception
+         raise Exception.Create('Test Error Message'); // test Exception
             end;
 
-      if Assigned(t.OnFinish) then
+      if Assigned(t) and Assigned(t.OnFinish) and not TLongTaskThread(t).IsTerminated then
         (t.OnFinish(i, ' ThreadFinished')); // thread finished
     end);
 
-  t.OnStart := OnStartLongTask;
-  t.OnProgress := OnProgressLongTask;
-  t.OnFinish := OnFinishLongTask;
+//  t.OnStart := OnStartLongTask;
+//  t.OnProgress := OnProgressLongTask;
+//  t.OnFinish := OnFinishLongTask;
   t.OnException := OnException;
 
   Main.LongTaskThreads.Add(t);
