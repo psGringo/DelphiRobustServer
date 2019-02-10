@@ -56,9 +56,6 @@ begin
 end;
 
 procedure TTimers.tWorkTimer(Sender: TObject);
-var
-  jo: ISuperObject;
-  idHTTP: ISP<TiDHTTP>;
 begin
   TThread.CreateAnonymousThread(
     procedure

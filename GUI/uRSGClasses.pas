@@ -19,13 +19,14 @@ type
     FAdress: string;
     FIsDefaultSettings: boolean;
     FIsActive: boolean;
+    FIsStartAsService: boolean;
     FIsStartedAsService: boolean;
     FServerExePath: string;
     FServerServiceName: string;
     FIsOnline: boolean;
     OnFNotifyEventMsg: TNotifyEventMsg;
     OnFNotifyEventStatusMsg: TNotifyEventStatusMsg;
-    FIsStartAsService: boolean;
+
     procedure ReadIniSettings;
     function HowServerStarted: boolean;
     function IsServiceRunning(aSMachine, aSService: PChar): boolean;
@@ -54,6 +55,7 @@ type
     property OnNotifyEventMsg: TNotifyEventMsg read OnFNotifyEventMsg write OnFNotifyEventMsg;
     property OnNotifyEventStatusMsg: TNotifyEventStatusMsg read OnFNotifyEventStatusMsg write OnFNotifyEventStatusMsg;
     property IsStartAsService: boolean read FIsStartAsService write FIsStartAsService;
+    property ServerExePath: string read FServerExePath;
   end;
 
 implementation
@@ -199,6 +201,7 @@ begin
     FPort := ini.ReadString('server', 'port', '<None>');
     FServerExePath := ini.ReadString('server', 'exepath', '<None>');
     FServerServiceName := ini.ReadString('server', 'serviceName', '<None>');
+    FIsStartAsService := ini.ReadString('server', 'isStartAsService', '<None>') = 'true';
     FIsDefaultSettings := false;
   end
   else
@@ -206,6 +209,7 @@ begin
     FProtocol := 'http';
     FHost := 'localhost';
     FPort := '7777';
+    FIsStartAsService := false;
     FIsDefaultSettings := true;
   end;
   FAdress := FProtocol + '://' + FHost + ':' + FPort;
@@ -216,7 +220,7 @@ var
   asExe: boolean;
   asService: boolean;
 begin
-  asExe := IsProcessExists(ServerExeName);
+  asExe := IsProcessExists(ExtractFileName(FServerExePath));
   asService := IsServiceRunning(nil, PWideChar(FServerServiceName));
   Result := asExe or asService;
   if Result then
@@ -482,22 +486,22 @@ begin
   if FIsActive then
     Exit();
 
-  case Main.MF.cbServiceOrExe.ItemIndex of
-    START_AsService: // service
-      if ServiceStart('', FServerServiceName) then
-      begin
-        FIsStartedAsService := true;
-        FIsActive := true;
-        Exit(true);
-      end;
-    START_AsExe: // exe
-      begin
-        param := 'exe';
-        ShellExecute(0, 'open', PWideChar(FServerExePath), PChar(param), nil, SW_SHOW);
-        FIsStartedAsService := false;
-        FIsActive := true;
-        Exit(true);
-      end;
+  if FIsStartAsService then
+  begin // as service
+    if ServiceStart('', FServerServiceName) then
+    begin
+      FIsStartedAsService := true;
+      FIsActive := true;
+      Exit(true);
+    end;
+  end
+  else
+  begin // as exe
+    param := 'exe';
+    ShellExecute(0, 'open', PWideChar(FServerExePath), PChar(param), nil, SW_SHOW);
+    FIsStartedAsService := false;
+    FIsActive := true;
+    Exit(true);
   end;
 end;
 
@@ -514,7 +518,7 @@ begin
   if FIsStartedAsService then
     Result := (ServiceStop('', FServerServiceName))
   else
-    Result := KillTask(ServerExeName);
+    Result := KillTask(ExtractFileName(FServerExePath));
 
   Main.Timers.StopTimers();
   FIsOnline := false;

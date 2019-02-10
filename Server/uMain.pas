@@ -52,14 +52,15 @@ type
     procedure bUrlEncodeClick(Sender: TObject);
     procedure cbPostTypeSelect(Sender: TObject);
     procedure bDoUrlEncodeClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     FProtocol: string;
     FHost: string;
     FPort: string;
     FTimers: TTimers;
-    FIsVclDesktopMode: boolean;
     FAdress: string;
+    FLongTaskThreads: ISP<TThreadList>;
     procedure SwitchStartStopButtons();
     procedure UpdateWorkTime(var aMsg: TMessage); message WM_WORK_TIME;
     procedure UpdateAppMemory(var aMsg: TMessage); message WM_APP_MEMORY;
@@ -70,12 +71,12 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure Start;
     procedure Stop;
-    property IsVclDesktopMode: boolean read FIsVclDesktopMode write FIsVclDesktopMode;
     property Protocol: string read FProtocol write FProtocol;
     property Host: string read FHost write FHost;
     property Port: string read FPort write FPort;
     property Adress: string read FAdress write FAdress;
     property Timers: TTimers read FTimers write FTimers;
+    property LongTaskThreads: ISP<TThreadList> read FLongTaskThreads;
   end;
 
 var
@@ -89,12 +90,12 @@ uses
 
 { TMain }
 procedure TMain.bAPIClick(Sender: TObject);
-//var
-// rp: ISP<TRP>;
+var
+  c: ISP<TIdHTTP>;
 begin
-// rp := TSP<TRP>.Create();
-// rp.CreateAPI(TRPTests);
-// ShellExecute(Handle, 'open', 'c:\windows\notepad.exe', 'api.txt', nil, SW_SHOWNORMAL);
+  c := TSP<TIdHTTP>.Create();
+  c.Get(FAdress + '/System/Api');
+  ShellExecute(Handle, 'open', 'c:\windows\notepad.exe', 'api.txt', nil, SW_SHOWNORMAL);
 end;
 
 procedure TMain.bClearAnswersClick(Sender: TObject);
@@ -260,6 +261,24 @@ begin
   Server.DefaultPort := FPort.ToInteger();
   ilPics.GetBitmap(3, bClearAnswers.Glyph);
   SwitchStartStopButtons(); // will start server
+
+  FLongTaskThreads := TSP<TThreadList>.Create();
+end;
+
+procedure TMain.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  i: integer;
+begin
+  with LongTaskThreads.LockList() do
+  try
+    for i := 0 to Count-1 do
+    begin
+      TLongTaskThread(Items[i]).FreeOnTerminate := false; // in other case they will be destroyed automatically
+      TLongTaskThread(Items[i]).Free();
+    end;
+  finally
+    LongTaskThreads.UnlockList();
+  end;
 end;
 
 procedure TMain.GetRequestProcessing;
@@ -288,7 +307,6 @@ end;
 procedure TMain.Start;
 var
   l: ISP<TLogger>;
-  jo: ISuperObject;
 begin
   l := TSP<TLogger>.Create();
   Server.Active := true;
@@ -300,14 +318,13 @@ end;
 procedure TMain.Stop;
 var
   l: ISP<TLogger>;
-  c: ISP<TIdHTTP>;
-  jo: ISuperObject;
 begin
   l := TSP<TLogger>.Create();
   Server.Active := false;
   StatusBar.Panels[0].Text := 'Stopped';
   UpdateStartStopGlyph(0);
   l.LogInfo('Server successfully stopped');
+
 end;
 
 procedure TMain.SwitchStartStopButtons;

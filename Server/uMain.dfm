@@ -12,6 +12,7 @@ object Main: TMain
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   object eRequest: TEdit
@@ -28,7 +29,7 @@ object Main: TMain
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    Text = 'Test/Connection'
+    Text = 'Test/LongTask'
   end
   object pUrlEncode: TPanel
     AlignWithMargins = True
@@ -384,7 +385,7 @@ object Main: TMain
     Left = 360
     Top = 232
     Bitmap = {
-      494C010104000800940010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010104000800AC0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

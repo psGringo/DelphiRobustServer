@@ -8,9 +8,7 @@ uses
 type
   TTimers = class(TDataModule)
     tStatus: TTimer;
-    IdHTTP: TIdHTTP;
     procedure tStatusTimer(Sender: TObject);
-
   private
     { Private declarations }
   public
@@ -21,7 +19,7 @@ type
 implementation
 
 uses
-  uMain, superobject, uCommon;
+  uMain, superobject, uCommon, uConst;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
@@ -54,31 +52,37 @@ begin
             Main.Server.IsActive := true;
             Main.Server.IsOnline := true;
           end);
-
         // memory
-            jo := SO[idHTTP.Get(Main.Server.Adress + '/System/Memory')];
+        jo := SO[idHTTP.Get(Main.Server.Adress + '/System/Memory')];
         TThread.Synchronize(TThread.CurrentThread,
           procedure()
           begin
             Main.MF.StatusBar.Panels[2].Text := jo.O['data'].s['memory'];
           end);
-
         // Contexts
-            jo := SO[idHTTP.Get(Main.Server.Adress + '/System/Connections')];
+
+        jo := SO[idHTTP.Get(Main.Server.Adress + '/System/Connections')];
         TThread.Synchronize(TThread.CurrentThread,
           procedure()
           begin
             Main.MF.StatusBar.Panels[3].Text := 'Connections ' + jo.O['data'].i['connections'].ToString();
           end);
+
       except
         on E: Exception do
+        begin
           TThread.Synchronize(TThread.CurrentThread,
             procedure()
             begin
+              Main.Timers.tStatus.Enabled := false;
+              Main.MF.StatusBar.Panels[0].Text := ServerStopped;
               Main.MF.StatusBar.Panels[1].Text := E.Message;
+              Main.MF.StatusBar.Panels[2].Text := '';
+              Main.MF.StatusBar.Panels[3].Text := '';
               Main.Server.IsActive := false;
               Main.Server.IsOnline := false;
             end);
+        end;
       end;
     end).Start;
 end;

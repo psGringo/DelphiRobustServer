@@ -11,6 +11,10 @@ type
   private
     FRequest: string;
     FPort: string;
+    procedure OnException(aClass, aMsg: string);
+    procedure OnStartLongTask(aProgress: double; aMsg: string);
+    procedure OnProgressLongTask(aProgress: double; aMsg: string);
+    procedure OnFinishLongTask(aProgress: double; aMsg: string);
   public
     constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
       overload; override;
@@ -20,6 +24,7 @@ type
     procedure PostJson;
     procedure URLEncoded(a, b: string);
     procedure Sessions;
+    function PingContext: string;
     procedure MethodWithParams(aParam1: string; aParam2: string);
     [THTTPAttributes('HttpGet')]
     procedure HTTPAttribute(); overload;
@@ -27,7 +32,8 @@ type
     procedure HTTPAttribute(aParam: string); overload;
     property Port: string read FPort;
     property Request: string read FRequest;
-    procedure SomeFakeJob();
+    procedure LongTask();
+    procedure GetLongTaskProgress(aGuid: string);
   end;
 
 implementation
@@ -53,9 +59,54 @@ begin
   FResponses.OkWithJson(json.AsJSon(false, false));
 end;
 
+procedure TRPTests.OnException(aClass, aMsg: string);
+begin
+// Notify exception here...
+  // free allocated memory and send any notification
+  Main.mAnswer.Lines.Add(aClass + ' ' + aMsg);
+end;
+
+procedure TRPTests.OnFinishLongTask(aProgress: double; aMsg: string);
+begin
+  Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+end;
+
+procedure TRPTests.OnProgressLongTask(aProgress: double; aMsg: string);
+begin
+  Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+end;
+
+procedure TRPTests.OnStartLongTask(aProgress: double; aMsg: string);
+begin
+  //Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+end;
+
 procedure TRPTests.Exceptions;
 begin
   raise Exception.Create('Test Error Message');
+end;
+
+procedure TRPTests.GetLongTaskProgress(aGuid: string);
+var
+  p: double;
+  json: ISuperObject;
+  i: integer;
+begin
+  p := 0.00;
+  with Main.LongTaskThreads.LockList() do
+  try
+    for i := 0 to Count - 1 do
+      if TLongTaskThread(Items[i]).GuiId = aGuid then
+      begin
+        p := TLongTaskThread(Items[i]).Progress;
+        break;
+      end;
+  finally
+    Main.LongTaskThreads.UnlockList();
+  end;
+  json := SO;
+  json.D['progress'] := p;
+  FResponses.OkWithJson(json.AsJSon(false, false));
 end;
 
 procedure TRPTests.HTTPAttribute(aParam: string);
@@ -75,6 +126,11 @@ begin
   json := SO;
   json.S['commandType'] := 'GET';
   FResponses.OkWithJson(json.AsJSon(false, false));
+end;
+
+function TRPTests.PingContext: string;
+begin
+//
 end;
 
 procedure TRPTests.PostJson;
@@ -112,10 +168,51 @@ begin
   FResponses.OkWithJson(jo.AsJSon(false, false));
 end;
 
-procedure TRPTests.SomeFakeJob;
+procedure TRPTests.LongTask;
+var
+  jo: ISuperObject;
+  t: TLongTaskThread;
 begin
-  Sleep(3000);
-  FResponses.OK();
+  t := TLongTaskThread.Create(
+    procedure()
+    var
+      i: integer;
+    begin
+
+      if Assigned(t) and Assigned(t.OnStart) then
+        (t.OnStart(i, 'ThreadStarted'));
+
+      for i := 0 to 99 do
+      begin
+        sleep(1000);
+        t.Progress := i;
+
+        if TLongTaskThread(t).IsTerminated then
+          break;
+
+        if Assigned(t) and Assigned(t.OnProgress) then
+          (t.OnProgress(i));
+
+         raise Exception.Create('Test Error Message'); // test Exception
+            end;
+
+      if Assigned(t) and Assigned(t.OnFinish) and not TLongTaskThread(t).IsTerminated then
+        (t.OnFinish(i, ' ThreadFinished')); // thread finished
+    end);
+
+//  t.OnStart := OnStartLongTask;
+//  t.OnProgress := OnProgressLongTask;
+//  t.OnFinish := OnFinishLongTask;
+  t.OnException := OnException;
+
+  Main.LongTaskThreads.Add(t);
+  t.Start();
+  if Assigned(t.OnStart) then
+    (t.OnStart); // thread started
+
+  jo := SO();
+  jo.S['threadGuid'] := t.GuiId;
+  FResponses.OkWithJson(jo.AsJSon(false, false));
 end;
 
 procedure TRPTests.Connection;

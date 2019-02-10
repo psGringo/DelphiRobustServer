@@ -150,14 +150,12 @@
         <DCCReference Include="RP\uRPTests.pas"/>
         <DCCReference Include="uAttributes.pas"/>
         <DCCReference Include="RP\uRPFiles.pas"/>
-        <DCCReference Include="RP\uRPApi.pas"/>
-        <DCCReference Include="uDelphiRobustService.pas">
-            <Form>DelphiRobustService</Form>
+        <DCCReference Include="uRSService.pas">
+            <Form>RobustService</Form>
         </DCCReference>
-        <DCCReference Include="uAnotherMain.pas">
-            <Form>AnotherMain</Form>
+        <DCCReference Include="RP\uRPSystem.pas">
+            <Form>$R *.res</Form>
         </DCCReference>
-        <DCCReference Include="RP\uRPSystem.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -190,15 +188,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\RobustServer.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>RobustServer.rsm</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\RobustServer.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>RobustServer.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win64\Debug\RobustServer.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>RobustServer.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
