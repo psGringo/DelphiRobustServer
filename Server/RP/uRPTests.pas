@@ -4,13 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, uRP, IdContext, System.NetEncoding,
-  uAttributes, System.JSON;
+  uAttributes, System.JSON, SyncObjs;
 
 type
   TRPTests = class(TRP)
   private
-    FRequest: string;
-    FPort: string;
     procedure OnException(aObject: TObject; aClass, aMsg: string);
     procedure OnStartLongTask(aProgress: double; aMsg: string);
     procedure OnProgressLongTask(aProgress: double; aMsg: string);
@@ -30,10 +28,10 @@ type
     procedure HTTPAttribute(); overload;
     [THTTPAttributes('HttpPost')]
     procedure HTTPAttribute(aParam: string); overload;
-    property Port: string read FPort;
-    property Request: string read FRequest;
     procedure LongTask();
     procedure GetLongTaskProgress(aGuid: string);
+    procedure SharedResourceExample();
+    procedure DBConnection();
   end;
 
 implementation
@@ -62,28 +60,28 @@ end;
 procedure TRPTests.OnException(aObject: TObject; aClass, aMsg: string);
 begin
 // Notify exception here...
-  with Main.LongTaskThreads.LockList() do
+  with TMain.GetInstance.LongTaskThreads.LockList() do
   try
-    Main.LongTaskThreads.Remove(aObject);
-    Main.mAnswer.Lines.Add(aClass + ' ' + aMsg);
+    TMain.GetInstance.LongTaskThreads.Remove(aObject);
+    TMain.GetInstance.mAnswer.Lines.Add(aClass + ' ' + aMsg);
   finally
-    Main.LongTaskThreads.UnlockList();
+    TMain.GetInstance.LongTaskThreads.UnlockList();
   end;
 end;
 
 procedure TRPTests.OnFinishLongTask(aProgress: double; aMsg: string);
 begin
-  Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+  TMain.GetInstance.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
 end;
 
 procedure TRPTests.OnProgressLongTask(aProgress: double; aMsg: string);
 begin
-  Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+  TMain.GetInstance.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
 end;
 
 procedure TRPTests.OnStartLongTask(aProgress: double; aMsg: string);
 begin
-  //Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+  //TMain.GetInstance.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
 end;
 
 procedure TRPTests.Exceptions;
@@ -98,7 +96,7 @@ var
   i: integer;
 begin
   p := 0.00;
-  with Main.LongTaskThreads.LockList() do
+  with TMain.GetInstance.LongTaskThreads.LockList() do
   try
     for i := 0 to Count - 1 do
       if TLongTaskThread(Items[i]).GuiId = aGuid then
@@ -107,7 +105,7 @@ begin
         break;
       end;
   finally
-    Main.LongTaskThreads.UnlockList();
+    TMain.GetInstance.LongTaskThreads.UnlockList();
   end;
   json := SO;
   json.D['progress'] := p;
@@ -167,10 +165,36 @@ begin
   jo.S['lastTimeStamp'] := DateTimeToStr(RequestInfo.Session.LastTimeStamp);
 
 //  LSessionList := TIdHTTPDefaultSessionList(Main.Server.SessionList).LockList;
-  LSessionList := TIdHTTPDefaultSessionList(Main.Server.SessionList).SessionList.LockList;
+  LSessionList := TIdHTTPDefaultSessionList(TMain.GetInstance.Server.SessionList).SessionList.LockList;
   jo.S['sessionCount'] := LSessionList.Count.ToString;
-  TIdHTTPDefaultSessionList(Main.Server.SessionList).SessionList.UnlockList;
+  TIdHTTPDefaultSessionList(TMain.GetInstance.Server.SessionList).SessionList.UnlockList;
   FResponses.OkWithJson(jo.AsJSon(false, false));
+end;
+
+procedure TRPTests.SharedResourceExample;
+var
+  json: ISuperObject;
+  i: Integer;
+begin
+  TMain.GetInstance.CS.Enter();
+  try
+    json := SO;
+    for i := 0 to TMain.GetInstance.SomeSharedResource.Count - 1 do
+      json.S['value_' + i.ToString] := TMain.GetInstance.SomeSharedResource.ValueFromIndex[i];
+    FResponses.OkWithJson(json.AsJSon(false, false));
+  finally
+    TMain.GetInstance.CS.Leave();
+  end;
+end;
+
+procedure TRPTests.DBConnection;
+var
+  json: ISuperObject;
+begin
+  DB.Connect();
+  json := SO;
+  json.B['connected'] := DB.FDConnection.Connected; // Db.FDConnection.Connected;
+  FResponses.OkWithJson(json.AsJSon(false, false));
 end;
 
 procedure TRPTests.LongTask;
@@ -183,9 +207,8 @@ begin
     var
       i: integer;
     begin
-
-      if Assigned(t) and Assigned(t.OnStart) then
-        (t.OnStart(i, 'ThreadStarted'));
+      if Assigned(t.OnStart) then
+        (t.OnStart(0, 'ThreadStarted'));
 
       for i := 0 to 99 do
       begin
@@ -195,22 +218,23 @@ begin
         if TLongTaskThread(t).IsTerminated then
           break;
 
-        if Assigned(t) and Assigned(t.OnProgress) then
+        if Assigned(t.OnProgress) then
           (t.OnProgress(i));
 
-        raise Exception.Create('Test Error Message'); // test Exception
-      end;
+//        raise Exception.Create('Test Error Message'); // test Exception
+            end;
 
-      if Assigned(t) and Assigned(t.OnFinish) and not TLongTaskThread(t).IsTerminated then
+      if Assigned(t.OnFinish) and not TLongTaskThread(t).IsTerminated then
         (t.OnFinish(i, ' ThreadFinished')); // thread finished
     end);
 
-//  t.OnStart := OnStartLongTask;
-//  t.OnProgress := OnProgressLongTask;
-//  t.OnFinish := OnFinishLongTask;
+  // events
+  t.OnStart := OnStartLongTask;
+  t.OnProgress := OnProgressLongTask;
+  t.OnFinish := OnFinishLongTask;
   t.OnException := OnException;
 
-  Main.LongTaskThreads.Add(t);
+  TMain.GetInstance.LongTaskThreads.Add(t);
   t.Start();
   if Assigned(t.OnStart) then
     (t.OnStart); // thread started

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
   Vcl.Dialogs, Vcl.StdCtrls, Vcl.Samples.Spin, Vcl.Buttons, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList, Vcl.ComCtrls,
-  uMainFrame, uTimers, System.IOUtils, Registry, System.IniFiles, uCommon, uRSGClasses;
+  uMainFrame, uTimers, System.IOUtils, Registry, System.IniFiles, uCommon, uRSGClasses, uLoadTestsFrame;
 
 type
   TMain = class(TForm)
@@ -13,7 +13,10 @@ type
     tsMain: TTabSheet;
     tsLoadTests: TTabSheet;
     MF: TMainFrame;
+    LoadTestFrame1: TLoadTestFrame;
+    StatusBar: TStatusBar;
     procedure FormCreate(Sender: TObject);
+    procedure MFbInstallServiceClick(Sender: TObject);
   private
     { Private declarations }
     FServer: ISP<TServer>;
@@ -45,6 +48,11 @@ begin
   MF.Init();
 end;
 
+procedure TMain.MFbInstallServiceClick(Sender: TObject);
+begin
+  MF.bInstallServiceClick(Sender);
+end;
+
 procedure TMain.NotifyEventMsg(aMsg: string);
 begin
   MF.mAnswer.Lines.Add(aMsg);
@@ -52,7 +60,7 @@ end;
 
 procedure TMain.NotifyEventStatusMsg(aMsg: string);
 begin
-  MF.StatusBar.Panels[0].Text := aMsg;
+  Main.StatusBar.Panels[0].Text := aMsg;
 end;
 
 end.

@@ -1,0 +1,19 @@
+unit uMains;
+
+interface
+
+uses
+  uMain,uRSService;
+
+implementation
+
+function GetMain: TMain;
+begin
+  if Assigned(RobustService) then
+    Result := RobustService.MainInstance
+  else
+    Result := Main;
+end;
+
+end.
+

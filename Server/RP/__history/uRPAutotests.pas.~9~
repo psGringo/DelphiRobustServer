@@ -1,0 +1,56 @@
+unit uRPAutotests;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, uRP, IdContext, System.NetEncoding,
+  uAttributes, System.JSON, SyncObjs;
+
+type
+  TRPAutotests = class(TRP)
+  public
+    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
+      overload; override;
+    procedure TestDBConnections(aCountRequestsPerSecond: integer);
+  end;
+
+implementation
+
+uses
+  IdHTTP;
+
+{ TRPAutotests }
+
+constructor TRPAutotests.Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
+begin
+  inherited;
+  Execute('Autotests');
+end;
+
+procedure TRPAutotests.TestDBConnections(aCountRequestsPerSecond: integer);
+var
+  i: Integer;
+begin
+  for i := 0 to aCountRequestsPerSecond do
+  begin
+    TThread.CreateAnonymousThread(
+      procedure()
+      var
+        c: ISP<TIdHTTP>;
+        s: string;
+      begin
+        try
+          c := TSP<TIdHTTP>.Create();
+          s := c.Get('http://localhost:7777/Test/DBConnection');
+        except
+          on E: Exception do
+          begin
+
+          end;
+        end;
+      end).Start();
+  end;
+end;
+
+end.
+

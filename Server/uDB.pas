@@ -3,27 +3,34 @@ unit uDB;
 interface
 
 uses
-  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
-  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
-  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.VCLUI.Wait, Data.DB,
-  FireDAC.Comp.Client, FireDAC.Phys.MySQLDef, FireDAC.Phys.MySQL, FireDAC.Stan.Param,
-  FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet, uCommon;
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
+  FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.VCLUI.Wait, Data.DB, FireDAC.Comp.Client,
+  FireDAC.Phys.MySQLDef, FireDAC.Phys.MySQL, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet,
+  uCommon;
 
 type
   TDB = class(TDataModule)
-    FDConnection: TFDConnection;
+    FDConnectionTemp: TFDConnection;
     FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink;
+    Q: TFDQuery;
+    procedure FDConnectionAfterDisconnect(Sender: TObject);
+    procedure FDConnectionAfterConnect(Sender: TObject);
   private
+    FFDConnection: TFDConnection;
     { Private declarations }
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     function Connect: boolean;
     function GetLastID: integer;
+    property FDConnection: TFDConnection read FFDConnection write FFDConnection;
   end;
 
 implementation
 
+uses
+  uMain;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
@@ -46,25 +53,25 @@ begin
    //Пробуем подключиться
     try
       FDConnection.Connected := true;
-      if FDConnection.Connected then
-      begin
-        Result := true;
-//     showmessage('Connected');
-      end
-      else
-        Result := false;
+      Q.Connection := FDConnection;
+      Result := FDConnection.Connected;
+
     except
       on E: EFDDBEngineException do
         case E.Kind of
           ekUserPwdInvalid:
        // user name or password are incorrect
-            raise Exception.Create('DBConnection Error. User name or password are incorrect' + #13#10 + #13#10 + E.ClassName + ' поднята ошибка, с сообщением : ' + E.Message);
+            raise Exception.Create('DBConnection Error. User name or password are incorrect' + #13#10 + #13#10 + E.ClassName
+              + ' поднята ошибка, с сообщением : ' + E.Message);
           ekUserPwdExpired:
-            raise Exception.Create('DBConnection Error. User password is expired' + #13#10 + #13#10 + E.ClassName + ' поднята ошибка, с сообщением : ' + E.Message);
+            raise Exception.Create('DBConnection Error. User password is expired' + #13#10 + #13#10 + E.ClassName +
+              ' поднята ошибка, с сообщением : ' + E.Message);
           ekServerGone:
-            raise Exception.Create('DBConnection Error. DBMS is not accessible due to some reason' + #13#10 + #13#10 + E.ClassName + ' поднята ошибка, с сообщением : ' + E.Message);
+            raise Exception.Create('DBConnection Error. DBMS is not accessible due to some reason' + #13#10 + #13#10 + E.ClassName
+              + ' поднята ошибка, с сообщением : ' + E.Message);
         else                // other issues
-          raise Exception.Create('DBConnection Error. UnknownMistake' + #13#10 + #13#10 + E.ClassName + ' поднята ошибка, с сообщением : ' + E.Message);
+          raise Exception.Create('DBConnection Error. UnknownMistake' + #13#10 + #13#10 + E.ClassName +
+            ' поднята ошибка, с сообщением : ' + E.Message);
         end;
       on E: Exception do
         raise Exception.Create(E.ClassName + ' поднята ошибка, с сообщением : ' + #13#10 + #13#10 + E.Message);
@@ -77,7 +84,25 @@ end;
 constructor TDB.Create(AOwner: TComponent);
 begin
   inherited;
-  Connect();
+  FFDConnection := TFDConnection.Create(Self);
+  FFDConnection.AfterConnect := FDConnectionAfterConnect;
+  FFDConnection.BeforeConnect := FDConnectionAfterDisconnect;
+end;
+
+destructor TDB.Destroy;
+begin
+  FFDConnection.Free();
+  inherited;
+end;
+
+procedure TDB.FDConnectionAfterConnect(Sender: TObject);
+begin
+  TMain.GetInstance.DBConnectionsCount := TMain.GetInstance.DBConnectionsCount + 1;
+end;
+
+procedure TDB.FDConnectionAfterDisconnect(Sender: TObject);
+begin
+//  TMains.Get.DBConnectionsCount := TMains.Get.DBConnectionsCount - 1;
 end;
 
 function TDB.GetLastID: integer;

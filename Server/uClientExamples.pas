@@ -51,7 +51,7 @@ begin
   client.Request.ContentType := 'application/json';
   client.Request.ContentEncoding := 'utf-8';
   r := client.Post('http://localhost:' + FPort + '/' + 'Tests/PostJson', ss); //
-  Main.mAnswer.Lines.Add(r);
+  TMain.GetInstance.mAnswer.Lines.Add(r);
 end;
 
 procedure TClientExamples.PostSendFile(aAbsWinFilePath: string);
@@ -73,7 +73,7 @@ begin
   postData.AddFormField('isOverwrite', System.NetEncoding.TNetEncoding.URL.Encode('false'));
   postData.AddFile('attach', aAbsWinFilePath, 'application/x-rar-compressed');
   client.POST('http://localhost:' + FPort + '/Files/Send', postData, ss); //
-  Main.mAnswer.Lines.Add(ss.DataString);
+  TMain.GetInstance.mAnswer.Lines.Add(ss.DataString);
 end;
 
 procedure TClientExamples.PostFormURLEncoded();
@@ -92,7 +92,7 @@ begin
   client.Request.ContentType := 'application/x-www-form-urlencoded';
   client.Request.RawHeaders.AddValue('AuthToken', 'evjTI82N');
   r := client.POST('http://localhost:' + FPort + '/Tests/URLEncoded', sl);
-  Main.mAnswer.Lines.Add(r);
+  TMain.GetInstance.mAnswer.Lines.Add(r);
 end;
 
 

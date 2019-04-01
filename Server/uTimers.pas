@@ -46,11 +46,11 @@ begin
     procedure
     begin
       idHTTP := TSP<TiDHTTP>.Create();
-      jo := SO[idHTTP.Get(Main.Adress + '/System/Memory')];
+      jo := SO[idHTTP.Get(TMain.GetInstance.Adress + '/System/Memory')];
       TThread.Synchronize(TThread.CurrentThread,
         procedure()
         begin
-          Main.StatusBar.Panels[2].Text := jo.O['data'].s['memory'];
+          TMain.GetInstance.StatusBar.Panels[2].Text := jo.O['data'].s['memory'];
         end);
     end).Start;
 end;
@@ -64,7 +64,7 @@ begin
         procedure()
         begin
           FWorkTime := (Now() - FStartTime);
-          Main.StatusBar.Panels[1].Text := TimeToStr(FWorkTime);
+          TMain.GetInstance.StatusBar.Panels[1].Text := TimeToStr(FWorkTime);
         end);
     end).Start;
 end;

@@ -2,7 +2,7 @@ object Main: TMain
   Left = 0
   Top = 0
   Caption = 'Delphi Robust Server'
-  ClientHeight = 338
+  ClientHeight = 418
   ClientWidth = 687
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,26 +15,10 @@ object Main: TMain
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
-  object eRequest: TEdit
-    AlignWithMargins = True
-    Left = 3
-    Top = 36
-    Width = 681
-    Height = 24
-    Align = alTop
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clGrayText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 0
-    Text = 'Test/LongTask'
-  end
   object pUrlEncode: TPanel
     AlignWithMargins = True
     Left = 3
-    Top = 66
+    Top = 74
     Width = 681
     Height = 32
     Align = alTop
@@ -45,8 +29,8 @@ object Main: TMain
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
-    TabOrder = 1
-    Visible = False
+    TabOrder = 0
+    ExplicitTop = 67
     object bDoUrlEncode: TBitBtn
       AlignWithMargins = True
       Left = 584
@@ -54,7 +38,7 @@ object Main: TMain
       Width = 93
       Height = 24
       Align = alRight
-      Caption = 'Encode'
+      Caption = '> URLEncode'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -78,7 +62,6 @@ object Main: TMain
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      Text = 'Some text to encode...'
     end
   end
   object pTop: TPanel
@@ -95,7 +78,7 @@ object Main: TMain
     Font.Style = []
     ParentFont = False
     ShowCaption = False
-    TabOrder = 2
+    TabOrder = 1
     object bStartStop: TBitBtn
       AlignWithMargins = True
       Left = 4
@@ -108,7 +91,7 @@ object Main: TMain
     end
     object pPort: TPanel
       AlignWithMargins = True
-      Left = 207
+      Left = 111
       Top = 4
       Width = 112
       Height = 25
@@ -117,6 +100,7 @@ object Main: TMain
       Caption = 'pPort'
       ShowCaption = False
       TabOrder = 1
+      ExplicitLeft = 207
       object lPort: TLabel
         Left = 8
         Top = 5
@@ -152,7 +136,7 @@ object Main: TMain
     end
     object bAPI: TBitBtn
       AlignWithMargins = True
-      Left = 325
+      Left = 229
       Top = 4
       Width = 33
       Height = 25
@@ -160,10 +144,11 @@ object Main: TMain
       Caption = 'API'
       TabOrder = 2
       OnClick = bAPIClick
+      ExplicitLeft = 325
     end
     object bLog: TBitBtn
       AlignWithMargins = True
-      Left = 364
+      Left = 268
       Top = 4
       Width = 33
       Height = 25
@@ -171,12 +156,13 @@ object Main: TMain
       Caption = 'LOG'
       TabOrder = 3
       OnClick = bLogClick
+      ExplicitLeft = 364
     end
     object cbRequestType: TComboBox
       AlignWithMargins = True
       Left = 43
       Top = 4
-      Width = 110
+      Width = 62
       Height = 24
       Align = alLeft
       Style = csDropDownList
@@ -194,32 +180,10 @@ object Main: TMain
         'GET'
         'POST')
     end
-    object bGo: TBitBtn
-      AlignWithMargins = True
-      Left = 159
-      Top = 4
-      Width = 42
-      Height = 25
-      Align = alLeft
-      Caption = 'GO'
-      TabOrder = 5
-      OnClick = bGoClick
-    end
-    object bUrlEncode: TBitBtn
-      AlignWithMargins = True
-      Left = 403
-      Top = 4
-      Width = 75
-      Height = 25
-      Align = alLeft
-      Caption = 'URLEncode'
-      TabOrder = 6
-      OnClick = bUrlEncodeClick
-    end
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 319
+    Top = 399
     Width = 687
     Height = 19
     Panels = <
@@ -236,19 +200,20 @@ object Main: TMain
       item
         Width = 100
       end>
+    ExplicitTop = 319
   end
   object pPost: TPanel
     AlignWithMargins = True
     Left = 3
-    Top = 104
+    Top = 112
     Width = 681
-    Height = 90
+    Height = 112
     Align = alTop
     BevelOuter = bvNone
     Caption = 'pPost'
     ShowCaption = False
-    TabOrder = 4
-    Visible = False
+    TabOrder = 3
+    ExplicitTop = 105
     object pPostParamsTop: TPanel
       AlignWithMargins = True
       Left = 3
@@ -274,9 +239,9 @@ object Main: TMain
         Height = 21
         Align = alClient
         Style = csDropDownList
-        ItemIndex = 1
+        ItemIndex = 0
         TabOrder = 0
-        Text = 'application/x-www-form-urlencoded'
+        Text = 'application/json'
         OnSelect = cbPostTypeSelect
         Items.Strings = (
           'application/json'
@@ -289,7 +254,7 @@ object Main: TMain
       Left = 3
       Top = 34
       Width = 675
-      Height = 53
+      Height = 75
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGrayText
@@ -297,23 +262,25 @@ object Main: TMain
       Font.Name = 'Tahoma'
       Font.Style = []
       Lines.Strings = (
-        'PostParam1 = URLEncoded(PostParam1Value)'
-        'PostParam2 = URLEncoded(PostParam2Value)')
+        '{ "name":"Stas", "age":35 }')
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 1
+      ExplicitHeight = 59
     end
   end
   object pAnswers: TPanel
     AlignWithMargins = True
     Left = 3
-    Top = 200
+    Top = 230
     Width = 681
-    Height = 116
+    Height = 166
     Align = alClient
     BevelOuter = bvNone
     Caption = 'pAnswers'
-    TabOrder = 5
+    TabOrder = 4
+    ExplicitTop = 201
+    ExplicitHeight = 115
     object pAnswerTop: TPanel
       Left = 0
       Top = 0
@@ -357,7 +324,7 @@ object Main: TMain
       Left = 3
       Top = 36
       Width = 675
-      Height = 77
+      Height = 127
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGrayText
@@ -367,6 +334,59 @@ object Main: TMain
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 1
+      ExplicitHeight = 76
+    end
+  end
+  object pRequest: TPanel
+    AlignWithMargins = True
+    Left = 3
+    Top = 36
+    Width = 681
+    Height = 32
+    Align = alTop
+    Caption = 'Request'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    ShowCaption = False
+    TabOrder = 5
+    ExplicitLeft = 8
+    ExplicitTop = 49
+    object cmbRequest: TComboBoxEx
+      AlignWithMargins = True
+      Left = 11
+      Top = 4
+      Width = 616
+      Height = 25
+      Margins.Left = 10
+      Margins.Right = 5
+      Align = alClient
+      ItemsEx = <>
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGrayText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      Text = 'Test/Connection'
+      ExplicitWidth = 25
+    end
+    object bGo: TBitBtn
+      AlignWithMargins = True
+      Left = 635
+      Top = 4
+      Width = 42
+      Height = 24
+      Align = alRight
+      Caption = '> GO '
+      TabOrder = 1
+      OnClick = bGoClick
+      ExplicitLeft = 652
+      ExplicitTop = 8
     end
   end
   object Server: TIdHTTPServer
@@ -377,15 +397,15 @@ object Main: TMain
     SessionState = True
     SessionTimeOut = 1000
     OnCommandGet = ServerCommandGet
-    Left = 288
-    Top = 232
+    Left = 376
+    Top = 304
   end
   object ilPics: TImageList
     ColorDepth = cd32Bit
-    Left = 360
-    Top = 232
+    Left = 440
+    Top = 296
     Bitmap = {
-      494C010104000800AC0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010104000800C00010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -657,7 +677,7 @@ object Main: TMain
       000000000000}
   end
   object OpenDialog: TOpenDialog
-    Left = 464
-    Top = 224
+    Left = 536
+    Top = 288
   end
 end

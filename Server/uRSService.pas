@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.SvcMgr, Vcl.Dialogs,
-  uMain, Vcl.Forms, uTimers;
+  Vcl.Forms, uTimers;
 
 type
   TRobustService = class(TService)
@@ -12,18 +12,20 @@ type
     procedure ServiceStart(Sender: TService; var Started: Boolean);
     procedure ServiceStop(Sender: TService; var Stopped: Boolean);
   private
+    FMainInstance: TObject;
     { Private declarations }
-    FMain: TMain;
   public
     { Public declarations }
     function GetServiceController: TServiceController; override;
-    property MainInstance: TMain read FMain;
+    property MainInstance: TObject read FMainInstance write FMainInstance;
   end;
 
 var
   RobustService: TRobustService;
 
 implementation
+
+uses uMain;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 {$R *.dfm}
@@ -42,20 +44,22 @@ end;
 
 procedure TRobustService.ServiceCreate(Sender: TObject);
 begin
-  FMain := TMain.Create(Self);
+   FMainInstance := TMain.Create(Self);
+//  FMain := TMain.Create(Self);
 end;
 
 procedure TRobustService.ServiceStart(Sender: TService; var Started: Boolean);
 begin
-  FMain.Start();
+  TMain(FMainInstance).Start();
   Started := true;
 end;
 
 procedure TRobustService.ServiceStop(Sender: TService; var Stopped: Boolean);
 begin
-  FMain.Stop();
+  TMain(FMainInstance).Stop();
   Stopped := true;
 end;
+
 
 end.
 

@@ -56,7 +56,7 @@ begin
   r := TSP<TResponses>.Create(TResponses.Create(FRequestInfo, FResponseInfo));
 
   try
-    firstSection := ParseFirstSection;
+    firstSection := ParseFirstSection();
 
     if (SameStr(firstSection, 'Users')) then
       u := TSP<TRPUsers>.Create(TRPUsers.Create(FContext, FRequestInfo, FResponseInfo))

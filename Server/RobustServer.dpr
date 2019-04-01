@@ -33,7 +33,7 @@ function IsSingleInstance(MutexName: string; KeepMutex: boolean = true): boolean
 const
   MUTEX_GLOBAL = 'Global\'; //Prefix to explicitly create the object in the global or session namespace. I.e. both client app (local user) and service (system account)
 var
-  MutexHandel: THandle;
+  MutexHandle: THandle;
   SecurityDesc: TSecurityDescriptor;
   SecurityAttr: TSecurityAttributes;
   ErrCode: integer;
@@ -51,17 +51,17 @@ begin
 
     // The mutex is created in the global name space which makes it possible to
     // access across user sessions.
-  MutexHandel := CreateMutex(@SecurityAttr, True, PChar(MUTEX_GLOBAL + MutexName));
-  ErrCode := GetLastError;
 
+  MutexHandle := CreateMutex(@SecurityAttr, True, PChar(MUTEX_GLOBAL + MutexName));
+  ErrCode := GetLastError;
     // If the function fails, the return value is 0
     // If the mutex is a named mutex and the object existed before this function
     // call, the return value is a handle to the existing object, GetLastError
     // returns ERROR_ALREADY_EXISTS.
-  if {(MutexHandel = 0) or } (ErrCode = ERROR_ALREADY_EXISTS) then
+  if (MutexHandle = 0) or  (ErrCode = ERROR_ALREADY_EXISTS) then
   begin
     result := false;
-    closeHandle(MutexHandel);
+    closeHandle(MutexHandle);
   end
   else
   begin
@@ -70,7 +70,7 @@ begin
     result := true;
 
     if not KeepMutex then
-      CloseHandle(MutexHandel);
+      CloseHandle(MutexHandle);
   end;
     // The Mutexhandle is not closed because we want it to exist during the
     // lifetime of the application. The system closes the handle automatically
@@ -85,12 +85,12 @@ begin
   begin
     Vcl.Forms.Application.Initialize;
     Vcl.Forms.Application.MainFormOnTaskbar := True;
-    TStyleManager.TrySetStyle('Carbon');
-    Vcl.Forms.Application.CreateForm(TMain, Main);
+    TStyleManager.TrySetStyle('Charcoal Dark Slate');
+  Vcl.Forms.Application.CreateForm(TMain, Main);
     Vcl.Forms.Application.Run;
   end
   else
-  begin
+  begin // service
     if not Vcl.SvcMgr.Application.DelayInitialize or Vcl.SvcMgr.Application.Installing then
       Vcl.SvcMgr.Application.Initialize;
     Vcl.SvcMgr.Application.CreateForm(TRobustService, RobustService);

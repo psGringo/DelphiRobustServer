@@ -18,7 +18,6 @@ type
       VContinueProcessing: Boolean);
     procedure ServerHeadersBlocked(AContext: TIdContext; AHeaders: TIdHeaderList; var VResponseNo: Integer; var
       VResponseText, VContentText: string);
-    function GetMain: TMain;
     procedure CreateAPIFromClass(aClass: TClass; aApi: TStringList);
   public
     constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
@@ -28,6 +27,7 @@ type
     procedure Offline();
     procedure Online();
     procedure Connections();
+    procedure DBConnections();
     procedure Deactivate();
     procedure Log();
     procedure Api();
@@ -79,12 +79,11 @@ var
 begin
   Result := false;
 
-  c := GetMain.Server.Contexts;
+  c := TMain.GetInstance.Server.Contexts;
   if c = nil then
     Exit();
 
   l := c.LockList();
-
   try
     for i := 0 to l.Count - 1 do
       TIdContext(l.Items[i]).Connection.Disconnect(False);
@@ -98,13 +97,13 @@ procedure TRPSystem.Connections;
 var
   jo: ISuperObject;
 begin
-  with GetMain.Server.Contexts.LockList() do
+  with TMain.GetInstance.Server.Contexts.LockList() do
   try
     jo := SO;
-    jo.I['connections'] := GetMain.Server.Contexts.Count;
+    jo.I['connections'] := TMain.GetInstance.Server.Contexts.Count;
     FResponses.OkWithJson(jo.AsJSon(false, false));
   finally
-    GetMain.Server.Contexts.UnlockList();
+    TMain.GetInstance.Server.Contexts.UnlockList();
   end;
 end;
 
@@ -138,18 +137,27 @@ begin
     RaiseLastOSError;
 end;
 
+procedure TRPSystem.DBConnections;
+var
+  json: IsuperObject;
+begin
+  DB.Connect();
+  with DB.Q do
+  begin
+    SQL.Text := 'SHOW STATUS WHERE `variable_name` = ''Threads_connected''';
+    Disconnect();
+    Open();
+    json := SO;
+    json.I['DbConnections'] := FieldByName('Value').AsInteger; // TMain.GetInstance.DBConnectionsCount;
+    FResponses.OkWithJson(json.AsJSon(false, false));
+    Close();
+  end;
+end;
+
 procedure TRPSystem.Deactivate;
 begin
   CloseAllConnections();
-  Main.Server.Active := false;
-end;
-
-function TRPSystem.GetMain: TMain;
-begin
-  if Assigned(RobustService) then
-    Result := RobustService.MainInstance
-  else
-    Result := Main;
+  TMain.GetInstance.Server.Active := false;
 end;
 
 procedure TRPSystem.Log;
@@ -188,8 +196,8 @@ end;
 
 procedure TRPSystem.Online();
 begin
-  GetMain.Server.OnHeadersAvailable := nil;
-  GetMain.Server.OnHeadersBlocked := nil;
+  TMain.GetInstance.Server.OnHeadersAvailable := nil;
+  TMain.GetInstance.Server.OnHeadersBlocked := nil;
   FResponses.OK();
 end;
 
@@ -201,7 +209,7 @@ var
   someProgress: string;
 begin
   r := false;
-  with GetMain.Server.Contexts.LockList() do
+  with TMain.GetInstance.Server.Contexts.LockList() do
   try
     for i := 0 to Count - 1 do
       if TIdContext(Items[i]).Binding.ID = aId.ToInteger then
@@ -211,7 +219,7 @@ begin
         Break;
       end;
   finally
-    GetMain.Server.Contexts.UnlockList();
+    TMain.GetInstance.Server.Contexts.UnlockList();
   end;
   if r then
   begin
@@ -223,8 +231,8 @@ end;
 
 procedure TRPSystem.Offline();
 begin
-  GetMain.Server.OnHeadersAvailable := ServerHeadersAvailable;
-  GetMain.Server.OnHeadersBlocked := ServerHeadersBlocked;
+  TMain.GetInstance.Server.OnHeadersAvailable := ServerHeadersAvailable;
+  TMain.GetInstance.Server.OnHeadersBlocked := ServerHeadersBlocked;
   FResponses.OK();
 end;
 
@@ -233,7 +241,7 @@ var
   json: ISuperobject;
 begin
   json := SO;
-  json.S['workTime'] := TimeToStr(GetMain.Timers.WorkTime);
+  json.S['workTime'] := TimeToStr(TMain.GetInstance.Timers.WorkTime);
   FResponses.OkWithJson(json.AsJSon(false, false));
 end;
 

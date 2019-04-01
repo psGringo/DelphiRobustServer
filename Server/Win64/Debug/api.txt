@@ -14,11 +14,16 @@ TRPSystem
 
   Connections | GET
 
+  DBConnections | GET
+
   Deactivate | GET
 
   Log | GET
 
   Api | GET
+
+  PingContext | GET
+    aId: string
 
   Create | GET
 
@@ -44,6 +49,8 @@ TRPTests
 
   Sessions | GET
 
+  PingContext | GET
+
   MethodWithParams | GET
     aParam1: string
     aParam2: string
@@ -53,7 +60,14 @@ TRPTests
   HTTPAttribute | POST
     aParam: string
 
-  SomeFakeJob | GET
+  LongTask | GET
+
+  GetLongTaskProgress | GET
+    aGuid: string
+
+  SharedResourceExample | GET
+
+  DBConnection | GET
 
   Create | GET
 

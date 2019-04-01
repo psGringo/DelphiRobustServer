@@ -5,7 +5,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, System.Generics.Collections, System.Rtti,
-  IdContext, uAttributes, System.Json, System.IOUtils;
+  IdContext, uAttributes, System.Json, System.IOUtils, uRSService;
 
 type
   TProcedure = reference to procedure;
@@ -44,12 +44,13 @@ type
 implementation
 
 uses
-  System.TypInfo, uDecodePostRequest, uRPTests;
+  System.TypInfo, uDecodePostRequest, uRPTests, Winapi.Windows;
 
 { TRP }
 procedure TRP.Create;
 begin
     // insert your code here...
+  FDB := TSP<TDB>.Create(TDB.Create(nil));
   FResponses.OK();
 end;
 
@@ -67,7 +68,8 @@ begin
   FContext := aContext;
   FResponseInfo := aResponseInfo;
   FRequestInfo := aRequestInfo;
-  FDB := TSP<TDB>.Create();
+  FDB := TSP<TDB>.Create(TDB.Create(nil));
+
   FClassAlias := '';
   FParams := TSP<TStringList>.Create();
   //reading params
@@ -89,6 +91,7 @@ constructor TRP.Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; a
   NoExecute: Boolean);
 begin
   FResponses := TSP<TResponses>.Create(TResponses.Create(aRequestInfo, aResponseInfo));
+  FDB := TSP<TDB>.Create(TDB.Create(nil));
   FRequestInfo := aRequestInfo;
   FResponseInfo := aResponseInfo;
   FContext := aContext;
@@ -112,6 +115,8 @@ var
   attribs: TArray<TCustomAttribute>;
   a: TCustomAttribute;
   methodParams: TArray<System.Rtti.TRttiParameter>;
+  iCounterPerSec: TLargeInteger;
+  C1, C2: TLargeInteger;
 
   procedure CollectArgs();
   var
@@ -128,6 +133,12 @@ var
   end;
 
 begin
+  QueryPerformanceFrequency(iCounterPerSec);
+  QueryPerformanceCounter(C1);
+
+  FResponses.ICounterPerSec := iCounterPerSec;
+  FResponses.TimeCounterStart := C1;
+
   FClassAlias := aClassAlias;
   CollectArgs();
   ctx := TRttiContext.Create();

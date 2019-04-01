@@ -18,7 +18,7 @@ object Main: TMain
     Left = 0
     Top = 0
     Width = 841
-    Height = 401
+    Height = 382
     ActivePage = tsMain
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
@@ -34,11 +34,11 @@ object Main: TMain
         Left = 0
         Top = 0
         Width = 833
-        Height = 368
+        Height = 349
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 833
-        ExplicitHeight = 368
+        ExplicitHeight = 349
         inherited eRequest: TEdit
           Width = 827
           ExplicitWidth = 827
@@ -72,6 +72,9 @@ object Main: TMain
         inherited pTop: TPanel
           Width = 833
           ExplicitWidth = 833
+          inherited bInstallService: TBitBtn
+            OnClick = MFbInstallServiceClick
+          end
         end
         inherited pUrlEncode: TPanel
           Width = 827
@@ -85,17 +88,11 @@ object Main: TMain
             ExplicitWidth = 720
           end
         end
-        inherited StatusBar: TStatusBar
-          Top = 349
-          Width = 833
-          ExplicitTop = 349
-          ExplicitWidth = 833
-        end
         inherited ilPics: TImageList
           Left = 480
           Top = 247
           Bitmap = {
-            494C010104000800AC0010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010104000800B40010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000002000000001002000000000000020
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -371,6 +368,85 @@ object Main: TMain
     object tsLoadTests: TTabSheet
       Caption = 'LoadTests'
       ImageIndex = 1
+      inline LoadTestFrame1: TLoadTestFrame
+        Left = 0
+        Top = 0
+        Width = 833
+        Height = 349
+        Align = alClient
+        TabOrder = 0
+        ExplicitWidth = 833
+        ExplicitHeight = 349
+        inherited Splitter2: TSplitter
+          Width = 833
+          ExplicitWidth = 833
+        end
+        inherited pTop: TPanel
+          Width = 833
+          ExplicitWidth = 833
+          inherited cmbTests: TComboBox
+            Width = 663
+            Height = 26
+            ExplicitWidth = 663
+            ExplicitHeight = 26
+          end
+        end
+        inherited pCenter: TPanel
+          Width = 833
+          ExplicitWidth = 833
+          inherited pRight: TPanel
+            Width = 643
+            ExplicitWidth = 643
+            inherited pParamsTop: TPanel
+              Width = 641
+              ExplicitWidth = 641
+            end
+            inherited mParams: TMemo
+              Width = 641
+              ExplicitWidth = 641
+            end
+          end
+        end
+        inherited pBottom: TPanel
+          Width = 833
+          Height = 129
+          ExplicitWidth = 833
+          ExplicitHeight = 129
+          inherited mResultsErrors: TMemo
+            Width = 831
+            Height = 103
+            ExplicitWidth = 831
+            ExplicitHeight = 103
+          end
+          inherited pResultsErrors: TPanel
+            Width = 831
+            ExplicitWidth = 831
+          end
+        end
+      end
     end
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Top = 382
+    Width = 841
+    Height = 19
+    Panels = <
+      item
+        Text = 'Stoped'
+        Width = 80
+      end
+      item
+        Width = 120
+      end
+      item
+        Width = 150
+      end
+      item
+        Width = 100
+      end
+      item
+        Width = 100
+      end>
   end
 end

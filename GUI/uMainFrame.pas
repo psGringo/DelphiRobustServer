@@ -29,7 +29,6 @@ type
     pUrlEncode: TPanel;
     bDoUrlEncode: TBitBtn;
     eUrlEncodeValue: TEdit;
-    StatusBar: TStatusBar;
     bPause: TBitBtn;
     bStart: TBitBtn;
     bSettings: TBitBtn;
@@ -67,13 +66,13 @@ uses
 procedure TMainFrame.ShowGUIServerStarted;
 begin
   Main.Timers.tStatus.Enabled := true;
-  StatusBar.Panels[0].Text := ServerStarted;
+  Main.StatusBar.Panels[0].Text := ServerStarted;
 end;
 
 procedure TMainFrame.ShowGUIServerStopped;
 begin
   Main.Timers.tStatus.Enabled := false;
-  StatusBar.Panels[0].Text := ServerStopped;
+  Main.StatusBar.Panels[0].Text := ServerStopped;
 end;
 
 procedure TMainFrame.bPauseClick(Sender: TObject);
@@ -85,7 +84,7 @@ begin
 
   if Main.Server.GoOffline(answer) then
   begin
-    StatusBar.Panels[0].Text := ServerPaused;
+    Main.StatusBar.Panels[0].Text := ServerPaused;
     Main.Timers.tStatus.Enabled := false;
   end
   else
@@ -102,7 +101,7 @@ procedure TMainFrame.bStartClick(Sender: TObject);
 begin
   if Main.Server.Start() then
   begin
-    StatusBar.Panels[0].Text := ServerStarted;
+    Main.StatusBar.Panels[0].Text := ServerStarted;
     Main.Timers.tStatus.Enabled := true;
   end;
 end;
@@ -111,10 +110,10 @@ procedure TMainFrame.bStopClick(Sender: TObject);
 begin
   if Main.Server.Stop() then
   begin
-    StatusBar.Panels[0].Text := ServerStopped;
-    StatusBar.Panels[1].Text := ''; // time
-    StatusBar.Panels[2].Text := ''; // memory
-    StatusBar.Panels[3].Text := ''; // connections
+    Main.StatusBar.Panels[0].Text := ServerStopped;
+    Main.StatusBar.Panels[1].Text := ''; // time
+    Main.StatusBar.Panels[2].Text := ''; // memory
+    Main.StatusBar.Panels[3].Text := ''; // connections
     Main.Timers.tStatus.Enabled := false;
   end;
 end;

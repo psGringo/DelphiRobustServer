@@ -48,7 +48,7 @@ begin
         TThread.Synchronize(TThread.CurrentThread,
           procedure()
           begin
-            Main.MF.StatusBar.Panels[1].Text := jo.O['data'].s['workTime'];
+            Main.StatusBar.Panels[1].Text := jo.O['data'].s['workTime'];
             Main.Server.IsActive := true;
             Main.Server.IsOnline := true;
           end);
@@ -57,15 +57,21 @@ begin
         TThread.Synchronize(TThread.CurrentThread,
           procedure()
           begin
-            Main.MF.StatusBar.Panels[2].Text := jo.O['data'].s['memory'];
+            Main.StatusBar.Panels[2].Text := jo.O['data'].s['memory'];
           end);
         // Contexts
-
         jo := SO[idHTTP.Get(Main.Server.Adress + '/System/Connections')];
         TThread.Synchronize(TThread.CurrentThread,
           procedure()
           begin
-            Main.MF.StatusBar.Panels[3].Text := 'Connections ' + jo.O['data'].i['connections'].ToString();
+            Main.StatusBar.Panels[3].Text := 'Connections ' + jo.O['data'].i['connections'].ToString();
+          end);
+         // DBConnections
+        jo := SO[idHTTP.Get(Main.Server.Adress + '/System/DBConnections')];
+        TThread.Synchronize(TThread.CurrentThread,
+          procedure()
+          begin
+            Main.StatusBar.Panels[4].Text := 'DBConnections ' + jo.O['data'].i['DbConnections'].ToString();
           end);
 
       except
@@ -75,10 +81,11 @@ begin
             procedure()
             begin
               Main.Timers.tStatus.Enabled := false;
-              Main.MF.StatusBar.Panels[0].Text := ServerStopped;
-              Main.MF.StatusBar.Panels[1].Text := E.Message;
-              Main.MF.StatusBar.Panels[2].Text := '';
-              Main.MF.StatusBar.Panels[3].Text := '';
+              Main.StatusBar.Panels[0].Text := ServerStopped;
+              Main.StatusBar.Panels[1].Text := E.Message;
+              Main.StatusBar.Panels[2].Text := '';
+              Main.StatusBar.Panels[3].Text := '';
+              Main.StatusBar.Panels[4].Text := '';
               Main.Server.IsActive := false;
               Main.Server.IsOnline := false;
             end);

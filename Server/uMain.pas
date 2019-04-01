@@ -3,10 +3,9 @@ unit uMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  IdBaseComponent, IdComponent, IdCustomTCPServer, IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin, System.ImageList,
-  Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent, IdCustomTCPServer,
+  IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin,
+  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -15,7 +14,6 @@ const
 type
   TMain = class(TForm)
     Server: TIdHTTPServer;
-    eRequest: TEdit;
     pUrlEncode: TPanel;
     bDoUrlEncode: TBitBtn;
     eUrlEncodeValue: TEdit;
@@ -30,16 +28,17 @@ type
     OpenDialog: TOpenDialog;
     bLog: TBitBtn;
     cbRequestType: TComboBox;
-    bGo: TBitBtn;
     pPost: TPanel;
     pPostParamsTop: TPanel;
     cbPostType: TComboBox;
     mPostParams: TMemo;
-    bUrlEncode: TBitBtn;
     pAnswers: TPanel;
     pAnswerTop: TPanel;
     mAnswer: TMemo;
     bClearAnswers: TBitBtn;
+    pRequest: TPanel;
+    cmbRequest: TComboBoxEx;
+    bGo: TBitBtn;
     procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
     procedure bAPIClick(Sender: TObject);
@@ -61,6 +60,9 @@ type
     FTimers: TTimers;
     FAdress: string;
     FLongTaskThreads: ISP<TThreadList>;
+    FCS: ISP<TCriticalSection>;
+    FSomeSharedResource: ISP<TStringList>;
+    FDBConnectionsCount: integer;
     procedure SwitchStartStopButtons();
     procedure UpdateWorkTime(var aMsg: TMessage); message WM_WORK_TIME;
     procedure UpdateAppMemory(var aMsg: TMessage); message WM_APP_MEMORY;
@@ -71,12 +73,16 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure Start;
     procedure Stop;
+    class function GetInstance(): TMain;
     property Protocol: string read FProtocol write FProtocol;
     property Host: string read FHost write FHost;
     property Port: string read FPort write FPort;
     property Adress: string read FAdress write FAdress;
     property Timers: TTimers read FTimers write FTimers;
     property LongTaskThreads: ISP<TThreadList> read FLongTaskThreads;
+    property CS: ISP<TCriticalSection> read FCS write FCS;
+    property SomeSharedResource: ISP<TStringList> read FSomeSharedResource;
+    property DBConnectionsCount: integer read FDBConnectionsCount write FDBConnectionsCount;
   end;
 
 var
@@ -86,7 +92,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.NetEncoding, IdMultipartFormData, uClientExamples, uRP, System.Math, System.IOUtils, System.IniFiles;
+  System.NetEncoding, IdMultipartFormData, uClientExamples, uRP, System.Math, System.IOUtils, System.IniFiles, uRSService;
 
 { TMain }
 procedure TMain.bAPIClick(Sender: TObject);
@@ -95,7 +101,7 @@ var
 begin
   c := TSP<TIdHTTP>.Create();
   c.Get(FAdress + '/System/Api');
-  ShellExecute(Handle, 'open', 'c:\windows\notepad.exe', 'api.txt', nil, SW_SHOWNORMAL);
+  ShellExecute(Handle, 'open', 'c:\windows\notepad.exe', PWideChar(ExtractFilePath(Application.ExeName) + 'api.txt'), nil, SW_SHOWNORMAL);
 end;
 
 procedure TMain.bClearAnswersClick(Sender: TObject);
@@ -120,7 +126,7 @@ end;
 
 procedure TMain.bLogClick(Sender: TObject);
 begin
-  ShellExecute(Handle, 'open', 'c:\windows\notepad.exe', 'log.txt', nil, SW_SHOWNORMAL);
+  ShellExecute(Handle, 'open', 'c:\windows\notepad.exe', PWideChar(ExtractFilePath(Application.ExeName) + 'log.txt'), nil, SW_SHOWNORMAL);
 end;
 
 procedure TMain.PostRequestProcessing();
@@ -143,7 +149,7 @@ begin
         ss.WriteString(jo.AsJSon(false, false));
         client.Request.ContentType := 'application/json';
         client.Request.ContentEncoding := 'utf-8';
-        r := client.Post(FAdress + '/' + eRequest.Text, ss);
+        r := client.Post(FAdress + '/' + cmbRequest.Text, ss);
         mAnswer.Lines.Add(r);
       end;
     1:
@@ -158,7 +164,7 @@ begin
         client.Request.ContentType := 'application/x-www-form-urlencoded';
         client.Request.ContentEncoding := 'utf-8';
 
-        r := client.Post(FAdress + '/' + eRequest.Text, paramsSL);
+        r := client.Post(FAdress + '/' + cmbRequest.Text, paramsSL);
         mAnswer.Lines.Add(r);
       end;
     2:
@@ -166,13 +172,13 @@ begin
       // multipart...
         fileName := ExtractFileName(mPostParams.Lines[0]);
         postData := TSP<TIdMultiPartFormDataStream>.Create();
-        client.Request.Referer := FAdress + '/' + eRequest.Text;
+        client.Request.Referer := FAdress + '/' + cmbRequest.Text;
         client.Request.ContentType := 'multipart/form-data';
         client.Request.RawHeaders.AddValue('AuthToken', System.NetEncoding.TNetEncoding.URL.Encode('evjTI82N'));
         postData.AddFormField('filename', System.NetEncoding.TNetEncoding.URL.Encode(fileName));
         postData.AddFormField('isOverwrite', System.NetEncoding.TNetEncoding.URL.Encode(mPostParams.Lines[1]));
         postData.AddFile('attach', mPostParams.Lines[0], 'application/x-rar-compressed');
-        client.POST(FAdress + '/' + eRequest.Text, postData, ss); //
+        client.POST(FAdress + '/' + cmbRequest.Text, postData, ss); //
         mAnswer.Lines.Add(ss.DataString);
       end;
   end;
@@ -195,18 +201,18 @@ begin
   case cbPostType.ItemIndex of
     0:
       begin
-        eRequest.Text := 'Test/PostJson';
+        cmbRequest.Text := 'Test/PostJson';
         mPostParams.Text := '{ "name":"Stas", "age":35 }';
       end;
     1:
       begin
-        eRequest.Text := 'Test/URLEncoded';
+        cmbRequest.Text := 'Test/URLEncoded';
         mPostParams.Lines.Add('PostParam1 = URLEncoded(PostParam1Value)');
         mPostParams.Lines.Add('PostParam2 = URLEncoded(PostParam2Value)');
       end;
     2:
       begin
-        eRequest.Text := 'Files/Upload';
+        cmbRequest.Text := 'Files/Upload';
         mPostParams.Lines.Add(ExtractFilePath(Application.ExeName) + 'testFile.php');
         mPostParams.Lines.Add('false');
       end;
@@ -218,17 +224,9 @@ procedure TMain.cbRequestTypeSelect(Sender: TObject);
 begin
   case cbRequestType.ItemIndex of
     0:
-      begin
-        eRequest.Text := 'Test/Connection';
-        pPost.Visible := false;
-      end;
-
+      cmbRequest.Text := 'Test/Connection';
     1:
-      begin
-        cbPostTypeSelect(nil);
-        pPost.Visible := true;
-      end;
-
+      cbPostTypeSelect(nil);
   end;
 end;
 
@@ -236,6 +234,7 @@ constructor TMain.Create(AOwner: TComponent);
 var
   filepath: string;
   ini: ISP<TIniFile>;
+  i: integer;
 begin
   inherited;
 
@@ -263,15 +262,24 @@ begin
   SwitchStartStopButtons(); // will start server
 
   FLongTaskThreads := TSP<TThreadList>.Create();
+  FCS := TSP<TCriticalSection>.Create();
+  FSomeSharedResource := TSP<TStringList>.Create();
+  //some test values
+  for i := 0 to 99 do
+    FSomeSharedResource.Add(Random(9).ToString());
+
+  //FDBConnectionsCount := 0;
 end;
 
 procedure TMain.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   i: integer;
 begin
+  Stop();
+
   with LongTaskThreads.LockList() do
   try
-    for i := 0 to Count-1 do
+    for i := 0 to Count - 1 do
     begin
       TLongTaskThread(Items[i]).FreeOnTerminate := false; // in other case they will be destroyed automatically
       TLongTaskThread(Items[i]).Free();
@@ -281,12 +289,20 @@ begin
   end;
 end;
 
+class function TMain.GetInstance: TMain;
+begin
+  if Assigned(RobustService) then
+    Result := TMain(RobustService.MainInstance)
+  else
+    Result := Main;
+end;
+
 procedure TMain.GetRequestProcessing;
 var
   client: ISP<TIdHTTP>;
 begin
   client := TSP<TIdHTTP>.Create();
-  mAnswer.Lines.Add(client.Get(FAdress + '/' + eRequest.Text));
+  mAnswer.Lines.Add(client.Get(FAdress + '/' + cmbRequest.Text));
 end;
 
 procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -324,7 +340,6 @@ begin
   StatusBar.Panels[0].Text := 'Stopped';
   UpdateStartStopGlyph(0);
   l.LogInfo('Server successfully stopped');
-
 end;
 
 procedure TMain.SwitchStartStopButtons;

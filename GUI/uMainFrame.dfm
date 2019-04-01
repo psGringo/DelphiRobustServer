@@ -6,27 +6,33 @@ object MainFrame: TMainFrame
   TabOrder = 0
   object eRequest: TEdit
     AlignWithMargins = True
-    Left = 3
-    Top = 36
-    Width = 903
-    Height = 24
+    Left = 5
+    Top = 38
+    Width = 899
+    Height = 26
+    Margins.Left = 5
+    Margins.Top = 5
+    Margins.Right = 5
+    Margins.Bottom = 5
     Align = alTop
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clGrayText
-    Font.Height = -13
+    Font.Height = -15
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
     TabOrder = 0
     Text = 'Test/Connection'
-    ExplicitWidth = 865
+    ExplicitLeft = 3
+    ExplicitTop = 36
+    ExplicitWidth = 903
   end
   object mAnswer: TMemo
     AlignWithMargins = True
     Left = 3
-    Top = 233
+    Top = 239
     Width = 903
-    Height = 82
+    Height = 95
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clGrayText
@@ -36,11 +42,12 @@ object MainFrame: TMainFrame
     ParentFont = False
     ScrollBars = ssVertical
     TabOrder = 1
-    ExplicitWidth = 865
+    ExplicitTop = 233
+    ExplicitHeight = 101
   end
   object pAnswerTop: TPanel
     Left = 0
-    Top = 197
+    Top = 203
     Width = 909
     Height = 33
     Align = alTop
@@ -53,7 +60,7 @@ object MainFrame: TMainFrame
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
-    ExplicitWidth = 871
+    ExplicitTop = 197
     object bClearAnswers: TBitBtn
       AlignWithMargins = True
       Left = 3
@@ -79,7 +86,7 @@ object MainFrame: TMainFrame
   object pPost: TPanel
     AlignWithMargins = True
     Left = 3
-    Top = 104
+    Top = 110
     Width = 903
     Height = 90
     Align = alTop
@@ -87,8 +94,7 @@ object MainFrame: TMainFrame
     Caption = 'pPost'
     ShowCaption = False
     TabOrder = 3
-    Visible = False
-    ExplicitWidth = 865
+    ExplicitTop = 104
     object pPostParamsTop: TPanel
       AlignWithMargins = True
       Left = 3
@@ -106,7 +112,6 @@ object MainFrame: TMainFrame
       ParentFont = False
       ShowCaption = False
       TabOrder = 0
-      ExplicitWidth = 859
       object cbPostType: TComboBox
         AlignWithMargins = True
         Left = 3
@@ -122,7 +127,6 @@ object MainFrame: TMainFrame
           'application/json'
           'application/x-www-form-urlencoded'
           'multipart/form-data')
-        ExplicitWidth = 853
       end
     end
     object mPostParams: TMemo
@@ -143,7 +147,6 @@ object MainFrame: TMainFrame
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 1
-      ExplicitWidth = 859
     end
   end
   object pTop: TPanel
@@ -161,7 +164,6 @@ object MainFrame: TMainFrame
     ParentFont = False
     ShowCaption = False
     TabOrder = 4
-    ExplicitWidth = 871
     object bStop: TBitBtn
       AlignWithMargins = True
       Left = 43
@@ -182,7 +184,6 @@ object MainFrame: TMainFrame
       Caption = 'API'
       TabOrder = 1
       OnClick = bAPIClick
-      ExplicitLeft = 285
     end
     object bLog: TBitBtn
       AlignWithMargins = True
@@ -194,7 +195,6 @@ object MainFrame: TMainFrame
       Caption = 'LOG'
       TabOrder = 2
       OnClick = bLogClick
-      ExplicitLeft = 324
     end
     object cbRequestType: TComboBox
       AlignWithMargins = True
@@ -216,7 +216,6 @@ object MainFrame: TMainFrame
       Items.Strings = (
         'GET'
         'POST')
-      ExplicitLeft = 121
     end
     object bGo: TBitBtn
       AlignWithMargins = True
@@ -228,7 +227,6 @@ object MainFrame: TMainFrame
       Caption = 'GO'
       TabOrder = 4
       OnClick = bGoClick
-      ExplicitLeft = 237
     end
     object bUrlEncode: TBitBtn
       AlignWithMargins = True
@@ -240,7 +238,6 @@ object MainFrame: TMainFrame
       Caption = 'URLEncode'
       TabOrder = 5
       OnClick = bUrlEncodeClick
-      ExplicitLeft = 363
     end
     object bPause: TBitBtn
       AlignWithMargins = True
@@ -271,8 +268,6 @@ object MainFrame: TMainFrame
       Align = alLeft
       TabOrder = 8
       OnClick = bSettingsClick
-      ExplicitLeft = 138
-      ExplicitTop = 5
     end
     object bInstallService: TBitBtn
       AlignWithMargins = True
@@ -295,14 +290,12 @@ object MainFrame: TMainFrame
       Caption = 'UninstallService'
       TabOrder = 10
       OnClick = bUninstallServiceClick
-      ExplicitLeft = 667
-      ExplicitTop = 5
     end
   end
   object pUrlEncode: TPanel
     AlignWithMargins = True
     Left = 3
-    Top = 66
+    Top = 72
     Width = 903
     Height = 32
     Align = alTop
@@ -315,7 +308,7 @@ object MainFrame: TMainFrame
     ParentFont = False
     TabOrder = 5
     Visible = False
-    ExplicitWidth = 865
+    ExplicitTop = 66
     object bDoUrlEncode: TBitBtn
       AlignWithMargins = True
       Left = 806
@@ -332,7 +325,6 @@ object MainFrame: TMainFrame
       ParentFont = False
       TabOrder = 0
       OnClick = bDoUrlEncodeClick
-      ExplicitLeft = 768
     end
     object eUrlEncodeValue: TEdit
       AlignWithMargins = True
@@ -349,36 +341,14 @@ object MainFrame: TMainFrame
       ParentFont = False
       TabOrder = 1
       Text = 'Some text to encode...'
-      ExplicitWidth = 758
     end
-  end
-  object StatusBar: TStatusBar
-    Left = 0
-    Top = 318
-    Width = 909
-    Height = 19
-    Panels = <
-      item
-        Text = 'Stoped'
-        Width = 80
-      end
-      item
-        Width = 120
-      end
-      item
-        Width = 150
-      end
-      item
-        Width = 100
-      end>
-    ExplicitWidth = 871
   end
   object ilPics: TImageList
     ColorDepth = cd32Bit
     Left = 472
     Top = 71
     Bitmap = {
-      494C010106000800B80010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010106000800C40010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       000000000000000000000000000000000000CA9283E9BB5E45FAB55B35F6BC58
       3EF6A85446F6D0A398FF6259566200000000000000004C3F3862B67764FFB856

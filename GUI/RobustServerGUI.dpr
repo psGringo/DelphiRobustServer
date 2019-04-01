@@ -9,7 +9,9 @@ uses
   Vcl.Styles,
   uCommon in 'uCommon.pas',
   uConst in 'uConst.pas',
-  uRSGClasses in 'uRSGClasses.pas';
+  uRSGClasses in 'uRSGClasses.pas',
+  uLoadTestsFrame in 'uLoadTestsFrame.pas' {LoadTestFrame: TFrame},
+  uTestThread in 'uTestThread.pas';
 
 {$R *.res}
 
