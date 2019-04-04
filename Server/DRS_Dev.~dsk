@@ -12,40 +12,52 @@ File_9=TSourceModule,'C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uC
 
 [Modules]
 Module0=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMain.pas
-Module1=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMainFrame.pas
-Module2=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RobustServer.dproj
-Module3=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMain.pas
-Module4=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uLoadTestsFrame.pas
-Module5=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\win\Winapi.Windows.pas
-Module6=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRPTests.pas
-Module7=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uTestThread.pas
-Module8=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uCommon.pas
-Module9=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uRSService.pas
-Module10=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uTimers.pas
-Module11=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uCommandGet.pas
-Module12=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas
-Module13=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uDB.pas
-Module14=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRPSystem.pas
-Module15=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uTimers.pas
-Module16=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uRSGClasses.pas
-Module17=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMains.pas
-Module18=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uConst.pas
-Module19=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRP.pas
-Count=20
+Module1=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uClientExamples.pas
+Module2=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.SysUtils.pas
+Module3=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RobustServer.dproj
+Module4=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMainFrame.pas
+Module5=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMain.pas
+Module6=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uLoadTestsFrame.pas
+Module7=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\win\Winapi.Windows.pas
+Module8=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRPTests.pas
+Module9=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uTestThread.pas
+Module10=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uCommon.pas
+Module11=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uRSService.pas
+Module12=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uTimers.pas
+Module13=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uCommandGet.pas
+Module14=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas
+Module15=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uDB.pas
+Module16=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRPSystem.pas
+Module17=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uTimers.pas
+Module18=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uRSGClasses.pas
+Module19=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMains.pas
+Module20=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uConst.pas
+Module21=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRP.pas
+Count=22
 EditWindowCount=1
 
 [C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMain.pas]
 ModuleType=TSourceModule
 FormState=1
-FormOnTop=1
+FormOnTop=0
+
+[C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uClientExamples.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.SysUtils.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RobustServer.dproj]
+ModuleType=TBaseProject
 
 [C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMainFrame.pas]
 ModuleType=TSourceModule
 FormState=1
-FormOnTop=1
-
-[C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RobustServer.dproj]
-ModuleType=TBaseProject
+FormOnTop=0
 
 [C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMain.pas]
 ModuleType=TSourceModule
@@ -133,7 +145,7 @@ FormState=0
 FormOnTop=0
 
 [EditWindow0]
-ViewCount=20
+ViewCount=22
 CurrentEditView=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMain.pas
 View0=0
 View1=1
@@ -155,6 +167,8 @@ View16=16
 View17=17
 View18=18
 View19=19
+View20=20
+View21=21
 PercentageSizes=1
 Create=1
 Visible=1
@@ -173,10 +187,8 @@ BorlandEditorCodeExplorer=BorlandEditorCodeExplorer@EditWindow0
 TopPanelSize=0
 LeftPanelSize=1898
 LeftPanelClients=PropertyInspector
-LeftPanelData=00000800010000000000421A0000000000000000000000000000000100000000421A00001100000050726F7065727479496E73706563746F72FFFFFFFF
-RightPanelSize=2000
-RightPanelClients=DockSite2
-RightPanelData=00000800010000000000000000000000000000000000000000000001000000000000000009000000446F636B5369746532FFFFFFFF
+LeftPanelData=0000080001000000000000000000000000000000000000000000000100000000000000001100000050726F7065727479496E73706563746F72FFFFFFFF
+RightPanelSize=0
 BottomPanelSize=1403
 BottomPanelClients=DockSite1,MessageView
 BottomPanelData=0000080001020100000009000000446F636B53697465317245000000000000027B050000000000000100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
@@ -184,20 +196,42 @@ BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
 BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779F1D00000000000002F206000000000000FFFFFFFF
 TabDockLeftClients=DockSite3=0
-TabDockRightClients=DockSite4=0
+TabDockRightClients=DockSite2=0,DockSite4=1
 
 [View0]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMain.pas
-CursorX=31
-CursorY=230
-TopLine=223
-LeftCol=1
+CursorX=52
+CursorY=139
+TopLine=126
+LeftCol=32
 Elisions=
-Bookmarks={1,272,1}
-EditViewName=Borland.FormDesignerView
+Bookmarks={1,104,106}
+EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMain.pas
 
 [View1]
+CustomEditViewType=TEditView
+Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uClientExamples.pas
+CursorX=30
+CursorY=64
+TopLine=52
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uClientExamples.pas
+
+[View2]
+CustomEditViewType=TEditView
+Module=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.SysUtils.pas
+CursorX=1
+CursorY=1
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\studio\17.0\SOURCE\RTL\SYS\System.SysUtils.pas
+
+[View3]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RobustServer.dpr
 CursorX=84
@@ -208,7 +242,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RobustServer.dpr
 
-[View2]
+[View4]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\win\Winapi.Windows.pas
 CursorX=1
@@ -219,7 +253,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\win\Winapi.Windows.pas
 
-[View3]
+[View5]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uConst.pas
 CursorX=1
@@ -230,7 +264,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uConst.pas
 
-[View4]
+[View6]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMains.pas
 CursorX=7
@@ -241,7 +275,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uMains.pas
 
-[View5]
+[View7]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uDB.pas
 CursorX=7
@@ -252,7 +286,7 @@ Elisions=
 Bookmarks={1,55,1}
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uDB.pas
 
-[View6]
+[View8]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMain.pas
 CursorX=19
@@ -263,7 +297,7 @@ Elisions=
 Bookmarks={1,39,1}
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMain.pas
 
-[View7]
+[View9]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uLoadTestsFrame.pas
 CursorX=44
@@ -274,7 +308,7 @@ Elisions=
 Bookmarks={1,84,6}
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uLoadTestsFrame.pas
 
-[View8]
+[View10]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uTestThread.pas
 CursorX=33
@@ -285,7 +319,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uTestThread.pas
 
-[View9]
+[View11]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uMainFrame.pas
 CursorX=1
@@ -296,7 +330,7 @@ Elisions=
 Bookmarks={1,108,1}
 EditViewName=Borland.FormDesignerView
 
-[View10]
+[View12]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uCommandGet.pas
 CursorX=91
@@ -307,7 +341,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uCommandGet.pas
 
-[View11]
+[View13]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas
 CursorX=3
@@ -318,7 +352,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\17.0\source\rtl\common\System.Classes.pas
 
-[View12]
+[View14]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uTimers.pas
 CursorX=1
@@ -329,7 +363,7 @@ Elisions=
 Bookmarks=
 EditViewName=Borland.FormDesignerView
 
-[View13]
+[View15]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uRSGClasses.pas
 CursorX=1
@@ -340,7 +374,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\uRSGClasses.pas
 
-[View14]
+[View16]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uTimers.pas
 CursorX=1
@@ -351,7 +385,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uTimers.pas
 
-[View15]
+[View17]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRP.pas
 CursorX=41
@@ -362,7 +396,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRP.pas
 
-[View16]
+[View18]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRPSystem.pas
 CursorX=1
@@ -373,7 +407,7 @@ Elisions=
 Bookmarks={1,82,1}{2,88,1}
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRPSystem.pas
 
-[View17]
+[View19]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRPTests.pas
 CursorX=41
@@ -384,7 +418,7 @@ Elisions=
 Bookmarks={1,133,1}
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RP\uRPTests.pas
 
-[View18]
+[View20]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uRSService.pas
 CursorX=1
@@ -395,7 +429,7 @@ Elisions=
 Bookmarks=
 EditViewName=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uRSService.pas
 
-[View19]
+[View21]
 CustomEditViewType=TEditView
 Module=C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\uCommon.pas
 CursorX=3
@@ -486,12 +520,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=2000
-Height=6926
+Width=1875
+Height=6691
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=6926
+ClientWidth=1875
+ClientHeight=6691
 TBDockHeight=5897
 LRDockWidth=2352
 Dockable=1
@@ -595,8 +629,8 @@ SplitPos=111
 
 [PropInspDesignerSelection]
 ArrangeBy=Name
-SelectedItem=Name,CustomHint
-ExpandedItems=Font=1,Font.Style=0,Anchors=0,BevelEdges=0,Constraints=0,LiveBindings=0,"LiveBindings Designer=0",Margins=1,Padding=0,StyleElements=0,Touch=0,StyleEx=0,AutoCompleteOptions=0,Options=0,OptionsEx=0
+SelectedItem=Caption,
+ExpandedItems=Anchors=0,BorderIcons=0,Constraints=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=1,StyleElements=0,StyleEx=0,BevelEdges=0,Touch=0,AutoCompleteOptions=0
 
 [ClassBrowserTool]
 PercentageSizes=1
@@ -663,12 +697,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=2000
-Height=6382
+Width=1875
+Height=6691
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=6382
+ClientWidth=1875
+ClientHeight=6691
 TBDockHeight=5956
 LRDockWidth=2508
 Dockable=1
@@ -680,8 +714,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-946
-Top=-18
+Left=-1210
+Top=-26
 Width=2844
 Height=6206
 MaxLeft=-1
@@ -868,12 +902,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=2000
-Height=6382
+Width=1875
+Height=6691
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=6382
+ClientWidth=1875
+ClientHeight=6691
 TBDockHeight=4882
 LRDockWidth=7148
 Dockable=1
@@ -951,12 +985,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=2000
-Height=6382
+Width=1875
+Height=6691
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=6382
+ClientWidth=1875
+ClientHeight=6691
 TBDockHeight=4882
 LRDockWidth=5305
 Dockable=1
@@ -1033,21 +1067,21 @@ ActiveTabID=DebugLogView
 TabDockClients=DebugLogView,BreakpointWindow,ThreadStatusWindow,CallStackWindow,WatchWindow,LocalVarsWindow
 
 [DockSite2]
-HostDockSite=DockRightPanel
+HostDockSite=RightTabDock
 DockSiteType=1
 PercentageSizes=1
 Create=1
-Visible=1
+Visible=0
 Docked=1
 State=0
-Left=0
-Top=23
+Left=1280
+Top=52
 Width=2000
-Height=7324
+Height=7662
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=7324
+ClientWidth=1875
+ClientHeight=7088
 TBDockHeight=7662
 LRDockWidth=2000
 Dockable=1

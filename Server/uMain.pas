@@ -5,8 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent, IdCustomTCPServer,
   IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin,
-  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs,
-  IdServerIOHandler, IdSSL, IdSSLOpenSSL;
+  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs, IdServerIOHandler, IdSSL, IdSSLOpenSSL;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -26,7 +25,6 @@ type
     lPort: TLabel;
     sePort: TSpinEdit;
     bAPI: TBitBtn;
-    OpenDialog: TOpenDialog;
     bLog: TBitBtn;
     cbRequestType: TComboBox;
     pPost: TPanel;
@@ -38,7 +36,7 @@ type
     mAnswer: TMemo;
     bClearAnswers: TBitBtn;
     pRequest: TPanel;
-    cmbRequest: TComboBoxEx;
+    cbRequest: TComboBoxEx;
     bGo: TBitBtn;
     IdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL;
     procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -70,6 +68,7 @@ type
     procedure UpdateAppMemory(var aMsg: TMessage); message WM_APP_MEMORY;
     procedure PostRequestProcessing();
     procedure GetRequestProcessing();
+    procedure SaveRequest;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -116,6 +115,40 @@ begin
   eUrlEncodeValue.Text := System.NetEncoding.TNetEncoding.URL.Encode(eUrlEncodeValue.Text);
 end;
 
+procedure TMain.SaveRequest();
+var
+  filepathLastRequests: string;
+  sl: ISP<TStringList>;
+  fs: TFileStream;
+  i: integer;
+  isSuchRequestExists: Boolean;
+begin
+      // Последние запросы читаем из текстового файла
+  filepathLastRequests := ExtractFilePath(Application.ExeName) + lastRequestsFileName;
+
+  if not TFile.Exists(filepathLastRequests) then
+  try
+    fs := TFile.Create(filepathLastRequests);
+  finally
+    fs.Free;
+  end;
+
+  sl := TSP<TStringList>.Create();
+  sl.LoadFromFile(filepathLastRequests);
+
+  isSuchRequestExists := false;
+  for i := 0 to sl.Count - 1 do
+    if sl[i] = cbRequest.Text then
+      isSuchRequestExists := true;
+
+  if (not isSuchRequestExists) and (cbRequest.Text <> '') then
+  begin
+    sl.Add(cbRequest.Text);
+    sl.SaveToFile(filepathLastRequests);
+    cbRequest.Items.Assign(sl);
+  end;
+end;
+
 procedure TMain.bGoClick(Sender: TObject);
 begin
   case cbRequestType.ItemIndex of
@@ -124,6 +157,8 @@ begin
     1:
       PostRequestProcessing();
   end;
+
+  SaveRequest();
 end;
 
 procedure TMain.bLogClick(Sender: TObject);
@@ -151,7 +186,7 @@ begin
         ss.WriteString(jo.AsJSon(false, false));
         client.Request.ContentType := 'application/json';
         client.Request.ContentEncoding := 'utf-8';
-        r := client.Post(FAdress + '/' + cmbRequest.Text, ss);
+        r := client.Post(FAdress + '/' + cbRequest.Text, ss);
         mAnswer.Lines.Add(r);
       end;
     1:
@@ -166,7 +201,7 @@ begin
         client.Request.ContentType := 'application/x-www-form-urlencoded';
         client.Request.ContentEncoding := 'utf-8';
 
-        r := client.Post(FAdress + '/' + cmbRequest.Text, paramsSL);
+        r := client.Post(FAdress + '/' + cbRequest.Text, paramsSL);
         mAnswer.Lines.Add(r);
       end;
     2:
@@ -174,13 +209,13 @@ begin
       // multipart...
         fileName := ExtractFileName(mPostParams.Lines[0]);
         postData := TSP<TIdMultiPartFormDataStream>.Create();
-        client.Request.Referer := FAdress + '/' + cmbRequest.Text;
+        client.Request.Referer := FAdress + '/' + cbRequest.Text;
         client.Request.ContentType := 'multipart/form-data';
         client.Request.RawHeaders.AddValue('AuthToken', System.NetEncoding.TNetEncoding.URL.Encode('evjTI82N'));
         postData.AddFormField('filename', System.NetEncoding.TNetEncoding.URL.Encode(fileName));
         postData.AddFormField('isOverwrite', System.NetEncoding.TNetEncoding.URL.Encode(mPostParams.Lines[1]));
         postData.AddFile('attach', mPostParams.Lines[0], 'application/x-rar-compressed');
-        client.POST(FAdress + '/' + cmbRequest.Text, postData, ss); //
+        client.POST(FAdress + '/' + cbRequest.Text, postData, ss); //
         mAnswer.Lines.Add(ss.DataString);
       end;
   end;
@@ -203,18 +238,18 @@ begin
   case cbPostType.ItemIndex of
     0:
       begin
-        cmbRequest.Text := 'Test/PostJson';
+        //cmbRequest.Text := 'Test/PostJson';
         mPostParams.Text := '{ "name":"Stas", "age":35 }';
       end;
     1:
       begin
-        cmbRequest.Text := 'Test/URLEncoded';
+        //cmbRequest.Text := 'Test/URLEncoded';
         mPostParams.Lines.Add('PostParam1 = URLEncoded(PostParam1Value)');
         mPostParams.Lines.Add('PostParam2 = URLEncoded(PostParam2Value)');
       end;
     2:
       begin
-        cmbRequest.Text := 'Files/Upload';
+        cbRequest.Text := 'Files/Upload';
         mPostParams.Lines.Add(ExtractFilePath(Application.ExeName) + 'testFile.php');
         mPostParams.Lines.Add('false');
       end;
@@ -226,7 +261,7 @@ procedure TMain.cbRequestTypeSelect(Sender: TObject);
 begin
   case cbRequestType.ItemIndex of
     0:
-      cmbRequest.Text := 'Test/Connection';
+      cbRequest.Text := 'Test/Connection';
     1:
       cbPostTypeSelect(nil);
   end;
@@ -234,19 +269,21 @@ end;
 
 constructor TMain.Create(AOwner: TComponent);
 var
-  filepath: string;
-  ini: ISP<TIniFile>;
+  filepathSettings: string;
+  filepathLastRequests: string;
+  sl: ISP<TStringList>;
+  iniSettings: ISP<TIniFile>;
   i: integer;
 begin
   inherited;
 
-  filepath := ExtractFilePath(Application.ExeName) + settingsFileName;
-  if TFile.Exists(filepath) then
+  filepathSettings := ExtractFilePath(Application.ExeName) + settingsFileName;
+  if TFile.Exists(filepathSettings) then
   begin
-    ini := TSP<Tinifile>.Create(Tinifile.Create(filepath));
-    FProtocol := ini.ReadString('server', 'protocol', '<None>');
-    FHost := ini.ReadString('server', 'host', '<None>');
-    FPort := ini.ReadString('server', 'port', '<None>');
+    iniSettings := TSP<Tinifile>.Create(Tinifile.Create(filepathSettings));
+    FProtocol := iniSettings.ReadString('server', 'protocol', '<None>');
+    FHost := iniSettings.ReadString('server', 'host', '<None>');
+    FPort := iniSettings.ReadString('server', 'port', '<None>');
   end
   else
   begin
@@ -255,6 +292,23 @@ begin
     FPort := '7777';
   end;
   Adress := FProtocol + '://' + FHost + ':' + FPort;
+  // Последние запросы читаем из текстового файла
+  filepathLastRequests := ExtractFilePath(Application.ExeName) + lastRequestsFileName;
+  if TFile.Exists(filepathLastRequests) then
+  begin
+    cbRequest.Items.LoadFromFile(filepathLastRequests);
+  // reverse
+    if cbRequest.Items.Count > 0 then
+    begin
+      sl := TSP<TStringList>.Create();
+      for i := cbRequest.Items.Count - 1 downto 0 do
+        sl.Add(cbRequest.Items[i]);
+      cbRequest.Items.Assign(sl);
+      cbRequest.Text := cbRequest.Items[0];
+    end
+    else
+      cbRequest.Text := 'Test/Connection';
+  end;
 
   ReportMemoryLeaksOnShutdown := True;
   FTimers := TTimers.Create(Self);
@@ -304,7 +358,7 @@ var
   client: ISP<TIdHTTP>;
 begin
   client := TSP<TIdHTTP>.Create();
-  mAnswer.Lines.Add(client.Get(FAdress + '/' + cmbRequest.Text));
+  mAnswer.Lines.Add(client.Get(FAdress + '/' + cbRequest.Text));
 end;
 
 procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);

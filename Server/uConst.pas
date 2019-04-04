@@ -9,6 +9,7 @@ type
 const
   logFileName = 'log.txt';
   settingsFileName = 'settings.ini';
+  lastRequestsFileName = 'lastRequests.txt';
 
 implementation
 

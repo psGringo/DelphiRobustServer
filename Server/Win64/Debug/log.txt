@@ -1136,3 +1136,26 @@
 error:1408F10B:SSL routines:SSL3_GET_RECORD:wrong version number
 04.04.2019 20:09:39.773 [инфо] Server successfully started
 04.04.2019 20:09:59.858 [инфо] Server successfully stopped
+04.04.2019 20:15:11.597 [инфо] Server successfully started
+04.04.2019 20:15:55.709 [инфо] Server successfully stopped
+04.04.2019 21:03:13.150 [инфо] Server successfully started
+04.04.2019 21:03:25.621 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+04.04.2019 21:03:25.660 [инфо] Server successfully stopped
+04.04.2019 21:03:46.432 [инфо] Server successfully started
+04.04.2019 21:06:45.295 [инфо] Server successfully started
+04.04.2019 21:07:51.946 [инфо] Server successfully started
+04.04.2019 21:08:39.323 [инфо] Server successfully stopped
+04.04.2019 21:14:18.304 [инфо] Server successfully started
+04.04.2019 21:15:32.169 [инфо] Server successfully started
+04.04.2019 21:16:58.427 [ошиб] Exception class EIdConnClosedGracefully exception message Connection Closed Gracefully.
+04.04.2019 21:16:58.469 [инфо] Server successfully stopped
+04.04.2019 21:17:15.120 [инфо] Server successfully started
+04.04.2019 21:17:20.177 [инфо] Server successfully stopped
+04.04.2019 21:19:45.220 [инфо] Server successfully started
+04.04.2019 21:19:51.133 [инфо] Server successfully stopped
+04.04.2019 21:20:22.514 [инфо] Server successfully started
+04.04.2019 21:20:32.905 [инфо] Server successfully stopped
+04.04.2019 21:20:57.506 [инфо] Server successfully started
+04.04.2019 21:21:05.847 [инфо] Server successfully stopped
+04.04.2019 21:21:16.997 [инфо] Server successfully started
+04.04.2019 21:21:37.187 [инфо] Server successfully stopped
