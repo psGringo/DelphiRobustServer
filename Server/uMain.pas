@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent, IdCustomTCPServer,
   IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin,
-  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs;
+  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs,
+  IdServerIOHandler, IdSSL, IdSSLOpenSSL;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -39,6 +40,7 @@ type
     pRequest: TPanel;
     cmbRequest: TComboBoxEx;
     bGo: TBitBtn;
+    IdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL;
     procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
     procedure bAPIClick(Sender: TObject);

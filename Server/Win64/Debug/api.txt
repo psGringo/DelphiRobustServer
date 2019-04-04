@@ -43,6 +43,10 @@ TRPTests
 
   PostJson | POST
 
+  SimplePostRequest | GET
+    a: string
+    b: string
+
   URLEncoded | GET
     a: string
     b: string

@@ -1131,3 +1131,8 @@
 04.04.2019 18:50:15.861 [инфо] Server successfully started
 04.04.2019 18:50:29.498 [инфо] Server successfully stopped
 04.04.2019 18:52:00.178 [инфо] Server successfully started
+04.04.2019 20:08:36.197 [инфо] Server successfully started
+04.04.2019 20:08:42.640 [ошиб] Exception class EIdOSSLUnderlyingCryptoError exception message Error accepting connection with SSL.
+error:1408F10B:SSL routines:SSL3_GET_RECORD:wrong version number
+04.04.2019 20:09:39.773 [инфо] Server successfully started
+04.04.2019 20:09:59.858 [инфо] Server successfully stopped

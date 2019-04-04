@@ -30,7 +30,6 @@ object Main: TMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 0
-    ExplicitTop = 67
     object bDoUrlEncode: TBitBtn
       AlignWithMargins = True
       Left = 584
@@ -100,7 +99,6 @@ object Main: TMain
       Caption = 'pPort'
       ShowCaption = False
       TabOrder = 1
-      ExplicitLeft = 207
       object lPort: TLabel
         Left = 8
         Top = 5
@@ -144,7 +142,6 @@ object Main: TMain
       Caption = 'API'
       TabOrder = 2
       OnClick = bAPIClick
-      ExplicitLeft = 325
     end
     object bLog: TBitBtn
       AlignWithMargins = True
@@ -156,7 +153,6 @@ object Main: TMain
       Caption = 'LOG'
       TabOrder = 3
       OnClick = bLogClick
-      ExplicitLeft = 364
     end
     object cbRequestType: TComboBox
       AlignWithMargins = True
@@ -200,7 +196,6 @@ object Main: TMain
       item
         Width = 100
       end>
-    ExplicitTop = 319
   end
   object pPost: TPanel
     AlignWithMargins = True
@@ -213,7 +208,6 @@ object Main: TMain
     Caption = 'pPost'
     ShowCaption = False
     TabOrder = 3
-    ExplicitTop = 105
     object pPostParamsTop: TPanel
       AlignWithMargins = True
       Left = 3
@@ -266,7 +260,6 @@ object Main: TMain
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 1
-      ExplicitHeight = 59
     end
   end
   object pAnswers: TPanel
@@ -279,8 +272,6 @@ object Main: TMain
     BevelOuter = bvNone
     Caption = 'pAnswers'
     TabOrder = 4
-    ExplicitTop = 201
-    ExplicitHeight = 115
     object pAnswerTop: TPanel
       Left = 0
       Top = 0
@@ -334,7 +325,6 @@ object Main: TMain
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 1
-      ExplicitHeight = 76
     end
   end
   object pRequest: TPanel
@@ -353,8 +343,6 @@ object Main: TMain
     ParentFont = False
     ShowCaption = False
     TabOrder = 5
-    ExplicitLeft = 8
-    ExplicitTop = 49
     object cmbRequest: TComboBoxEx
       AlignWithMargins = True
       Left = 11
@@ -373,7 +361,6 @@ object Main: TMain
       ParentFont = False
       TabOrder = 0
       Text = 'Test/Connection'
-      ExplicitWidth = 25
     end
     object bGo: TBitBtn
       AlignWithMargins = True
@@ -385,17 +372,14 @@ object Main: TMain
       Caption = '> GO '
       TabOrder = 1
       OnClick = bGoClick
-      ExplicitLeft = 652
-      ExplicitTop = 8
     end
   end
   object Server: TIdHTTPServer
     Bindings = <>
     DefaultPort = 7777
+    IOHandler = IdServerIOHandlerSSLOpenSSL
     OnException = ServerException
     AutoStartSession = True
-    SessionState = True
-    SessionTimeOut = 1000
     OnCommandGet = ServerCommandGet
     Left = 376
     Top = 304
@@ -405,7 +389,7 @@ object Main: TMain
     Left = 440
     Top = 296
     Bitmap = {
-      494C010104000800C00010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C010104000800C40010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -678,6 +662,16 @@ object Main: TMain
   end
   object OpenDialog: TOpenDialog
     Left = 536
+    Top = 288
+  end
+  object IdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL
+    SSLOptions.RootCertFile = 'root.pem'
+    SSLOptions.CertFile = 'cert.pem'
+    SSLOptions.KeyFile = 'key.pem'
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 80
     Top = 288
   end
 end
