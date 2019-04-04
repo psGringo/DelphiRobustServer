@@ -370,7 +370,7 @@ begin
   jsonResult.S['executionTime'] := FormatExecutionTime();
 
   FAResponseInfo.ResponseNo := 200;
-  FAResponseInfo.ContentType := 'application/json';
+  FAResponseInfo.ContentType := 'application/json; charset=utf-8';
   FAResponseInfo.CacheControl := 'no-cache';
   FAResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
   FAResponseInfo.ContentText := jsonResult.AsJSon(false, false);

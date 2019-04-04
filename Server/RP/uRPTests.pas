@@ -20,6 +20,7 @@ type
     procedure Exceptions;
     [THTTPAttributes('HttpPost')]
     procedure PostJson;
+    procedure SimplePostRequest(a, b: string);
     procedure URLEncoded(a, b: string);
     procedure Sessions;
     function PingContext: string;
@@ -187,6 +188,15 @@ begin
   end;
 end;
 
+procedure TRPTests.SimplePostRequest(a, b: string);
+var
+  test: string;
+begin
+  test := a;
+  test := b;
+  FResponses.OK();
+end;
+
 procedure TRPTests.DBConnection;
 var
   json: ISuperObject;
@@ -248,6 +258,7 @@ procedure TRPTests.Connection;
 begin
   FResponses.OK();
 end;
+
 
 procedure TRPTests.URLEncoded(a, b: string);
 var

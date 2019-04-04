@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, uRP, IdContext, System.NetEncoding,
-  uAttributes, System.JSON;
+  uAttributes, System.JSON, SyncObjs;
 
 type
   TRPTests = class(TRP)
@@ -20,6 +20,7 @@ type
     procedure Exceptions;
     [THTTPAttributes('HttpPost')]
     procedure PostJson;
+    procedure SimplePostRequest(a, b: string);
     procedure URLEncoded(a, b: string);
     procedure Sessions;
     function PingContext: string;
@@ -60,28 +61,28 @@ end;
 procedure TRPTests.OnException(aObject: TObject; aClass, aMsg: string);
 begin
 // Notify exception here...
-  with Main.LongTaskThreads.LockList() do
+  with TMain.GetInstance.LongTaskThreads.LockList() do
   try
-    Main.LongTaskThreads.Remove(aObject);
-    Main.mAnswer.Lines.Add(aClass + ' ' + aMsg);
+    TMain.GetInstance.LongTaskThreads.Remove(aObject);
+    TMain.GetInstance.mAnswer.Lines.Add(aClass + ' ' + aMsg);
   finally
-    Main.LongTaskThreads.UnlockList();
+    TMain.GetInstance.LongTaskThreads.UnlockList();
   end;
 end;
 
 procedure TRPTests.OnFinishLongTask(aProgress: double; aMsg: string);
 begin
-  Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+  TMain.GetInstance.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
 end;
 
 procedure TRPTests.OnProgressLongTask(aProgress: double; aMsg: string);
 begin
-  Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+  TMain.GetInstance.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
 end;
 
 procedure TRPTests.OnStartLongTask(aProgress: double; aMsg: string);
 begin
-  //Main.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
+  //TMain.GetInstance.mAnswer.Lines.Add(aProgress.ToString() + aMsg);
 end;
 
 procedure TRPTests.Exceptions;
@@ -96,7 +97,7 @@ var
   i: integer;
 begin
   p := 0.00;
-  with Main.LongTaskThreads.LockList() do
+  with TMain.GetInstance.LongTaskThreads.LockList() do
   try
     for i := 0 to Count - 1 do
       if TLongTaskThread(Items[i]).GuiId = aGuid then
@@ -105,7 +106,7 @@ begin
         break;
       end;
   finally
-    Main.LongTaskThreads.UnlockList();
+    TMain.GetInstance.LongTaskThreads.UnlockList();
   end;
   json := SO;
   json.D['progress'] := p;
@@ -165,9 +166,9 @@ begin
   jo.S['lastTimeStamp'] := DateTimeToStr(RequestInfo.Session.LastTimeStamp);
 
 //  LSessionList := TIdHTTPDefaultSessionList(Main.Server.SessionList).LockList;
-  LSessionList := TIdHTTPDefaultSessionList(Main.Server.SessionList).SessionList.LockList;
+  LSessionList := TIdHTTPDefaultSessionList(TMain.GetInstance.Server.SessionList).SessionList.LockList;
   jo.S['sessionCount'] := LSessionList.Count.ToString;
-  TIdHTTPDefaultSessionList(Main.Server.SessionList).SessionList.UnlockList;
+  TIdHTTPDefaultSessionList(TMain.GetInstance.Server.SessionList).SessionList.UnlockList;
   FResponses.OkWithJson(jo.AsJSon(false, false));
 end;
 
@@ -176,22 +177,30 @@ var
   json: ISuperObject;
   i: Integer;
 begin
-  Main.CS.Enter();
+  TMain.GetInstance.CS.Enter();
   try
     json := SO;
-    for i := 0 to Main.SomeSharedResource.Count - 1 do
-      json.S['value_' + i.ToString] := Main.SomeSharedResource.ValueFromIndex[i];
+    for i := 0 to TMain.GetInstance.SomeSharedResource.Count - 1 do
+      json.S['value_' + i.ToString] := TMain.GetInstance.SomeSharedResource.ValueFromIndex[i];
     FResponses.OkWithJson(json.AsJSon(false, false));
   finally
-    Main.CS.Leave();
+    TMain.GetInstance.CS.Leave();
   end;
+end;
+
+procedure TRPTests.SimplePostRequest(a, b: string);
+var
+  test: string;
+begin
+  test := a;
+  test := b;
+  FResponses.OK();
 end;
 
 procedure TRPTests.DBConnection;
 var
   json: ISuperObject;
 begin
-  DB.Main := GetMain;
   DB.Connect();
   json := SO;
   json.B['connected'] := DB.FDConnection.Connected; // Db.FDConnection.Connected;
@@ -208,9 +217,8 @@ begin
     var
       i: integer;
     begin
-
       if Assigned(t.OnStart) then
-        (t.OnStart(i, 'ThreadStarted'));
+        (t.OnStart(0, 'ThreadStarted'));
 
       for i := 0 to 99 do
       begin
@@ -231,12 +239,12 @@ begin
     end);
 
   // events
-  //  t.OnStart := OnStartLongTask;
+  t.OnStart := OnStartLongTask;
   t.OnProgress := OnProgressLongTask;
   t.OnFinish := OnFinishLongTask;
   t.OnException := OnException;
 
-  Main.LongTaskThreads.Add(t);
+  TMain.GetInstance.LongTaskThreads.Add(t);
   t.Start();
   if Assigned(t.OnStart) then
     (t.OnStart); // thread started
@@ -251,13 +259,47 @@ begin
   FResponses.OK();
 end;
 
+function convertir_utf8_ansi(const Source: string):string;
+    var
+       Iterator, SourceLength, FChar, NChar: Integer;
+    begin
+       Result := '';
+       Iterator := 0;
+       SourceLength := Length(Source);
+       while Iterator < SourceLength do
+       begin
+          Inc(Iterator);
+          FChar := Ord(Source[Iterator]);
+          if FChar >= $80 then
+          begin
+             Inc(Iterator);
+             if Iterator > SourceLength then break;
+             FChar := FChar and $3F;
+             if (FChar and $20) <> 0 then
+             begin
+                FChar := FChar and $1F;
+                NChar := Ord(Source[Iterator]);
+                if (NChar and $C0) <> $80 then break;
+                FChar := (FChar shl 6) or (NChar and $3F);
+                Inc(Iterator);
+                if Iterator > SourceLength then break;
+             end;
+             NChar := Ord(Source[Iterator]);
+             if (NChar and $C0) <> $80 then break;
+             Result := Result + WideChar((FChar shl 6) or (NChar and $3F));
+          end
+          else
+             Result := Result + WideChar(FChar);
+       end;
+    end;
+
 procedure TRPTests.URLEncoded(a, b: string);
 var
   jo: ISuperObject;
 begin
   jo := SO;
-  jo.S[FParams.Names[0]] := a;
-  jo.S[FParams.Names[1]] := b;
+  jo.S[FParams.Names[0]] := convertir_utf8_ansi(a);
+  jo.S[FParams.Names[1]] := convertir_utf8_ansi(b);
   FResponses.OkWithJson(jo.AsJSon(false, false));
 end;
 

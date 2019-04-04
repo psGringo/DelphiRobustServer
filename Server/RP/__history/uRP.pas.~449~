@@ -17,6 +17,7 @@ type
     FRequestInfo: TIdHTTPRequestInfo;
     FDB: ISP<TDB>;
     FRelWebFileDir: string;
+    function ConvertUtf8ToAnsi(const Source: string): string;
     //function RttiMethodInvokeEx(const MethodName: string; RttiType: TRttiType; Instance: TValue; const Args: array of TValue): TValue; // for overloaded methods
   protected
     FClassAlias: string;
@@ -32,7 +33,6 @@ type
     procedure Update(); virtual;
     procedure GetInfo(); virtual;
     procedure Execute(aClassAlias: string);
-    function GetMain(): TMain;
     property Context: TIdContext read FContext;
     property RequestInfo: TIdHTTPRequestInfo read FRequestInfo write FRequestInfo;
     property ResponseInfo: TIdHTTPResponseInfo read FResponseInfo write FResponseInfo;
@@ -42,20 +42,10 @@ type
     property RelWebFileDir: string read FRelWebFileDir write FRelWebFileDir;
   end;
 
-   {
-   function TRPSystem.GetMain: TMain;
-begin
-  if Assigned(RobustService) then
-    Result := RobustService.MainInstance
-  else
-    Result := Main;
-end;
-   }
-
 implementation
 
 uses
-  System.TypInfo, uDecodePostRequest, uRPTests;
+  System.TypInfo, uDecodePostRequest, uRPTests, Winapi.Windows;
 
 { TRP }
 procedure TRP.Create;
@@ -63,6 +53,44 @@ begin
     // insert your code here...
   FDB := TSP<TDB>.Create(TDB.Create(nil));
   FResponses.OK();
+end;
+
+function TRP.ConvertUtf8ToAnsi(const Source: string): string;
+var
+  Iterator, SourceLength, FChar, NChar: Integer;
+begin
+  Result := '';
+  Iterator := 0;
+  SourceLength := Length(Source);
+  while Iterator < SourceLength do
+  begin
+    Inc(Iterator);
+    FChar := Ord(Source[Iterator]);
+    if FChar >= $80 then
+    begin
+      Inc(Iterator);
+      if Iterator > SourceLength then
+        break;
+      FChar := FChar and $3F;
+      if (FChar and $20) <> 0 then
+      begin
+        FChar := FChar and $1F;
+        NChar := Ord(Source[Iterator]);
+        if (NChar and $C0) <> $80 then
+          break;
+        FChar := (FChar shl 6) or (NChar and $3F);
+        Inc(Iterator);
+        if Iterator > SourceLength then
+          break;
+      end;
+      NChar := Ord(Source[Iterator]);
+      if (NChar and $C0) <> $80 then
+        break;
+      Result := Result + WideChar((FChar shl 6) or (NChar and $3F));
+    end
+    else
+      Result := Result + WideChar(FChar);
+  end;
 end;
 
 constructor TRP.Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
@@ -83,6 +111,7 @@ begin
 
   FClassAlias := '';
   FParams := TSP<TStringList>.Create();
+  aRequestInfo.Params.Text := (aRequestInfo.Params.Text); //ConvertUtf8ToAnsi
   //reading params
   case aRequestInfo.CommandType of
     hcGET:
@@ -126,6 +155,8 @@ var
   attribs: TArray<TCustomAttribute>;
   a: TCustomAttribute;
   methodParams: TArray<System.Rtti.TRttiParameter>;
+  iCounterPerSec: TLargeInteger;
+  C1, C2: TLargeInteger;
 
   procedure CollectArgs();
   var
@@ -142,6 +173,12 @@ var
   end;
 
 begin
+  QueryPerformanceFrequency(iCounterPerSec);
+  QueryPerformanceCounter(C1);
+
+  FResponses.ICounterPerSec := iCounterPerSec;
+  FResponses.TimeCounterStart := C1;
+
   FClassAlias := aClassAlias;
   CollectArgs();
   ctx := TRttiContext.Create();
@@ -205,14 +242,6 @@ begin
 
   // insert your code here...
   FResponses.OK();
-end;
-
-function TRP.GetMain: TMain;
-begin
-  if Assigned(RobustService) then
-    Result := RobustService.MainInstance
-  else
-    Result := Main;
 end;
 
 procedure TRP.Update;

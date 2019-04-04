@@ -41,20 +41,10 @@ type
     property RelWebFileDir: string read FRelWebFileDir write FRelWebFileDir;
   end;
 
-   {
-   function TRPSystem.GetMain: TMain;
-begin
-  if Assigned(RobustService) then
-    Result := RobustService.MainInstance
-  else
-    Result := Main;
-end;
-   }
-
 implementation
 
 uses
-  System.TypInfo, uDecodePostRequest, uRPTests;
+  System.TypInfo, uDecodePostRequest, uRPTests, Winapi.Windows;
 
 { TRP }
 procedure TRP.Create;
@@ -125,6 +115,8 @@ var
   attribs: TArray<TCustomAttribute>;
   a: TCustomAttribute;
   methodParams: TArray<System.Rtti.TRttiParameter>;
+  iCounterPerSec: TLargeInteger;
+  C1, C2: TLargeInteger;
 
   procedure CollectArgs();
   var
@@ -141,6 +133,12 @@ var
   end;
 
 begin
+  QueryPerformanceFrequency(iCounterPerSec);
+  QueryPerformanceCounter(C1);
+
+  FResponses.ICounterPerSec := iCounterPerSec;
+  FResponses.TimeCounterStart := C1;
+
   FClassAlias := aClassAlias;
   CollectArgs();
   ctx := TRttiContext.Create();
