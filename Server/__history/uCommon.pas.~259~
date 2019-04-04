@@ -6,7 +6,7 @@ uses
   LDSLogger, uConst, System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, IdIOHandler, IdIOHandlerSocket,
   IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdMessage, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP, IdMessageCoderMIME, IdMessageCoder, IdGlobal,
-  HTTPApp, vcl.Forms, System.NetEncoding, IdException;
+  HTTPApp, vcl.Forms, System.NetEncoding, IdException, Winapi.Windows;
 
 type
   int = integer;
@@ -39,16 +39,23 @@ type
   private
     FAResponseInfo: TIdHTTPResponseInfo;
     FARequestInfo: TIdHTTPRequestInfo;
+    FTimeCounterFinish: TLargeInteger;
+    FTimeCounterStart: TLargeInteger;
+    FICounterPerSec: TLargeInteger;
     function GetCommandType(): string;
+    function FormatExecutionTime: string;
   public
     constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
     procedure OK();
     procedure Error(EMessage: string = ''; ACodeNumber: integer = -1);
     procedure Deactivate();
     procedure OkWithJson(aJsonData: string);
-    procedure SuccessfullInsert(aId: integer);
     property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
     property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write FAResponseInfo;
+
+    property TimeCounterStart: TLargeInteger read FTimeCounterStart write FTimeCounterStart;
+    property TimeCounterFinish: TLargeInteger read FTimeCounterFinish write FTimeCounterFinish;
+    property ICounterPerSec: TLargeInteger read FICounterPerSec write FICounterPerSec;
   end;
 
   TCommon = class
@@ -87,10 +94,12 @@ type
 const
   logFileName = 'log.txt';
 
+
+
 implementation
 
 uses
-  uMain;
+  uMain, uRSService;
 { TLDSLoggerImpl }
 
 procedure TLogger.LogError(aMsg: string);
@@ -290,7 +299,7 @@ end;
 procedure TResponses.Deactivate();
 begin
   try
-    Main.Server.Active := false;
+    TMain.GetInstance.Server.Active := false;
   except
     on E: EIdException do
       Error(E.Message);
@@ -310,8 +319,9 @@ begin
   json.S['uri'] := ARequestInfo.URI;
   json.S['responseNo'] := aResponseInfo.ResponseNo.ToString();
   json.S['commandType'] := GetCommandType();
+  json.S['executionTime'] := FormatExecutionTime();
   FaResponseInfo.ResponseNo := 200;
-  FaResponseInfo.ContentType := 'application/json';
+  FAResponseInfo.ContentType := 'application/json; charset=utf-8';
   FaResponseInfo.CacheControl := 'no-cache';
   FaResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
   FaResponseInfo.ContentText := json.AsJSon(false, false);
@@ -337,6 +347,7 @@ begin
   json.S['uri'] := ARequestInfo.URI;
   json.S['responseNo'] := aResponseInfo.ResponseNo.ToString();
   json.S['commandType'] := GetCommandType();
+  json.S['executionTime'] := FormatExecutionTime();
   FaResponseInfo.ResponseNo := 200;
   FaResponseInfo.ContentType := 'application/json';
   FaResponseInfo.CacheControl := 'no-cache';
@@ -356,18 +367,20 @@ begin
   jsonResult.S['responseNo'] := aResponseInfo.ResponseNo.ToString();
   jsonResult.O['data'] := json;
   jsonResult.S['commandType'] := GetCommandType();
+  jsonResult.S['executionTime'] := FormatExecutionTime();
 
   FAResponseInfo.ResponseNo := 200;
-  FAResponseInfo.ContentType := 'application/json';
+  FAResponseInfo.ContentType := 'application/json; charset=utf-8';
   FAResponseInfo.CacheControl := 'no-cache';
   FAResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
   FAResponseInfo.ContentText := jsonResult.AsJSon(false, false);
   FAResponseInfo.WriteContent;
 end;
 
-procedure TResponses.SuccessfullInsert(aId: integer);
+function TResponses.FormatExecutionTime: string;
 begin
-//
+  QueryPerformanceCounter(FTimeCounterFinish);
+  Result := FormatFloat('0.0000000', (FTimeCounterFinish - FTimeCounterStart) / (FICounterPerSec)) + ' sec.';
 end;
 
 procedure TCommon.IsNotNull(aObject: TObject);
@@ -375,7 +388,6 @@ begin
   if (aObject = nil) then
     raise Exception.Create('Object is nil');
 end;
-
 
 { TLongTaskThread }
 

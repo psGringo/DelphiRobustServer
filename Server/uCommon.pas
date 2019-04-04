@@ -47,9 +47,9 @@ type
   public
     constructor Create(aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
     procedure OK();
+    procedure OkWithJson(aJsonData: string);
     procedure Error(EMessage: string = ''; ACodeNumber: integer = -1);
     procedure Deactivate();
-    procedure OkWithJson(aJsonData: string);
     property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
     property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write FAResponseInfo;
 
@@ -321,7 +321,7 @@ begin
   json.S['commandType'] := GetCommandType();
   json.S['executionTime'] := FormatExecutionTime();
   FaResponseInfo.ResponseNo := 200;
-  FaResponseInfo.ContentType := 'application/json';
+  FAResponseInfo.ContentType := 'application/json; charset=utf-8';
   FaResponseInfo.CacheControl := 'no-cache';
   FaResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
   FaResponseInfo.ContentText := json.AsJSon(false, false);
@@ -349,7 +349,7 @@ begin
   json.S['commandType'] := GetCommandType();
   json.S['executionTime'] := FormatExecutionTime();
   FaResponseInfo.ResponseNo := 200;
-  FaResponseInfo.ContentType := 'application/json';
+  FAResponseInfo.ContentType := 'application/json; charset=utf-8';
   FaResponseInfo.CacheControl := 'no-cache';
   FaResponseInfo.CustomHeaders.Add('Access-Control-Allow-Origin: *');
   FaResponseInfo.ContentText := json.AsJSon(false, false);
