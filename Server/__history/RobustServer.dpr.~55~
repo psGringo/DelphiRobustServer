@@ -51,8 +51,8 @@ begin
 
     // The mutex is created in the global name space which makes it possible to
     // access across user sessions.
+
   MutexHandle := CreateMutex(@SecurityAttr, True, PChar(MUTEX_GLOBAL + MutexName));
-  CloseHandle(MutexHandle);
   ErrCode := GetLastError;
     // If the function fails, the return value is 0
     // If the mutex is a named mutex and the object existed before this function
@@ -86,7 +86,7 @@ begin
     Vcl.Forms.Application.Initialize;
     Vcl.Forms.Application.MainFormOnTaskbar := True;
     TStyleManager.TrySetStyle('Carbon');
-    Vcl.Forms.Application.CreateForm(TMain, Main);
+  Vcl.Forms.Application.CreateForm(TMain, Main);
     Vcl.Forms.Application.Run;
   end
   else

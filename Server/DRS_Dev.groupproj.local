@@ -4,6 +4,6 @@
     <Transaction>1899.12.30 00:00:00.000.965,C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\DRS_Dev.groupproj=C:\Users\YellowFriend\Documents\Embarcadero\Studio\Projects\ProjectGroup1.groupproj</Transaction>
   </Transactions>
 	<Default.Personality>
-		<Projects ActiveProject="C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\GUI\RobustServerGUI.dproj"/>
+		<Projects ActiveProject="C:\Work\DSeattle\12_RobustServer\DelphiRobustServer\Server\RobustServer.dproj"/>
 	</Default.Personality>
 </BorlandProject>

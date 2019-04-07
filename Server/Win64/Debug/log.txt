@@ -1201,3 +1201,59 @@ error:1408F10B:SSL routines:SSL3_GET_RECORD:wrong version number
 07.04.2019 07:57:36.575 [инфо] Server successfully started
 07.04.2019 07:58:50.645 [инфо] Server successfully started
 07.04.2019 07:59:03.971 [инфо] Server successfully stopped
+07.04.2019 08:08:12.157 [инфо] Server successfully started
+07.04.2019 08:08:21.447 [инфо] Server successfully stopped
+07.04.2019 08:08:49.499 [инфо] Server successfully started
+07.04.2019 08:09:23.859 [инфо] Server successfully started
+07.04.2019 08:09:36.908 [инфо] Server successfully stopped
+07.04.2019 08:09:49.461 [инфо] Server successfully started
+07.04.2019 08:10:02.797 [ошиб] Exception class EIdOSSLUnderlyingCryptoError exception message Error accepting connection with SSL.
+error:1408F10B:SSL routines:SSL3_GET_RECORD:wrong version number
+07.04.2019 08:10:05.783 [ошиб] Exception class EIdOSSLUnderlyingCryptoError exception message Error accepting connection with SSL.
+error:1408F10B:SSL routines:SSL3_GET_RECORD:wrong version number
+07.04.2019 08:10:24.399 [инфо] Server successfully started
+07.04.2019 08:10:27.753 [ошиб] Exception class EIdOSSLUnderlyingCryptoError exception message Error accepting connection with SSL.
+error:1408F10B:SSL routines:SSL3_GET_RECORD:wrong version number
+07.04.2019 08:13:22.989 [инфо] Server successfully started
+07.04.2019 08:16:46.504 [инфо] Server successfully stopped
+07.04.2019 08:18:05.138 [инфо] Server successfully started
+07.04.2019 08:18:09.455 [инфо] Server successfully stopped
+07.04.2019 08:18:48.388 [инфо] Server successfully started
+07.04.2019 08:19:31.013 [инфо] Server successfully started
+07.04.2019 08:20:11.889 [инфо] Server successfully stopped
+07.04.2019 08:20:36.796 [инфо] Server successfully started
+07.04.2019 08:20:45.652 [инфо] Server successfully stopped
+07.04.2019 08:20:53.235 [инфо] Server successfully started
+07.04.2019 08:43:02.766 [инфо] Server successfully started
+07.04.2019 08:45:13.734 [инфо] Server successfully started
+07.04.2019 08:45:24.360 [инфо] Server successfully stopped
+07.04.2019 08:46:08.216 [инфо] Server successfully started
+07.04.2019 08:46:26.254 [инфо] Server successfully stopped
+07.04.2019 08:47:09.040 [инфо] Server successfully started
+07.04.2019 08:49:29.083 [инфо] Server successfully started
+07.04.2019 08:49:42.598 [инфо] Server successfully stopped
+07.04.2019 08:51:14.550 [инфо] Server successfully started
+07.04.2019 08:51:45.096 [инфо] Server successfully stopped
+07.04.2019 08:52:19.159 [инфо] Server successfully started
+07.04.2019 08:53:15.701 [инфо] Server successfully stopped
+07.04.2019 08:57:03.493 [инфо] Server successfully started
+07.04.2019 08:57:08.497 [инфо] Server successfully stopped
+07.04.2019 08:59:32.924 [инфо] Server successfully started
+07.04.2019 08:59:43.492 [инфо] Server successfully stopped
+07.04.2019 09:00:11.504 [инфо] Server successfully started
+07.04.2019 09:13:51.965 [инфо] Server successfully stopped
+07.04.2019 09:14:48.610 [инфо] Server successfully started
+07.04.2019 09:15:17.209 [инфо] Server successfully stopped
+07.04.2019 09:16:53.577 [инфо] Server successfully started
+07.04.2019 09:17:15.187 [инфо] Server successfully stopped
+07.04.2019 09:17:46.431 [инфо] Server successfully started
+07.04.2019 09:19:03.014 [инфо] Server successfully started
+07.04.2019 09:19:42.661 [инфо] Server successfully stopped
+07.04.2019 09:21:20.272 [инфо] Server successfully started
+07.04.2019 09:21:29.956 [инфо] Server successfully stopped
+07.04.2019 09:21:41.245 [инфо] Server successfully started
+07.04.2019 09:23:00.427 [инфо] Server successfully started
+07.04.2019 09:23:09.459 [инфо] Server successfully stopped
+07.04.2019 09:23:45.304 [инфо] Server successfully started
+07.04.2019 09:25:48.355 [инфо] Server successfully stopped
+07.04.2019 09:30:59.524 [инфо] Server successfully started

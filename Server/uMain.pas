@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent, IdCustomTCPServer,
   IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin,
-  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs, IdServerIOHandler, IdSSL, IdSSLOpenSSL;
+  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs, IdServerIOHandler, IdSSL, IdSSLOpenSSL,
+  Vcl.AppEvnts, Vcl.Menus;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -37,6 +38,11 @@ type
     bGo: TBitBtn;
     IdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL;
     bSettings: TBitBtn;
+    TrayIcon: TTrayIcon;
+    ApplicationEvents: TApplicationEvents;
+    PopupMenu: TPopupMenu;
+    pNormalWindow: TMenuItem;
+    pExit: TMenuItem;
     procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
     procedure bAPIClick(Sender: TObject);
@@ -52,6 +58,11 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cbRequestKeyPress(Sender: TObject; var Key: Char);
     procedure bSettingsClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure ApplicationEventsMinimize(Sender: TObject);
+    procedure TrayIconDblClick(Sender: TObject);
+    procedure pNormalWindowClick(Sender: TObject);
+    procedure pExitClick(Sender: TObject);
   private
     { Private declarations }
     FProtocol: string;
@@ -63,6 +74,7 @@ type
     FCS: ISP<TCriticalSection>;
     FSomeSharedResource: ISP<TStringList>;
     FDBConnectionsCount: integer;
+    FMyIcon: TIcon;
     procedure SwitchStartStopButtons();
     procedure UpdateWorkTime(var aMsg: TMessage); message WM_WORK_TIME;
     procedure UpdateAppMemory(var aMsg: TMessage); message WM_APP_MEMORY;
@@ -96,6 +108,13 @@ uses
   System.NetEncoding, IdMultipartFormData, uClientExamples, uRP, System.Math, System.IOUtils, System.IniFiles, uRSService;
 
 { TMain }
+procedure TMain.ApplicationEventsMinimize(Sender: TObject);
+begin
+  TrayIcon.Visible := True;
+  Application.ShowMainForm := True;
+  ShowWindow(Handle, SW_HIDE);
+end;
+
 procedure TMain.bAPIClick(Sender: TObject);
 var
   c: ISP<TIdHTTP>;
@@ -120,8 +139,7 @@ var
   filepathLastRequests: string;
   sl: ISP<TStringList>;
   fs: TFileStream;
-  i: integer;
-  isSuchRequestExists: Boolean;
+  index: Integer;
 begin
   // Последние запросы читаем из текстового файла
   filepathLastRequests := ExtractFilePath(Application.ExeName) + lastRequestsFileName;
@@ -136,17 +154,16 @@ begin
   sl := TSP<TStringList>.Create();
   sl.LoadFromFile(filepathLastRequests);
 
-  isSuchRequestExists := false;
-  for i := 0 to sl.Count - 1 do
-    if sl[i] = cbRequest.Text then
-      isSuchRequestExists := true;
-
-  if (not isSuchRequestExists) and (cbRequest.Text <> '') then
+  index := sl.IndexOf(trim(cbRequest.Text));
+  if (index = -1) and (cbRequest.Text <> '') then
   begin
     sl.Add(cbRequest.Text);
-    sl.SaveToFile(filepathLastRequests);
     cbRequest.Items.Assign(sl);
-  end;
+  end
+  else
+    sl.Move(index, 0); // move Position first
+
+  sl.SaveToFile(filepathLastRequests);
 end;
 
 procedure TMain.bGoClick(Sender: TObject);
@@ -337,15 +354,8 @@ begin
   if TFile.Exists(filepathLastRequests) then
   begin
     cbRequest.Items.LoadFromFile(filepathLastRequests);
-  // reverse
     if cbRequest.Items.Count > 0 then
-    begin
-      sl := TSP<TStringList>.Create();
-      for i := cbRequest.Items.Count - 1 downto 0 do
-        sl.Add(cbRequest.Items[i]);
-      cbRequest.Items.Assign(sl);
-      cbRequest.Text := cbRequest.Items[0];
-    end
+      cbRequest.ItemIndex := 0
     else
       cbRequest.Text := 'Test/Connection';
   end;
@@ -364,27 +374,19 @@ begin
     FSomeSharedResource.Add(Random(9).ToString());
 
   bGo.Glyph := nil;
-  ilPics.GetBitmap(4, bGo.Glyph);
+  ilPics.GetBitmap(7, bGo.Glyph);
   bSettings.Glyph := nil;
   ilPics.GetBitmap(5, bSettings.Glyph);
 end;
 
 procedure TMain.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-  i: integer;
 begin
   Stop();
+end;
 
-  with LongTaskThreads.LockList() do
-  try
-    for i := 0 to Count - 1 do
-    begin
-      TLongTaskThread(Items[i]).FreeOnTerminate := false; // in other case they will be destroyed automatically
-      TLongTaskThread(Items[i]).Free();
-    end;
-  finally
-    LongTaskThreads.UnlockList();
-  end;
+procedure TMain.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(FMyIcon);
 end;
 
 class function TMain.GetInstance: TMain;
@@ -404,13 +406,25 @@ begin
       client: ISP<TIdHTTP>;
     begin
       client := TSP<TIdHTTP>.Create();
-      r := client.Get(FAdress + '/' + cbRequest.Text);
-      TThread.Synchronize(TThread.CurrentThread,
-        procedure()
-        begin
-          mAnswer.Lines.Add(r);
-        end);
+        r := client.Get(FAdress + '/' + cbRequest.Text);
+        TThread.Synchronize(TThread.CurrentThread,
+          procedure()
+          begin
+            mAnswer.Lines.BeginUpdate;
+            mAnswer.Lines.Add(r);
+            mAnswer.Lines.EndUpdate;
+          end);
     end).Start();
+end;
+
+procedure TMain.pExitClick(Sender: TObject);
+begin
+  Stop();
+end;
+
+procedure TMain.pNormalWindowClick(Sender: TObject);
+begin
+  Self.WindowState := wsNormal;
 end;
 
 procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -442,12 +456,25 @@ end;
 procedure TMain.Stop;
 var
   l: ISP<TLogger>;
+  i: integer;
 begin
   l := TSP<TLogger>.Create();
   Server.Active := false;
   StatusBar.Panels[0].Text := 'Stopped';
   UpdateStartStopGlyph(0);
   l.LogInfo('Server successfully stopped');
+  //
+  with LongTaskThreads.LockList() do
+  try
+    for i := 0 to Count - 1 do
+    begin
+      TLongTaskThread(Items[i]).FreeOnTerminate := false; // in other case they will be destroyed automatically
+      TLongTaskThread(Items[i]).Terminate;
+    end;
+  finally
+    LongTaskThreads.UnlockList();
+  end;
+  //
 end;
 
 procedure TMain.SwitchStartStopButtons;
@@ -456,6 +483,14 @@ begin
     Stop
   else
     Start;
+end;
+
+procedure TMain.TrayIconDblClick(Sender: TObject);
+begin
+  TrayIcon.Visible := False;
+  Show();
+  WindowState := wsNormal;
+  Application.BringToFront()
 end;
 
 procedure TMain.UpdateAppMemory(var aMsg: TMessage);

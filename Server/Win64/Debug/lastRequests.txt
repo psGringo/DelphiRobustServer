@@ -1,3 +1,3 @@
-Test/Connection
 System/Memory
+Test/Connection
 Files/Upload

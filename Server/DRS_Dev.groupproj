@@ -9,6 +9,9 @@
         <Projects Include="..\GUI\RobustServerGUI.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\..\..\06_SalesForecast\HTTPFileServer\HTTPServer.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="RobustServerGUI:Make">
         <MSBuild Projects="..\GUI\RobustServerGUI.dproj" Targets="Make"/>
     </Target>
+    <Target Name="HTTPServer">
+        <MSBuild Projects="..\..\..\06_SalesForecast\HTTPFileServer\HTTPServer.dproj"/>
+    </Target>
+    <Target Name="HTTPServer:Clean">
+        <MSBuild Projects="..\..\..\06_SalesForecast\HTTPFileServer\HTTPServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="HTTPServer:Make">
+        <MSBuild Projects="..\..\..\06_SalesForecast\HTTPFileServer\HTTPServer.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="RobustServer;RobustServerGUI"/>
+        <CallTarget Targets="RobustServer;RobustServerGUI;HTTPServer"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="RobustServer:Clean;RobustServerGUI:Clean"/>
+        <CallTarget Targets="RobustServer:Clean;RobustServerGUI:Clean;HTTPServer:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="RobustServer:Make;RobustServerGUI:Make"/>
+        <CallTarget Targets="RobustServer:Make;RobustServerGUI:Make;HTTPServer:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

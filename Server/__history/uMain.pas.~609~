@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdBaseComponent, IdComponent, IdCustomTCPServer,
   IdHTTPServer, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, uCommandGet, uTimers, IdTCPConnection, IdTCPClient, IdHTTP, IdCustomHTTPServer, IdContext, Vcl.Samples.Spin,
-  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs, IdServerIOHandler, IdSSL, IdSSLOpenSSL;
+  System.ImageList, Vcl.ImgList, uCommon, System.Classes, superobject, IdHeaderList, ShellApi, uRPTests, Registry, uConst, System.SyncObjs, IdServerIOHandler, IdSSL, IdSSLOpenSSL,
+  Vcl.AppEvnts, Vcl.Menus;
 
 const
   WM_WORK_TIME = WM_USER + 1000;
@@ -37,6 +38,11 @@ type
     bGo: TBitBtn;
     IdServerIOHandlerSSLOpenSSL: TIdServerIOHandlerSSLOpenSSL;
     bSettings: TBitBtn;
+    TrayIcon: TTrayIcon;
+    ApplicationEvents: TApplicationEvents;
+    PopupMenu: TPopupMenu;
+    pNormalWindow: TMenuItem;
+    pExit: TMenuItem;
     procedure ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure bStartStopClick(Sender: TObject);
     procedure bAPIClick(Sender: TObject);
@@ -52,6 +58,10 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cbRequestKeyPress(Sender: TObject; var Key: Char);
     procedure bSettingsClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure ApplicationEventsMinimize(Sender: TObject);
+    procedure TrayIconDblClick(Sender: TObject);
+    procedure pNormalWindowClick(Sender: TObject);
   private
     { Private declarations }
     FProtocol: string;
@@ -63,6 +73,7 @@ type
     FCS: ISP<TCriticalSection>;
     FSomeSharedResource: ISP<TStringList>;
     FDBConnectionsCount: integer;
+    FMyIcon: TIcon;
     procedure SwitchStartStopButtons();
     procedure UpdateWorkTime(var aMsg: TMessage); message WM_WORK_TIME;
     procedure UpdateAppMemory(var aMsg: TMessage); message WM_APP_MEMORY;
@@ -96,6 +107,13 @@ uses
   System.NetEncoding, IdMultipartFormData, uClientExamples, uRP, System.Math, System.IOUtils, System.IniFiles, uRSService;
 
 { TMain }
+procedure TMain.ApplicationEventsMinimize(Sender: TObject);
+begin
+  TrayIcon.Visible := True;
+  Application.ShowMainForm := True;
+  ShowWindow(Handle, SW_HIDE);
+end;
+
 procedure TMain.bAPIClick(Sender: TObject);
 var
   c: ISP<TIdHTTP>;
@@ -120,8 +138,7 @@ var
   filepathLastRequests: string;
   sl: ISP<TStringList>;
   fs: TFileStream;
-  i: integer;
-  isSuchRequestExists: Boolean;
+  index: Integer;
 begin
   // Последние запросы читаем из текстового файла
   filepathLastRequests := ExtractFilePath(Application.ExeName) + lastRequestsFileName;
@@ -136,17 +153,15 @@ begin
   sl := TSP<TStringList>.Create();
   sl.LoadFromFile(filepathLastRequests);
 
-  isSuchRequestExists := false;
-  for i := 0 to sl.Count - 1 do
-    if sl[i] = cbRequest.Text then
-      isSuchRequestExists := true;
-
-  if (not isSuchRequestExists) and (cbRequest.Text <> '') then
+  index := sl.IndexOf(trim(cbRequest.Text));
+  if (index <> -1) and (cbRequest.Text <> '') then
   begin
     sl.Add(cbRequest.Text);
     sl.SaveToFile(filepathLastRequests);
     cbRequest.Items.Assign(sl);
-  end;
+  end
+  else
+    sl.Move(index, 0) // move Position first
 end;
 
 procedure TMain.bGoClick(Sender: TObject);
@@ -387,6 +402,11 @@ begin
   end;
 end;
 
+procedure TMain.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(FMyIcon);
+end;
+
 class function TMain.GetInstance: TMain;
 begin
   if Assigned(RobustService) then
@@ -396,13 +416,12 @@ begin
 end;
 
 procedure TMain.GetRequestProcessing;
-var
-  client: ISP<TIdHTTP>;
 begin
   TTHread.CreateAnonymousThread(
     procedure()
     var
       r: string;
+      client: ISP<TIdHTTP>;
     begin
       client := TSP<TIdHTTP>.Create();
       r := client.Get(FAdress + '/' + cbRequest.Text);
@@ -412,6 +431,11 @@ begin
           mAnswer.Lines.Add(r);
         end);
     end).Start();
+end;
+
+procedure TMain.pNormalWindowClick(Sender: TObject);
+begin
+  Self.WindowState := wsNormal;
 end;
 
 procedure TMain.ServerCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -457,6 +481,14 @@ begin
     Stop
   else
     Start;
+end;
+
+procedure TMain.TrayIconDblClick(Sender: TObject);
+begin
+  TrayIcon.Visible := False;
+  Show();
+  WindowState := wsNormal;
+  Application.BringToFront()
 end;
 
 procedure TMain.UpdateAppMemory(var aMsg: TMessage);

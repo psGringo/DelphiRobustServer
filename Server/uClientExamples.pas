@@ -95,7 +95,6 @@ begin
   TMain.GetInstance.mAnswer.Lines.Add(r);
 end;
 
-
 procedure TClientExamples.SendEmail();
 var y: ISP<TEmail>;
 begin
