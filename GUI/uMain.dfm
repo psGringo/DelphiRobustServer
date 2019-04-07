@@ -40,14 +40,14 @@ object Main: TMain
         ExplicitWidth = 833
         ExplicitHeight = 349
         inherited eRequest: TEdit
-          Width = 827
-          ExplicitWidth = 827
+          Width = 823
+          ExplicitWidth = 823
         end
         inherited mAnswer: TMemo
           Width = 827
-          Height = 113
+          Height = 107
           ExplicitWidth = 827
-          ExplicitHeight = 113
+          ExplicitHeight = 107
         end
         inherited pAnswerTop: TPanel
           Width = 833
@@ -72,6 +72,9 @@ object Main: TMain
         inherited pTop: TPanel
           Width = 833
           ExplicitWidth = 833
+          inherited bPause: TBitBtn
+            OnClick = MFbPauseClick
+          end
           inherited bInstallService: TBitBtn
             OnClick = MFbInstallServiceClick
           end
@@ -92,7 +95,7 @@ object Main: TMain
           Left = 480
           Top = 247
           Bitmap = {
-            494C010104000800B40010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+            494C010104000800B80010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000002000000001002000000000000020
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000

@@ -3,9 +3,8 @@ unit uCommon;
 interface
 
 uses
-  LDSLogger, uConst, System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, IdIOHandler, IdIOHandlerSocket,
-  IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdMessage, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-  IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP, IdMessageCoderMIME, IdMessageCoder, IdGlobal,
+  LDSLogger, uConst, System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdMessage,
+  IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP, IdMessageCoderMIME, IdMessageCoder, IdGlobal,
   HTTPApp, vcl.Forms, System.NetEncoding, IdException, Winapi.Windows;
 
 type
@@ -52,7 +51,6 @@ type
     procedure Deactivate();
     property ARequestInfo: TIdHTTPRequestInfo read FARequestInfo write FARequestInfo;
     property AResponseInfo: TIdHTTPResponseInfo read FAResponseInfo write FAResponseInfo;
-
     property TimeCounterStart: TLargeInteger read FTimeCounterStart write FTimeCounterStart;
     property TimeCounterFinish: TLargeInteger read FTimeCounterFinish write FTimeCounterFinish;
     property ICounterPerSec: TLargeInteger read FICounterPerSec write FICounterPerSec;
@@ -94,8 +92,6 @@ type
 const
   logFileName = 'log.txt';
 
-
-
 implementation
 
 uses
@@ -120,8 +116,7 @@ end;
 
 
 { TEmail }
-procedure TEmail.Send(aHost: string; aPort: int; aSubject, aEmailContent, aRecipientEmail, aMyEmail, aMyPassword,
-  aFromName: string);
+procedure TEmail.Send(aHost: string; aPort: int; aSubject, aEmailContent, aRecipientEmail, aMyEmail, aMyPassword, aFromName: string);
 var
   idSMTP: ISP<TIdSMTP>;
   msg: ISP<TIdMessage>;
@@ -379,8 +374,10 @@ end;
 
 function TResponses.FormatExecutionTime: string;
 begin
+  Result := '0.0000000';
   QueryPerformanceCounter(FTimeCounterFinish);
-  Result := FormatFloat('0.0000000', (FTimeCounterFinish - FTimeCounterStart) / (FICounterPerSec)) + ' sec.';
+  if FICounterPerSec <> 0 then
+    Result := FormatFloat('0.0000000', (FTimeCounterFinish - FTimeCounterStart) / (FICounterPerSec)) + ' sec.';
 end;
 
 procedure TCommon.IsNotNull(aObject: TObject);

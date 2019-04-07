@@ -17,6 +17,7 @@ type
     StatusBar: TStatusBar;
     procedure FormCreate(Sender: TObject);
     procedure MFbInstallServiceClick(Sender: TObject);
+    procedure MFbPauseClick(Sender: TObject);
   private
     { Private declarations }
     FServer: ISP<TServer>;
@@ -51,6 +52,12 @@ end;
 procedure TMain.MFbInstallServiceClick(Sender: TObject);
 begin
   MF.bInstallServiceClick(Sender);
+end;
+
+procedure TMain.MFbPauseClick(Sender: TObject);
+begin
+  MF.bPauseClick(Sender);
+
 end;
 
 procedure TMain.NotifyEventMsg(aMsg: string);
