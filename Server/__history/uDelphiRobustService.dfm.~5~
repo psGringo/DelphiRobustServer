@@ -1,9 +1,0 @@
-object RobustServer: TRobustServer
-  OldCreateOrder = False
-  OnCreate = ServiceCreate
-  DisplayName = 'RobustServer'
-  OnStart = ServiceStart
-  OnStop = ServiceStop
-  Height = 150
-  Width = 215
-end

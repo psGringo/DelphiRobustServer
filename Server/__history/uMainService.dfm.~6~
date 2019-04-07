@@ -1,6 +1,0 @@
-object DRS: TDRS
-  OldCreateOrder = False
-  DisplayName = 'DelphiRobustServer'
-  Height = 150
-  Width = 215
-end

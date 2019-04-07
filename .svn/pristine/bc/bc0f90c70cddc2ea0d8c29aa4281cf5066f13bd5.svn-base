@@ -1,0 +1,16 @@
+[req]
+default_bits=1024
+default_keyfile=privkey.pem
+distinguished_name=req_distinguished_name
+encrypt_rsa_key=no
+[req_distinguished_name]
+countryName=RU
+countryName_default=RU
+stateOrProvinceName=Yekateringburg region
+localityName=Yekateringburg region
+localityName_default=Yekateringburg region
+organizationName=PS
+organizationName_default=PS
+organizationalUnitName=PS
+commonName=Panteleev Stas
+emailAddress=panteleevstas@gmail.com
