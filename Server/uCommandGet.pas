@@ -57,7 +57,6 @@ procedure TCommandGet.Execute();
 var
   responses: ISP<TResponses>;
 begin
-
   try
     ProcessRequest();
     DownloadFile();
