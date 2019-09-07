@@ -20,3 +20,6 @@
 07.09.2019 19:21:25.335 [инфо] Server successfully stopped
 07.09.2019 19:33:37.401 [инфо] Server successfully started
 07.09.2019 19:33:42.083 [инфо] Server successfully stopped
+07.09.2019 19:36:12.429 [инфо] Server successfully started
+07.09.2019 19:37:08.261 [инфо] Server successfully started
+07.09.2019 19:37:16.865 [инфо] Server successfully stopped

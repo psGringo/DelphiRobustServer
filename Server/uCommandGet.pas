@@ -39,7 +39,9 @@ begin
   // fill data
   FUniqueModuleNames.Add(RP_Users, TRPUsers);
   FUniqueModuleNames.Add(RP_Tests, TRPTests);
-  //
+  FUniqueModuleNames.Add(RP_Files, TRPFiles);
+  FUniqueModuleNames.Add(RP_System, TRPSystem);
+  // fire
   Execute();
 end;
 
