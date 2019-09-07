@@ -340,7 +340,6 @@ begin
   json := SO;
   json.S['answer'] := 'ok';
   json.S['uri'] := ARequestInfo.URI;
-  json.S['responseNo'] := aResponseInfo.ResponseNo.ToString();
   json.S['commandType'] := GetCommandType();
   json.S['executionTime'] := FormatExecutionTime();
   FaResponseInfo.ResponseNo := 200;
@@ -359,7 +358,6 @@ begin
   jsonResult := SO();
   jsonResult.S['answer'] := 'ok';
   jsonResult.S['uri'] := ARequestInfo.URI;
-  jsonResult.S['responseNo'] := aResponseInfo.ResponseNo.ToString();
   jsonResult.O['data'] := json;
   jsonResult.S['commandType'] := GetCommandType();
   jsonResult.S['executionTime'] := FormatExecutionTime();

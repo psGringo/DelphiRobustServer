@@ -140,6 +140,9 @@ var
   sl: ISP<TStringList>;
   fs: TFileStream;
   index: Integer;
+  j: Integer;
+const
+  maxListCount = 10;
 begin
   // Последние запросы читаем из текстового файла
   filepathLastRequests := ExtractFilePath(Application.ExeName) + lastRequestsFileName;
@@ -159,6 +162,13 @@ begin
   begin
     sl.Add(cbRequest.Text);
     cbRequest.Items.Assign(sl);
+    // Очищаем список, если больше 10 элементов
+    if sl.Count > maxListCount then
+    begin
+      for j := sl.Count - 1 downto maxListCount do
+        sl.Delete(j);
+    end;
+    cbRequest.Items.Assign(sl);
   end
   else
     sl.Move(index, 0); // move Position first
@@ -174,8 +184,6 @@ begin
     1:
       PostRequestProcessing();
   end;
-
-  SaveRequest();
 end;
 
 procedure TMain.bLogClick(Sender: TObject);
@@ -198,6 +206,7 @@ begin
           begin
             client := TSP<TIdHTTP>.Create();
             jo := SO(Trim(mPostParams.Lines.Text));
+            ss := TSP<TStringStream>.Create();
             ss.WriteString(jo.AsJSon(false, false));
             client.Request.ContentType := 'application/json';
             client.Request.ContentEncoding := 'utf-8';
@@ -206,6 +215,7 @@ begin
               procedure()
               begin
                 mAnswer.Lines.Add(r);
+                SaveRequest();
               end);
           end).Start();
       end;
@@ -234,6 +244,7 @@ begin
             procedure()
             begin
               mAnswer.Lines.Add(r);
+              SaveRequest();
             end);
         end).Start();
     2:
@@ -262,6 +273,7 @@ begin
             procedure()
             begin
               mAnswer.Lines.Add(ss.DataString);
+              SaveRequest();
             end);
         end).Start();
   end;
@@ -406,14 +418,15 @@ begin
       client: ISP<TIdHTTP>;
     begin
       client := TSP<TIdHTTP>.Create();
-        r := client.Get(FAdress + '/' + cbRequest.Text);
-        TThread.Synchronize(TThread.CurrentThread,
-          procedure()
-          begin
-            mAnswer.Lines.BeginUpdate;
-            mAnswer.Lines.Add(r);
-            mAnswer.Lines.EndUpdate;
-          end);
+      r := client.Get(FAdress + '/' + cbRequest.Text);
+      TThread.Synchronize(TThread.CurrentThread,
+        procedure()
+        begin
+          mAnswer.Lines.BeginUpdate;
+          mAnswer.Lines.Add(r);
+          mAnswer.Lines.EndUpdate;
+          SaveRequest();
+        end);
     end).Start();
 end;
 

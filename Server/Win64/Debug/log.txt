@@ -1,0 +1,10 @@
+13.04.2019 12:34:50.042 [инфо] Server successfully started
+13.04.2019 12:35:01.571 [инфо] Server successfully stopped
+13.04.2019 13:52:00.705 [инфо] Server successfully started
+13.04.2019 13:52:09.239 [инфо] Server successfully stopped
+13.04.2019 13:52:34.104 [инфо] Server successfully started
+13.04.2019 13:52:58.529 [инфо] Server successfully stopped
+14.04.2019 01:48:36.634 [инфо] Server successfully started
+14.04.2019 01:48:48.714 [инфо] Server successfully stopped
+07.09.2019 18:36:40.393 [инфо] Server successfully started
+07.09.2019 18:38:02.889 [инфо] Server successfully stopped
