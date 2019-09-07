@@ -4,8 +4,8 @@ unit uRP;
 interface
 
 uses
-  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, System.Generics.Collections, System.Rtti,
-  IdContext, uAttributes, System.Json, System.IOUtils, uRSService;
+  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, System.Generics.Collections, System.Rtti, IdContext, uAttributes, System.Json, System.IOUtils,
+  uRSService;
 
 type
   TProcedure = reference to procedure;
@@ -24,10 +24,8 @@ type
     FParams: ISP<TStringList>; // << params collected in one place for GET, POST Request
     FResponses: ISP<TResponses>;
   public
-    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
-      overload; virtual;
-    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo;
-      NoExecute: Boolean); overload; virtual;
+    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo); overload; virtual;
+    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo; NoExecute: Boolean); overload; virtual;
     procedure Create(); overload; virtual;
     procedure Delete(); virtual;
     procedure Update(); virtual;
@@ -41,6 +39,8 @@ type
     property Params: ISP<TStringList> read FParams;
     property RelWebFileDir: string read FRelWebFileDir write FRelWebFileDir;
   end;
+
+  TRPClass = class of TRP;
 
 implementation
 
@@ -127,8 +127,7 @@ begin
   end;
 end;
 
-constructor TRP.Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo;
-  NoExecute: Boolean);
+constructor TRP.Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo; NoExecute: Boolean);
 begin
   FResponses := TSP<TResponses>.Create(TResponses.Create(aRequestInfo, aResponseInfo));
   FDB := TSP<TDB>.Create(TDB.Create(nil));
@@ -197,8 +196,8 @@ begin
         and ((FRequestInfo.URI = '/' + className + '/' + m.Name) //
         or (FRequestInfo.URI = '/' + className + '/' + m.Name + '()')) then
       begin
-        if (Pos('application/json', LowerCase(RequestInfo.ContentType)) > 0) or ((Pos('multipart/form-data', LowerCase(FRequestInfo.ContentType))
-          > 0) and (Pos('boundary', LowerCase(FRequestInfo.ContentType)) > 0) and (FRequestInfo.URI = '/Files/Upload')) then
+        if (Pos('application/json', LowerCase(RequestInfo.ContentType)) > 0) or ((Pos('multipart/form-data', LowerCase(FRequestInfo.ContentType)) > 0) and (Pos('boundary',
+          LowerCase(FRequestInfo.ContentType)) > 0) and (FRequestInfo.URI = '/Files/Upload')) then
         begin
           // do nothing, pass Fparams.Text which is json here, to invoked method
           SetLength(args, 0);
@@ -220,7 +219,6 @@ begin
               begin
                 if (THTTPAttributes(a).CommandType = 'HttpGet') and (FRequestInfo.CommandType = hcGET) then
                   m.Invoke(Self, args)
-
                 else if (THTTPAttributes(a).CommandType = 'HttpPost') and (FRequestInfo.CommandType = hcPOST) then
                   m.Invoke(Self, args)
               end;

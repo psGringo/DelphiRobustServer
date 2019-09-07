@@ -1,0 +1,19 @@
+unit uConst;
+
+interface
+
+type
+  TConst = class
+  end;
+
+const
+  logFileName = 'log.txt';
+  settingsFileName = 'settings.ini';
+  lastRequestsFileName = 'lastRequests.txt';
+  // modules
+  RP_Content = 'Content';
+
+implementation
+
+end.
+

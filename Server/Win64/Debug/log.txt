@@ -8,3 +8,15 @@
 14.04.2019 01:48:48.714 [инфо] Server successfully stopped
 07.09.2019 18:36:40.393 [инфо] Server successfully started
 07.09.2019 18:38:02.889 [инфо] Server successfully stopped
+07.09.2019 18:58:26.353 [инфо] Server successfully started
+07.09.2019 19:12:50.191 [инфо] Server successfully started
+07.09.2019 19:13:05.979 [инфо] Server successfully stopped
+07.09.2019 19:14:59.756 [инфо] Server successfully started
+07.09.2019 19:15:04.809 [инфо] Server successfully stopped
+07.09.2019 19:18:34.626 [инфо] Server successfully started
+07.09.2019 19:18:36.177 [инфо] Server successfully stopped
+07.09.2019 19:19:13.912 [инфо] Server successfully started
+07.09.2019 19:21:14.275 [инфо] Server successfully started
+07.09.2019 19:21:25.335 [инфо] Server successfully stopped
+07.09.2019 19:33:37.401 [инфо] Server successfully started
+07.09.2019 19:33:42.083 [инфо] Server successfully stopped

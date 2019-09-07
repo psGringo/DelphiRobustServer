@@ -3,8 +3,7 @@ unit uRPTests;
 interface
 
 uses
-  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, uRP, IdContext, System.NetEncoding,
-  uAttributes, System.JSON, SyncObjs;
+  System.SysUtils, System.Classes, IdCustomHTTPServer, superobject, uCommon, uDB, uRP, IdContext, System.NetEncoding, uAttributes, System.JSON, SyncObjs, uConst;
 
 type
   TRPTests = class(TRP)
@@ -14,8 +13,7 @@ type
     procedure OnProgressLongTask(aProgress: double; aMsg: string);
     procedure OnFinishLongTask(aProgress: double; aMsg: string);
   public
-    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
-      overload; override;
+    constructor Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo); overload; override;
     procedure Connection;
     procedure Exceptions;
     [THTTPAttributes('HttpPost')]
@@ -45,7 +43,7 @@ uses
 constructor TRPTests.Create(aContext: TIdContext; aRequestInfo: TIdHTTPRequestInfo; aResponseInfo: TIdHTTPResponseInfo);
 begin
   inherited;
-  Execute('Test');
+  Execute(RP_Tests);
 end;
 
 procedure TRPTests.MethodWithParams(aParam1: string; aParam2: string);
@@ -258,7 +256,6 @@ procedure TRPTests.Connection;
 begin
   FResponses.OK();
 end;
-
 
 procedure TRPTests.URLEncoded(a, b: string);
 var

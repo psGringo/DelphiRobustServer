@@ -3,8 +3,8 @@ unit uCommandGet;
 interface
 
 uses
-  System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections, superobject, System.NetEncoding, System.IOUtils,
-  Vcl.Forms, uUniqueName, uDB, uCommon;
+  System.Classes, IdContext, IdCustomHTTPServer, System.Generics.Collections, superobject, System.NetEncoding, System.IOUtils, Vcl.Forms, uUniqueName, uDB, uCommon,
+  Spring.Collections, uRP;
 
 type
   TCommandGet = class
@@ -12,7 +12,10 @@ type
     FContext: TIdContext;
     FRequestInfo: TIdHTTPRequestInfo;
     FResponseInfo: TIdHTTPResponseInfo;
+    FUniqueModuleNames: IDictionary<string, TRPClass>;
+    procedure ProcessRequest();
     function ParseFirstSection(): string;
+    procedure DownloadFile;
   public
     constructor Create(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure Execute();
@@ -32,46 +35,37 @@ begin
   FContext := AContext;
   FRequestInfo := ARequestInfo;
   FResponseInfo := AResponseInfo;
+  FUniqueModuleNames := TCollections.CreateDictionary<string, TRPClass>;
+  // fill data
+  FUniqueModuleNames.Add(RP_Users, TRPUsers);
+  FUniqueModuleNames.Add(RP_Tests, TRPTests);
+  //
   Execute();
 end;
 
-procedure TCommandGet.Execute();
-
-  procedure DownloadFile();
-  var
-    f: ISP<TRPFiles>;
-  begin
-    f := TSP<TRPFiles>.Create(TRPFiles.Create(FContext, FRequestInfo, FResponseInfo, true));
-    f.Download();
-  end;
-
+procedure TCommandGet.DownloadFile();
 var
-  firstSection: string;
-  r: ISP<TResponses>;
-  u: ISP<TRPUsers>;
-  t: ISP<TRPTests>;
   f: ISP<TRPFiles>;
-  s: ISP<TRPSystem>;
 begin
-  r := TSP<TResponses>.Create(TResponses.Create(FRequestInfo, FResponseInfo));
+  f := TSP<TRPFiles>.Create(TRPFiles.Create(FContext, FRequestInfo, FResponseInfo, true));
+  f.Download();
+end;
+
+procedure TCommandGet.Execute();
+var
+  responses: ISP<TResponses>;
+begin
 
   try
-    firstSection := ParseFirstSection();
-
-    if (SameStr(firstSection, 'Users')) then
-      u := TSP<TRPUsers>.Create(TRPUsers.Create(FContext, FRequestInfo, FResponseInfo))
-    else if (SameStr(firstSection, 'Test')) then
-      t := TSP<TRPTests>.Create(TRPTests.Create(FContext, FRequestInfo, FResponseInfo))
-    else if SameStr(firstSection, 'Files') then
-      f := TSP<TRPFiles>.Create(TRPFiles.Create(FContext, FRequestInfo, FResponseInfo))
-    else if SameStr(firstSection, 'System') then
-      s := TSP<TRPSystem>.Create(TRPSystem.Create(FContext, FRequestInfo, FResponseInfo));
-
+    ProcessRequest();
     DownloadFile();
     FResponseInfo.ResponseNo := 404;
   except
     on E: Exception do
-      r.Error(e.Message);
+    begin
+      responses := TSP<TResponses>.Create(TResponses.Create(FRequestInfo, FResponseInfo));
+      responses.Error(e.Message);
+    end;
   end;
 end;
 
@@ -83,6 +77,16 @@ begin
   a := FRequestInfo.URI.Split(['/']);
   if Length(a) > 0 then
     Result := a[1]; // Parses Users from /Users/Add for example....
+end;
+
+procedure TCommandGet.ProcessRequest();
+var
+  rp: ISP<TRP>;
+  firstSection: string;
+begin
+  firstSection := ParseFirstSection();
+  if FUniqueModuleNames.ContainsKey(firstSection) then
+    rp := TSP<TRP>.Create(FUniqueModuleNames.GetValueOrDefault(firstSection).Create(FContext, FRequestInfo, FResponseInfo));
 end;
 
 end.

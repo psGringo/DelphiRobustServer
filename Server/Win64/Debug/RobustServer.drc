@@ -11,6 +11,15 @@
 #define System_JSONConsts_SUTF8InvalidHeaderByte 64448
 #define System_JSONConsts_SEndOfPath 64449
 #define System_JSONConsts_SErrorInPath 64450
+#define Spring_ResourceStrings_SArgumentOutOfRangeException 64451
+#define Spring_ResourceStrings_SArgumentNullException 64452
+#define Spring_ResourceStrings_SInvalidTypeCast 64453
+#define Spring_ResourceStrings_SEnumEmpty 64454
+#define Spring_ResourceStrings_SEnumFailedVersion 64455
+#define Spring_ResourceStrings_SSequenceContainsNoElements 64456
+#define Spring_ResourceStrings_SSequenceContainsNoMatchingElement 64457
+#define Spring_ResourceStrings_SSequenceContainsMoreThanOneMatchingElement 64458
+#define Spring_ResourceStrings_SSequenceContainsMoreThanOneElement 64459
 #define FireDAC_Stan_ResStrs_S_FD_ClntNotAccessible 64464
 #define FireDAC_Stan_ResStrs_S_FD_ClntConnDefParams 64465
 #define FireDAC_Stan_ResStrs_S_FD_ClntClientInfo 64466
@@ -1088,6 +1097,15 @@ BEGIN
 	System_JSONConsts_SUTF8InvalidHeaderByte,	L"UTF8: Type cannot be determined out of header byte at position %s"
 	System_JSONConsts_SEndOfPath,	L"End of path"
 	System_JSONConsts_SErrorInPath,	L"Error in path"
+	Spring_ResourceStrings_SArgumentOutOfRangeException,	L"Specified argument was out of the range of valid values: %s"
+	Spring_ResourceStrings_SArgumentNullException,	L"Specified argument cannot be nil: %s"
+	Spring_ResourceStrings_SInvalidTypeCast,	L"Invalid cast: %s to %s."
+	Spring_ResourceStrings_SEnumEmpty,	L"Invalid Operation. The enumeration is empty."
+	Spring_ResourceStrings_SEnumFailedVersion,	L"Collection was modified; enumeration operation may not execute."
+	Spring_ResourceStrings_SSequenceContainsNoElements,	L"Sequence contains no elements."
+	Spring_ResourceStrings_SSequenceContainsNoMatchingElement,	L"Sequence contains no matching element."
+	Spring_ResourceStrings_SSequenceContainsMoreThanOneMatchingElement,	L"Sequence contains more than one matching element."
+	Spring_ResourceStrings_SSequenceContainsMoreThanOneElement,	L"Sequence contains more than one element."
 	FireDAC_Stan_ResStrs_S_FD_ClntNotAccessible,	L"Not accessible."
 	FireDAC_Stan_ResStrs_S_FD_ClntConnDefParams,	L"Connection definition parameters"
 	FireDAC_Stan_ResStrs_S_FD_ClntClientInfo,	L"Client info"
